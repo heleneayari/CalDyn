@@ -7,17 +7,20 @@ folder='/data1/thoman/ownCloud/flux_calcique/';
     rough_data_pathname=[rough_data_foldername, file];
     matrix_rough_data=xlsread(rough_data_pathname);
     
-slow=0;
+slow=1;
 if slow
-    pol_length=51;
+    pol_length=31;% avec 51 ca plante corriger
     sm=200;
     prop=0.2;
 else
-    pol_length=11;
+    pol_length=3;
     sm=20;
     prop=0.1;
 end
-    
+%% param flux calcique
+    pol_length=31;
+    sm=200;
+    prop=0.2; 
 
 %%
 close all

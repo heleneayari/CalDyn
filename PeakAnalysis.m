@@ -57,7 +57,7 @@ handles.i = p.Results.i;
 handles.ResDir=p.Results.ResDir;
 handles.col=[0.5 0.5 0.5];
 
-set(handles.pol_order,'string',num2str(handles.PK.vector_filtering_polynomial_order(handles.i)))
+
 set(handles.frame_length,'string',num2str(handles.PK.vector_filtering_frame_length(handles.i)))
 set(handles.smooth_length,'string',num2str(handles.PK.sm(handles.i)))
 set(handles.prop,'string',num2str(handles.PK.prop(handles.i)))
@@ -108,47 +108,6 @@ guidata(hObject, handles);
 
 
 
-
-
-function pol_order_Callback(hObject, eventdata, handles)
-% hObject    handle to pol_order (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hints: get(hObject,'String') returns contents of pol_order as text
-%        str2double(get(hObject,'String')) returns contents of pol_order as a double
-input = str2double(get(hObject,'string'));
-handles.PK.vector_filtering_polynomial_order(handles.i:end)=input;
-handles.PK.Filter(handles.i);
-handles.PK.CalculateParameters(handles.i);
-% handles.PK.Thresh(handles.i);
-% handles.PK.Calculate(handles.i);
-cla(handles.axes_image)
-pos=handles.PK.posper(:,:,handles.i);
-M=handles.PK.Mper(:,:,handles.i);
-hold(handles.axes_image,'on');
-plot(handles.PK.matrix_rough_fluorescences(:,handles.i),'color',handles.col,'parent',handles.axes_image)
-plot(handles.PK.matrix_filtered_fluorescences(:,handles.i),'linewidth',2,'color','b','parent',handles.axes_image)
-plot(handles.PK.xmc(:,handles.i),handles.PK.mmvg(:,handles.i),'+c','parent',handles.axes_image)
-plot(handles.PK.xMc(:,handles.i),handles.PK.M(:,handles.i),'+y','parent',handles.axes_image)
-plot(handles.PK.xmr(:,handles.i),handles.PK.mmvd(:,handles.i),'+g','parent',handles.axes_image)
-plot(handles.PK.xMr(:,handles.i),handles.PK.M(:,handles.i),'+r','parent',handles.axes_image)
-plot(handles.PK.posm(:,handles.i),handles.PK.ms(:,handles.i),'+k','parent',handles.axes_image)
-plot(handles.PK.posM(:,handles.i),handles.PK.Ms(:,handles.i),'+k','parent',handles.axes_image)
-plot(pos(:),M(:),'+m','parent',handles.axes_image)
-guidata(hObject, handles);
-
-% --- Executes during object creation, after setting all properties.
-function pol_order_CreateFcn(hObject, eventdata, handles)
-% hObject    handle to pol_order (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: edit controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
 
 
 
@@ -253,7 +212,7 @@ function prop_Callback(hObject, eventdata, handles)
 %        str2double(get(hObject,'String')) returns contents of prop as a double
 input = str2double(get(hObject,'string'));
 
-try
+
 handles.PK.prop(handles.i:end)=input;
 handles.PK.Filter(handles.i);
 handles.PK.CalculateParameters(handles.i);
@@ -272,7 +231,7 @@ plot(handles.PK.xMr(:,handles.i),handles.PK.M(:,handles.i),'+r','parent',handles
 plot(handles.PK.posm(:,handles.i),handles.PK.ms(:,handles.i),'+k','parent',handles.axes_image)
 plot(handles.PK.posM(:,handles.i),handles.PK.Ms(:,handles.i),'+k','parent',handles.axes_image)
 plot(pos(:),M(:),'+m','parent',handles.axes_image)
-catch
+
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.

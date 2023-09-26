@@ -152,6 +152,7 @@ classdef AnalysisPeaks < handle
         posper
         Mper
         ltab
+        dd2
         
         
     end
@@ -169,7 +170,7 @@ classdef AnalysisPeaks < handle
             pkh=p.Results.pkhgt;
             pol_length=p.Results.Pol_length;
             sm=p.Results.Smoothness;
-            PK.ltab=1000;
+            PK.ltab=10000;
             prop=p.Results.proportion;
             PK.PixelSize = p.Results.PixelSize;
             PK.SamplingFrequency=p.Results.SamplingFrequency;
@@ -679,8 +680,10 @@ classdef AnalysisPeaks < handle
                             PK.M(count,i)=M(count)*PK.PixelSize;
                             PK.mmvg(count,i)=mmvg(count)*PK.PixelSize;
                             PK.mmvd(count,i)=mmvd(count)*PK.PixelSize;
-                            [Ms(count),posM(count)]=max(Signal(round(xmc(count)):round(xmr(count))));
+
+                            [Ms(count),posM(count)]=max(Signal(round(max(1,xmc(count))):round(min(length(Signal),xmr(count)))));
                             posM(count)=posM(count)+xmc(count)-1;
+
                             
                             count=count+1;
                         end
