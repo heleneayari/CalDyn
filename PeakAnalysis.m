@@ -66,11 +66,12 @@ set(handles.prop,'string',num2str(handles.PK.prop(handles.i)))
 
 handles.PK.Filter(handles.i);
 handles.PK.CalculateParameters(handles.i);
+pos=handles.PK.posper(:,:,handles.i);
+M=handles.PK.Mper(:,:,handles.i);
 % handles.PK.Thresh(handles.i);
 % handles.PK.Calculate(handles.i);
 
-pos=handles.PK.posper(:,:,handles.i);
-M=handles.PK.Mper(:,:,handles.i);
+
 hold(handles.axes_image,'on');
 plot(handles.PK.matrix_rough_fluorescences(:,handles.i),'color',handles.col,'parent',handles.axes_image)
 plot(handles.PK.matrix_filtered_fluorescences(:,handles.i),'linewidth',2,'color','b','parent',handles.axes_image)
@@ -160,13 +161,20 @@ function frame_length_Callback(hObject, eventdata, handles)
 %        str2double(get(hObject,'String')) returns contents of frame_length as a double
 input = str2double(get(hObject,'string'));
 handles.PK.vector_filtering_frame_length(handles.i:end)=input;
+
 handles.PK.Filter(handles.i);
+
 handles.PK.CalculateParameters(handles.i);
-% handles.PK.Thresh(handles.i);
-% handles.PK.Calculate(handles.i);
-cla(handles.axes_image)
 pos=handles.PK.posper(:,:,handles.i);
 M=handles.PK.Mper(:,:,handles.i);
+
+
+% handles.PK.Thresh(handles.i);
+% handles.PK.Calculate(handles.i);
+
+
+cla(handles.axes_image)
+
 hold(handles.axes_image,'on');
 plot(handles.PK.matrix_rough_fluorescences(:,handles.i),'color',handles.col,'parent',handles.axes_image)
 plot(handles.PK.matrix_filtered_fluorescences(:,handles.i),'linewidth',2,'color','b','parent',handles.axes_image)
@@ -244,6 +252,8 @@ function prop_Callback(hObject, eventdata, handles)
 % Hints: get(hObject,'String') returns contents of prop as text
 %        str2double(get(hObject,'String')) returns contents of prop as a double
 input = str2double(get(hObject,'string'));
+
+try
 handles.PK.prop(handles.i:end)=input;
 handles.PK.Filter(handles.i);
 handles.PK.CalculateParameters(handles.i);
@@ -262,6 +272,7 @@ plot(handles.PK.xMr(:,handles.i),handles.PK.M(:,handles.i),'+r','parent',handles
 plot(handles.PK.posm(:,handles.i),handles.PK.ms(:,handles.i),'+k','parent',handles.axes_image)
 plot(handles.PK.posM(:,handles.i),handles.PK.Ms(:,handles.i),'+k','parent',handles.axes_image)
 plot(pos(:),M(:),'+m','parent',handles.axes_image)
+catch
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.

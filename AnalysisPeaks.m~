@@ -284,7 +284,7 @@ classdef AnalysisPeaks < handle
         function PK=Filter(PK,varargin)
             i=varargin{1};
             PK.matrix_filtered_fluorescences(:,i)=sgolayfilt(PK.matrix_rough_fluorescences(:,i),PK.vector_filtering_polynomial_order(i),PK.vector_filtering_frame_length(i)); % in AU
-          %  PK.matrix_filtered_fluorescences(:,i)=PK.matrix_rough_fluorescences(:,i);
+           %  PK.matrix_filtered_fluorescences(:,i)=PK.matrix_rough_fluorescences(:,i);
         end
         
         function PK=Thresh(PK,varargin)
@@ -505,7 +505,7 @@ classdef AnalysisPeaks < handle
             p=inputParser;
             addRequired(p,'i')
             parse(p, varargin{1:end});
-            i=p.Results.i;
+            i=p.Results.i
             dper=[0.8 0.7 0.5 0.3 0.1];
             PK.posm(:,i)=nan*ones(PK.ltab,1);
             PK.posM(:,i)=nan*ones(PK.ltab,1);
@@ -527,8 +527,8 @@ classdef AnalysisPeaks < handle
             PK.hc(:,i)=nan*ones(PK.ltab,1);
             PK.hr(:,i)=nan*ones(PK.ltab,1);
             PK.Aire(:,i)=nan*ones(PK.ltab,1);
-%             PK.locc(:,i)=nan*ones(PK.ltab,1);
-%             PK.locr(:,i)=nan*ones(PK.ltab,1);
+            PK.locc(:,i)=nan*ones(PK.ltab,1);
+            PK.locr(:,i)=nan*ones(PK.ltab,1);
 
             PK.Mper(:,:,i)=nan*ones(PK.ltab,5,1);
             PK.posper(:,:,i)=nan*ones(PK.ltab,5,1);
@@ -537,7 +537,7 @@ classdef AnalysisPeaks < handle
            
             
             
-            win=3;
+            win=5;
             sl=PK.sm(i);
             Signal=PK.matrix_filtered_fluorescences(~isnan(PK.matrix_filtered_fluorescences(:,i)),i);
             %             Signal=    PK.matrix_rough_fluorescences(:,i);
@@ -565,12 +565,12 @@ classdef AnalysisPeaks < handle
             
             clear maxc locc locr minr
             for ii=1:length(locct)
-                [maxc(ii),locc(ii)]=max(dd(max(1,locct(ii)-win):min(locct(ii)+win,length(dd))));
-                locc(ii)=max(1,locct(ii)-win)+locc(ii)-1;
+                [maxc(ii),locct2(ii)]=max(dd(max(1,locct(ii)-win):min(locct(ii)+win,length(dd))));
+                locct2(ii)=max(1,locct(ii)-win)+locct2(ii)-1;
             end
             for ii=1:length(locrt)
-                [minr(ii),locr(ii)]=min(dd(max(1,locrt(ii)-win):min(locrt(ii)+win,length(dd))));
-                locr(ii)=locr(ii)+max(1,locrt(ii)-win)-1;
+                [minr(ii),locrt2(ii)]=min(dd(max(1,locrt(ii)-win):min(locrt(ii)+win,length(dd))));
+                locrt2(ii)=locrt2(ii)+max(1,locrt(ii)-win)-1;
             end
             
             %                                                                  figure
@@ -582,9 +582,9 @@ classdef AnalysisPeaks < handle
             %                                                 pause
             %
             
-            [locr,ia,~]=unique(locr);
+            [locr,ia,~]=unique(locrt2);
             minr=minr(ia);
-            [locc,ia,~]=unique(locc);
+            [locc,ia,~]=unique(locct2);
             maxc=maxc(ia);
             
             
@@ -719,8 +719,8 @@ classdef AnalysisPeaks < handle
             PK.xMc(1:length(xMc),i)=xMc/PK.SamplingFrequency;
             PK.xmr(1:length(xmr),i)=xmr/PK.SamplingFrequency;
             PK.xMr(1:length(xMr),i)=xMr/PK.SamplingFrequency;
-%             PK.locc(1:length(locc),i)=locc/PK.SamplingFrequency;
-%             PK.locr(1:length(locr),i)=locr/PK.SamplingFrequency;
+            PK.locc(1:length(locc),i)=locc/PK.SamplingFrequency;
+            PK.locr(1:length(locr),i)=locr/PK.SamplingFrequency;
             
             
             

@@ -7,16 +7,9 @@ folder='/data1/thoman/ownCloud/flux_calcique/';
     rough_data_pathname=[rough_data_foldername, file];
     matrix_rough_data=xlsread(rough_data_pathname);
     
-slow=0;
+slow=1;
 if slow
-    pol_length=51;
-    sm=200;
-    prop=0.2;
-else
-    pol_length=11;
-    sm=20;
-    prop=0.1;
-end
+    
     
 
 %%
@@ -26,7 +19,7 @@ if ~exist(results_foldername,'file')
     mkdir(results_foldername);
 end
 
-PK=AnalysisPeaks(matrix_rough_data,'Pol_length',pol_length,'smoothness',sm,'prop',prop);
+PK=AnalysisPeaks(matrix_rough_data);
 
 %% rest
 
@@ -47,3 +40,4 @@ end
 
 
 close all;
+clc;
