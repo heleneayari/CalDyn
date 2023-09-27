@@ -27,11 +27,11 @@ function varargout = PeakAnalysis(varargin)
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
 gui_State = struct('gui_Name',       mfilename, ...
-                   'gui_Singleton',  gui_Singleton, ...
-                   'gui_OpeningFcn', @PeakAnalysis_OpeningFcn, ...
-                   'gui_OutputFcn',  @PeakAnalysis_OutputFcn, ...
-                   'gui_LayoutFcn',  [] , ...
-                   'gui_Callback',   []);
+    'gui_Singleton',  gui_Singleton, ...
+    'gui_OpeningFcn', @PeakAnalysis_OpeningFcn, ...
+    'gui_OutputFcn',  @PeakAnalysis_OutputFcn, ...
+    'gui_LayoutFcn',  [] , ...
+    'gui_Callback',   []);
 if nargin && ischar(varargin{1})
     gui_State.gui_Callback = str2func(varargin{1});
 end
@@ -65,9 +65,9 @@ error=1;
 while error
     try
         handles.PK.Filter(handles.i);
-handles.PK.CalculateParameters(handles.i);
-error=0;
-set(handles.smooth_length,'string',num2str(handles.PK.sm(handles.i)))
+        handles.PK.CalculateParameters(handles.i);
+        error=0;
+        set(handles.smooth_length,'string',num2str(handles.PK.sm(handles.i)))
     catch
         handles.PK.sm(:)=handles.PK.sm(1)+10;
         
@@ -78,7 +78,7 @@ plot_graphs(handles);
 guidata(hObject, handles);
 uiwait(handles.figure1);
 
-function varargout = PeakAnalysis_OutputFcn(hObject, eventdata, handles) 
+function varargout = PeakAnalysis_OutputFcn(hObject, eventdata, handles)
 varargout{1} = handles.PK;
 if (isfield(handles,'closeFigure') && handles.closeFigure)
     figure1_CloseRequestFcn(hObject, eventdata, handles)
@@ -116,23 +116,23 @@ old=handles.PK.vector_filtering_frame_length(handles.i);
 
 try
     if input>2 && mod(input,2)==1
-handles.PK.vector_filtering_frame_length(handles.i:end)=input;
-    else 
+        handles.PK.vector_filtering_frame_length(handles.i:end)=input;
+    else
         if input<3
-          handles.PK.vector_filtering_frame_length(handles.i:end)=3;
-          set(handles.frame_length,'string',num2str(3));
+            handles.PK.vector_filtering_frame_length(handles.i:end)=3;
+            set(handles.frame_length,'string',num2str(3));
         else
             handles.PK.vector_filtering_frame_length(handles.i:end)=input+1;
             set(handles.frame_length,'string',num2str(input+1));
         end
     end
-handles.PK.Filter(handles.i);
-handles.PK.CalculateParameters(handles.i);
-
-
-plot_graphs(handles);
-
-
+    handles.PK.Filter(handles.i);
+    handles.PK.CalculateParameters(handles.i);
+    
+    
+    plot_graphs(handles);
+    
+    
 catch
     set(handles.frame_length,'string',num2str(old))
     handles.PK.vector_filtering_frame_length(handles.i:end)=old;
@@ -167,21 +167,19 @@ function smooth_length_Callback(hObject, eventdata, handles)
 input = str2double(get(hObject,'string'));
 old=handles.PK.sm(handles.i);
 try
-handles.PK.sm(handles.i:end)=input;
-handles.PK.Filter(handles.i);
-handles.PK.CalculateParameters(handles.i);
-% handles.PK.Thresh(handles.i);
-% handles.PK.Calculate(handles.i);
-  plot_graphs(handles);
-
-
+    handles.PK.sm(handles.i:end)=input;
+    handles.PK.Filter(handles.i);
+    handles.PK.CalculateParameters(handles.i);
+    plot_graphs(handles);
+    
+    
 catch
     set(handles.smooth_length,'string',num2str(old))
     handles.PK.sm(handles.i:end)=old;
     handles.PK.Filter(handles.i);
-
     
-    end
+    
+end
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
@@ -208,19 +206,19 @@ function prop_Callback(hObject, eventdata, handles)
 input = str2double(get(hObject,'string'));
 old=handles.PK.prop(handles.i);
 try
-
-handles.PK.prop(handles.i:end)=input;
-handles.PK.Filter(handles.i);
-handles.PK.CalculateParameters(handles.i);
-
-plot_graphs(handles);
-
+    
+    handles.PK.prop(handles.i:end)=input;
+    handles.PK.Filter(handles.i);
+    handles.PK.CalculateParameters(handles.i);
+    
+    plot_graphs(handles);
+    
 catch
-   handles.PK.prop(handles.i:end)=old;
-   set(handles.prop,'string',old);
-   handles.PK.Filter(handles.i);
-
-   
+    handles.PK.prop(handles.i:end)=old;
+    set(handles.prop,'string',old);
+    handles.PK.Filter(handles.i);
+    
+    
 end
 
 
@@ -240,7 +238,7 @@ end
 
 
 function handles=plot_graphs(handles)
-    %for plots
+%for plots
 pos=handles.PK.posper(:,:,handles.i);
 M=handles.PK.Mper(:,:,handles.i);
 

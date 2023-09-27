@@ -1,11 +1,18 @@
 
 clc
 clear
+close all;
 folder='/data1/thoman/ownCloud/flux_calcique/';
     %% load data
-    [file,rough_data_foldername]=uigetfile([folder,'*.xls*']);
+    [file,rough_data_foldername]=uigetfile([folder,'*.*']);
     rough_data_pathname=[rough_data_foldername, file];
-    matrix_rough_data=xlsread(rough_data_pathname);
+
+    tutu=readtable(rough_data_pathname,'Delimiter',';');
+    for ii=1:size(tutu,2)
+        titi(1:size(tutu,1)-2,ii)=str2double(strrep(tutu{3:end,ii},',','.'));
+      
+    end
+    matrix_rough_data=readtable(rough_data_pathname);
     
 
 %% param 
@@ -15,7 +22,7 @@ folder='/data1/thoman/ownCloud/flux_calcique/';
 
 %%
 close all
-results_foldername=[rough_data_foldername,filesep,'Results',filesep];
+results_foldername=[rough_data_foldername,filesep,'Results_',file(1:end-5), filesep];
 if ~exist(results_foldername,'file')
     mkdir(results_foldername);
 end
@@ -36,8 +43,9 @@ end
 
     
 
-    results_pathname=[results_foldername filesep 'Results' file(1:end-5)','.xlsx'];
+    results_pathname=[results_foldername filesep 'Results_' file(1:end-5),'.xlsx'];
+    save([results_foldername filesep 'Results_' file(1:end-5),'.mat'],'PK');
     PK.Save(results_pathname);
 
 
-close all;
+

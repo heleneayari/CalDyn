@@ -8,120 +8,6 @@ classdef AnalysisPeaks < handle
         vector_filtering_polynomial_order
         vector_filtering_frame_length
         matrix_filtered_fluorescences
-        vector_threshold_peaks_detection
-        vector_number_peaks
-        vector_number_valleys
-        matrix_time_peaks
-        matrix_time_valleys
-        matrix_fluorescences_peaks
-        matrix_fluorescences_valleys
-        vector_number_complete_peaks
-        vector_number_complete_valleys
-        matrix_time_complete_peaks
-        matrix_time_complete_valleys
-        matrix_fluorescences_complete_peaks
-        matrix_fluorescences_complete_valleys
-        matrix_left_durations_complete_peaks
-        matrix_right_durations_complete_peaks
-        matrix_left_amplitudes_complete_peaks
-        matrix_left_normalized_complete_peaks
-        matrix_right_amplitudes_complete_peaks
-        matrix_right_normalized_amplitudes_complete_peaks
-        matrix_left_velocities_complete_peaks
-        matrix_right_velocities_complete_peaks
-        vector_frequency_complete_peaks
-        vector_frequency_complete_valleys
-        matrix_effective_areas_complete_peaks
-        vector_maximum_left_amplitude_complete_peaks
-        vector_maximum_left_normalized_amplitude_complete_peaks
-        vector_maximum_right_amplitude_complete_peaks
-        vector_maximum_right_normalized_amplitude_complete_peaks
-        vector_threshold_small_medium_peaks
-        vector_threshold_medium_large_peaks
-        vector_number_small_complete_peaks
-        vector_frequency_small_complete_peaks
-        matrix_numbers_small_complete_peaks
-        matrix_left_durations_small_complete_peaks
-        matrix_right_durations_small_complete_peaks
-        matrix_left_amplitudes_small_complete_peaks
-        matrix_left_normalized_amplitudes_small_complete_peaks
-        matrix_right_amplitudes_small_complete_peaks
-        matrix_right_normalized_amplitudes_small_complete_peaks
-        matrix_left_velocities_small_complete_peaks
-        matrix_right_velocities_small_complete_peaks
-        matrix_areas_small_complete_peaks
-        vector_number_medium_complete_peaks
-        vector_frequency_medium_complete_peaks
-        matrix_numbers_medium_complete_peaks
-        matrix_left_durations_medium_complete_peaks
-        matrix_right_durations_medium_complete_peaks
-        matrix_left_amplitudes_medium_complete_peaks
-        matrix_left_normalized_amplitudes_medium_complete_peaks
-        matrix_right_amplitudes_medium_complete_peaks
-        matrix_right_normalized_amplitudes_medium_complete_peaks
-        matrix_left_velocities_medium_complete_peaks
-        matrix_right_velocities_medium_complete_peaks
-        matrix_areas_medium_complete_peaks
-        vector_number_large_complete_peaks
-        vector_frequency_large_complete_peaks
-        matrix_numbers_large_complete_peaks
-        matrix_left_durations_large_complete_peaks
-        matrix_right_durations_large_complete_peaks
-        matrix_left_amplitudes_large_complete_peaks
-        matrix_left_normalized_amplitudes_large_complete_peaks
-        matrix_right_amplitudes_large_complete_peaks
-        matrix_right_normalized_amplitudes_large_complete_peaks
-        matrix_left_velocities_large_complete_peaks
-        matrix_right_velocities_large_complete_peaks
-        matrix_areas_large_complete_peaks
-        vector_fluorescences_peaks
-        vector_time_peaks
-        vector_fluorescences_valleys
-        vector_time_valleys
-        vector_time_complete_peaks
-        vector_time_complete_valleys
-        vector_fluorescences_complete_peaks
-        vector_fluorescences_complete_valleys
-        vector_left_durations_complete_peaks
-        vector_right_durations_complete_peaks
-        vector_left_amplitudes_complete_peaks
-        vector_left_normalized_amplitudes_complete_peaks
-        vector_right_amplitudes_complete_peaks
-        vector_right_normalized_amplitudes_complete_peaks
-        vector_left_velocities_complete_peaks
-        vector_right_velocities_complete_peaks
-        vector_numbers_small_complete_peaks
-        vector_left_durations_small_complete_peaks
-        vector_right_durations_small_complete_peaks
-        vector_left_amplitudes_small_complete_peaks
-        vector_left_normalized_amplitudes_small_complete_peaks
-        vector_right_amplitudes_small_complete_peaks
-        vector_right_normalized_amplitudes_small_complete_peaks
-        vector_left_velocities_small_complete_peaks
-        vector_right_velocities_small_complete_peaks
-        vector_areas_small_complete_peaks
-        vector_numbers_medium_complete_peaks
-        vector_left_durations_medium_complete_peaks
-        vector_right_durations_medium_complete_peaks
-        vector_left_amplitudes_medium_complete_peaks
-        vector_left_normalized_amplitudes_medium_complete_peaks
-        vector_right_amplitudes_medium_complete_peaks
-        vector_right_normalized_amplitudes_medium_complete_peaks
-        vector_left_velocities_medium_complete_peaks
-        vector_right_velocities_medium_complete_peaks
-        vector_effective_areas_complete_peaks
-        vector_areas_medium_complete_peaks
-        vector_numbers_large_complete_peaks
-        vector_left_durations_large_complete_peaks
-        vector_right_durations_large_complete_peaks
-        vector_left_amplitudes_large_complete_peaks
-        vector_left_normalized_amplitudes_large_complete_peaks
-        vector_right_amplitudes_large_complete_peaks
-        vector_right_normalized_amplitudes_large_complete_peaks
-        vector_left_velocities_large_complete_peaks
-        vector_right_velocities_large_complete_peaks
-        vector_total_areas_complete_peaks
-        vector_areas_large_complete_peaks
         sm
         prop
         PixelSize
@@ -168,7 +54,7 @@ classdef AnalysisPeaks < handle
             addOptional(p, 'Smoothness', 200);
             addOptional(p, 'proportion', 0.1);
             parse(p, varargin{:});
-            pkh=p.Results.pkhgt;
+
             pol_length=p.Results.Pol_length;
             sm=p.Results.Smoothness;
             PK.ltab=10000;
@@ -188,72 +74,7 @@ classdef AnalysisPeaks < handle
             PK.matrix_filtered_fluorescences=zeros(PK.number_acquisitions,PK.number_cells);
             PK.smooth_signal=zeros(PK.number_acquisitions,PK.number_cells);
             PK.dd2=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.vector_threshold_peaks_detection=pkh*ones(1,PK.number_cells);
-            PK.vector_number_peaks=zeros(1,PK.number_cells);
-            PK.vector_number_valleys=zeros(1,PK.number_cells);
-            PK.matrix_time_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_time_valleys=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_fluorescences_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_fluorescences_valleys=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.vector_number_complete_peaks=zeros(1,PK.number_cells);
-            PK.vector_number_complete_valleys=zeros(1,PK.number_cells);
-            PK.matrix_time_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_time_complete_valleys=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_fluorescences_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_fluorescences_complete_valleys=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_left_durations_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_right_durations_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_left_amplitudes_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_left_normalized_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_right_amplitudes_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_right_normalized_amplitudes_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_left_velocities_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_right_velocities_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.vector_frequency_complete_peaks=zeros(1,PK.number_cells);
-            PK.vector_frequency_complete_valleys=zeros(1,PK.number_cells);
-            PK.matrix_effective_areas_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.vector_maximum_left_amplitude_complete_peaks=zeros(1,PK.number_cells);
-            PK.vector_maximum_left_normalized_amplitude_complete_peaks=zeros(1,PK.number_cells);
-            PK.vector_maximum_right_amplitude_complete_peaks=zeros(1,PK.number_cells);
-            PK.vector_maximum_right_normalized_amplitude_complete_peaks=zeros(1,PK.number_cells);
-            PK.vector_threshold_small_medium_peaks=0.2*ones(1,PK.number_cells);
-            PK.vector_threshold_medium_large_peaks=0.5*ones(1,PK.number_cells);
-            PK.vector_number_small_complete_peaks=zeros(1,PK.number_cells);
-            PK.vector_frequency_small_complete_peaks=zeros(1,PK.number_cells);
-            PK.matrix_numbers_small_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_left_durations_small_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_right_durations_small_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_left_amplitudes_small_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_left_normalized_amplitudes_small_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_right_amplitudes_small_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_right_normalized_amplitudes_small_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_left_velocities_small_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_right_velocities_small_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_areas_small_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.vector_number_medium_complete_peaks=zeros(1,PK.number_cells);
-            PK.vector_frequency_medium_complete_peaks=zeros(1,PK.number_cells);
-            PK.matrix_numbers_medium_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_left_durations_medium_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_right_durations_medium_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_left_amplitudes_medium_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_left_normalized_amplitudes_medium_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_right_amplitudes_medium_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_right_normalized_amplitudes_medium_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_left_velocities_medium_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_right_velocities_medium_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_areas_medium_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.vector_number_large_complete_peaks=zeros(1,PK.number_cells); %%%%%%
-            PK.vector_frequency_large_complete_peaks=zeros(1,PK.number_cells); %%%%%%
-            PK.matrix_numbers_large_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_left_durations_large_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_right_durations_large_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_left_amplitudes_large_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_left_normalized_amplitudes_large_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_right_amplitudes_large_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_right_normalized_amplitudes_large_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_left_velocities_large_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_right_velocities_large_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
-            PK.matrix_areas_large_complete_peaks=zeros(PK.number_acquisitions,PK.number_cells);
+
             
             PK.sm=sm*ones(1,PK.number_cells);
             PK.prop=prop*ones(1,PK.number_cells);
@@ -294,219 +115,8 @@ classdef AnalysisPeaks < handle
           %  PK.matrix_filtered_fluorescences(:,i)=PK.matrix_rough_fluorescences(:,i);
         end
         
-        function PK=Thresh(PK,varargin)
-            i=varargin{1};
-     
-            [PK.vector_fluorescences_peaks,PK.vector_time_peaks]=findpeaks(PK.matrix_filtered_fluorescences(:,i),PK.vector_time,'MinPeakProminence',PK.vector_threshold_peaks_detection(i));
-            [PK.vector_fluorescences_valleys,PK.vector_time_valleys]=findpeaks(-PK.matrix_filtered_fluorescences(:,i),PK.vector_time,'MinPeakProminence',PK.vector_threshold_peaks_detection(i));
-            if length(PK.vector_time_peaks)==1 && isempty(PK.vector_time_valleys)
-                PK.vector_fluorescences_valleys(1,1)=max(-PK.matrix_filtered_fluorescences(1:find(PK.vector_time==PK.vector_time_peaks),1));
-                PK.vector_time_valleys(1,1)=PK.vector_time(-PK.matrix_filtered_fluorescences(:,i)==PK.vector_fluorescences_valleys(1,1));
-                PK.vector_fluorescences_valleys(2,1)=max(-PK.matrix_filtered_fluorescences(find(PK.vector_time==PK.vector_time_peaks):length(PK.vector_time),1));
-                PK.vector_time_valleys(2,1)=PK.vector_time(-PK.matrix_filtered_fluorescences(:,i)==PK.vector_fluorescences_valleys(2,1));
-            end
-            PK.vector_fluorescences_valleys=-PK.vector_fluorescences_valleys; % in AU
-            PK.vector_number_peaks(i)=length(PK.vector_time_peaks);
-            PK.vector_number_valleys(i)=length(PK.vector_time_valleys);
-            PK.matrix_time_peaks(1:PK.vector_number_peaks(i),i)=PK.vector_time_peaks; % in s
-            PK.matrix_time_valleys(1:PK.vector_number_valleys(i),i)=PK.vector_time_valleys; % in s
-            PK.matrix_fluorescences_peaks(1:PK.vector_number_peaks(i),i)=PK.vector_fluorescences_peaks; % in AU
-            PK.matrix_fluorescences_valleys(1:PK.vector_number_valleys(i),i)=PK.vector_fluorescences_valleys; % in AU
-            
-%             close(figure(2));
-%             figure(2)
-%             plot(PK.vector_time,PK.matrix_filtered_fluorescences(:,i),'-k');
-%             grid on
-%             title('Filtered signal','interpreter','latex')
-%             xlabel('Time (s)','interpreter','latex');
-%             ylabel('Fluorescence (AU)','interpreter','latex');
-%             hold on
-%             plot(PK.vector_time_peaks,PK.vector_fluorescences_peaks,'+r');
-%             hold on
-%             plot(PK.vector_time_valleys,PK.vector_fluorescences_valleys,'xb');
-%             legend('Experimental data (filtered)','Peaks','Valleys');
-            
-        end
-        function PK=Calculate(PK,varargin)
-            i=varargin{1};
 
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            if PK.vector_time_valleys(1)<PK.vector_time_peaks(1)
-                if PK.vector_number_peaks(i)<PK.vector_number_valleys(i)
-                    PK.vector_number_complete_peaks(i)=PK.vector_number_peaks(i);
-                    PK.vector_number_complete_valleys(i)=PK.vector_number_valleys(i);
-                    PK.vector_time_complete_peaks=PK.vector_time_peaks; % in s
-                    PK.vector_time_complete_valleys=PK.vector_time_valleys; % in s
-                    PK.vector_fluorescences_complete_peaks=PK.vector_fluorescences_peaks; % in AU
-                    PK.vector_fluorescences_complete_valleys=PK.vector_fluorescences_valleys; % in AU
-                else
-                    PK.vector_number_complete_peaks(i)=PK.vector_number_peaks(i)-1;
-                    PK.vector_number_complete_valleys(i)=PK.vector_number_valleys(i);
-                    PK.vector_time_complete_peaks=PK.vector_time_peaks(1:PK.vector_number_complete_peaks(i)); % in s
-                    PK.vector_time_complete_valleys=PK.vector_time_valleys; % in s
-                    PK.vector_fluorescences_complete_peaks=PK.vector_fluorescences_peaks(1:PK.vector_number_complete_peaks(i)); % in AU
-                    PK.vector_fluorescences_complete_valleys=PK.vector_fluorescences_valleys; % in AU
-                end
-            else
-                if PK.vector_number_peaks(i)==PK.vector_number_valleys(i)
-                    PK.vector_number_complete_peaks(i)=PK.vector_number_peaks(i)-1;
-                    PK.vector_number_complete_valleys(i)=PK.vector_number_valleys(i);
-                    PK.vector_time_complete_peaks=PK.vector_time_peaks(2:(PK.vector_number_complete_peaks(i)+1)); % in s
-                    PK.vector_time_complete_valleys=PK.vector_time_valleys; % in s
-                    PK.vector_fluorescences_complete_peaks=PK.vector_fluorescences_peaks(2:(PK.vector_number_complete_peaks(i)+1)); % in AU
-                    PK.vector_fluorescences_complete_valleys=PK.vector_fluorescences_valleys; % in AU
-                else
-                    PK.vector_number_complete_peaks(i)=PK.vector_number_peaks(i)-2;
-                    PK.vector_number_complete_valleys(i)=PK.vector_number_valleys(i);
-                    PK.vector_time_complete_peaks=PK.vector_time_peaks(2:(PK.vector_number_complete_peaks(i)+1)); % in s
-                    PK.vector_time_complete_valleys=PK.vector_time_valleys; % in s
-                    PK.vector_fluorescences_complete_peaks=PK.vector_fluorescences_peaks(2:(PK.vector_number_complete_peaks(i)+1)); % in AU
-                    PK.vector_fluorescences_complete_valleys=PK.vector_fluorescences_valleys; % in AU
-                end
-            end
-            PK.vector_left_durations_complete_peaks=PK.vector_time_complete_peaks-PK.vector_time_complete_valleys(1:(PK.vector_number_complete_valleys(i)-1)); % in s
-            PK.vector_right_durations_complete_peaks=-(PK.vector_time_complete_peaks-PK.vector_time_complete_valleys(2:PK.vector_number_complete_valleys(i))); % in s
-            PK.vector_left_amplitudes_complete_peaks=PK.vector_fluorescences_complete_peaks-PK.vector_fluorescences_complete_valleys(1:(PK.vector_number_complete_valleys(i)-1)); % in AU
-            PK.vector_left_normalized_amplitudes_complete_peaks=PK.vector_left_amplitudes_complete_peaks./PK.vector_fluorescences_complete_valleys(1:(PK.vector_number_complete_valleys(i)-1));
-            PK.vector_right_amplitudes_complete_peaks=PK.vector_fluorescences_complete_peaks-PK.vector_fluorescences_complete_valleys(2:PK.vector_number_complete_valleys(i)); % in AU
-            PK.vector_right_normalized_amplitudes_complete_peaks=PK.vector_right_amplitudes_complete_peaks./PK.vector_fluorescences_complete_valleys(2:PK.vector_number_complete_valleys(i));
-            PK.vector_left_velocities_complete_peaks=PK.vector_left_amplitudes_complete_peaks./PK.vector_left_durations_complete_peaks; % in AU/s
-            PK.vector_right_velocities_complete_peaks=PK.vector_right_amplitudes_complete_peaks./PK.vector_right_durations_complete_peaks; % in AU/s
-            PK.matrix_time_complete_peaks(1:PK.vector_number_complete_peaks(i),i)=PK.vector_time_complete_peaks; % in s
-            PK.matrix_time_complete_valleys(1:PK.vector_number_complete_valleys(i),i)=PK.vector_time_complete_valleys; % in s
-            PK.matrix_fluorescences_complete_peaks(1:PK.vector_number_complete_peaks(i),i)=PK.vector_fluorescences_complete_peaks; % in AU
-            PK.matrix_fluorescences_complete_valleys(1:PK.vector_number_complete_valleys(i),i)=PK.vector_fluorescences_complete_valleys; % in AU
-            PK.matrix_left_durations_complete_peaks(1:PK.vector_number_complete_peaks(i),i)=PK.vector_left_durations_complete_peaks; % in s
-            PK.matrix_right_durations_complete_peaks(1:PK.vector_number_complete_peaks(i),i)=PK.vector_right_durations_complete_peaks; % in s
-            PK.matrix_left_amplitudes_complete_peaks(1:PK.vector_number_complete_peaks(i),i)=PK.vector_left_amplitudes_complete_peaks; % in AU
-            PK.matrix_left_normalized_complete_peaks(1:PK.vector_number_complete_peaks(i),i)=PK.vector_left_normalized_amplitudes_complete_peaks;
-            PK.matrix_right_amplitudes_complete_peaks(1:PK.vector_number_complete_peaks(i),i)=PK.vector_right_amplitudes_complete_peaks; % in AU
-            PK.matrix_right_normalized_amplitudes_complete_peaks(1:PK.vector_number_complete_peaks(i),i)=PK.vector_right_normalized_amplitudes_complete_peaks;
-            PK.matrix_left_velocities_complete_peaks(1:PK.vector_number_complete_peaks(i),i)=PK.vector_left_velocities_complete_peaks; % in AU/s
-            PK.matrix_right_velocities_complete_peaks(1:PK.vector_number_complete_peaks(i),i)=PK.vector_right_velocities_complete_peaks; % in AU/s
-            PK.vector_frequency_complete_peaks(i)=PK.vector_number_complete_peaks(i)/max(PK.vector_time); % in pk/s
-            PK.vector_frequency_complete_valleys(i)=PK.vector_number_complete_valleys(i)/max(PK.vector_time); % in pk/s
-            
-            PK.vector_total_areas_complete_peaks=zeros(1,PK.vector_number_complete_peaks(i)); % in AU*s
-            PK.vector_effective_areas_complete_peaks=zeros(1,PK.vector_number_complete_peaks(i)); % in AU*
-            for m=1:PK.vector_number_complete_peaks(i)
-                number_start_peak=find(PK.vector_time == PK.vector_time_complete_valleys(m));
-                number_end_peak=find(PK.vector_time == PK.vector_time_complete_valleys(m+1));
-                position=number_start_peak;
-                local_area=0; % in AU*s
-                while position<number_end_peak
-                    local_area=(PK.matrix_filtered_fluorescences(position+1,i)+PK.matrix_filtered_fluorescences(position,i))*(PK.vector_time(position+1)-PK.vector_time(position))/2; % in AU*s
-                    PK.vector_total_areas_complete_peaks(m)=PK.vector_total_areas_complete_peaks(m)+local_area; % in AU*s
-                    position=position+1;
-                end
-                PK.vector_effective_areas_complete_peaks(m)=PK.vector_total_areas_complete_peaks(m)-(PK.matrix_filtered_fluorescences(number_end_peak,i)+PK.matrix_filtered_fluorescences(number_start_peak,i))*(PK.vector_time(number_end_peak)-PK.vector_time(number_start_peak))/2;
-            end
-            PK.matrix_effective_areas_complete_peaks(1:PK.vector_number_complete_peaks(i),i)=PK.vector_effective_areas_complete_peaks; % in AU*s
-            
-            PK.vector_maximum_left_amplitude_complete_peaks(i)=max(PK.vector_left_amplitudes_complete_peaks); % in AU
-            PK.vector_maximum_left_normalized_amplitude_complete_peaks(i)=max(PK.vector_left_normalized_amplitudes_complete_peaks);
-            PK.vector_maximum_right_amplitude_complete_peaks(i)=max(PK.vector_right_amplitudes_complete_peaks); % in AU
-            PK.vector_maximum_right_normalized_amplitude_complete_peaks(i)=max(PK.vector_right_normalized_amplitudes_complete_peaks);
-            %             k=1;
-            %             while k==1
-            %                 PK.vector_threshold_small_medium_peaks(i)=str2num(input('Enter the threshold of differentiation between small and medium peaks (between 0 and 1): ', 's')); % in AU
-            %                 if PK.vector_threshold_small_medium_peaks(i)<=0 || PK.vector_threshold_small_medium_peaks(i)>=1
-            %                     disp('The threshold of differentiation between small and medium peaks should be between 0 and 1');
-            %                     n=2;
-            %                 else
-            %                     PK.vector_threshold_medium_large_peaks(i)=str2num(input('Enter the threshold of differentiation between medium and large peaks (between 0 and 1): ', 's')); % in AU
-            %                     if PK.vector_threshold_medium_large_peaks(i)<=0 || PK.vector_threshold_medium_large_peaks(i)>=1 || PK.vector_threshold_small_medium_peaks(i)>=PK.vector_threshold_medium_large_peaks(i)
-            %                         disp('The threshold of differentiation between medium and large peaks should be between 0 and 1 and greater than that between small and medium peaks');
-            %                     else
-            %                         k=2;
-            %                     end
-            %                 end
-            %             end
-            
-            PK.vector_numbers_small_complete_peaks=find(PK.vector_left_amplitudes_complete_peaks<(PK.vector_threshold_small_medium_peaks(i)*PK.vector_maximum_left_amplitude_complete_peaks(i)));
-            PK.vector_number_small_complete_peaks(i)=length(PK.vector_numbers_small_complete_peaks);
-            PK.vector_left_durations_small_complete_peaks=PK.vector_left_durations_complete_peaks(PK.vector_numbers_small_complete_peaks); % in s
-            PK.vector_right_durations_small_complete_peaks=PK.vector_right_durations_complete_peaks(PK.vector_numbers_small_complete_peaks); % in s
-            PK.vector_left_amplitudes_small_complete_peaks=PK.vector_left_amplitudes_complete_peaks(PK.vector_numbers_small_complete_peaks); % in AU
-            PK.vector_left_normalized_amplitudes_small_complete_peaks=PK.vector_left_normalized_amplitudes_complete_peaks(PK.vector_numbers_small_complete_peaks);
-            PK.vector_right_amplitudes_small_complete_peaks=PK.vector_right_amplitudes_complete_peaks(PK.vector_numbers_small_complete_peaks); % in AU
-            PK.vector_right_normalized_amplitudes_small_complete_peaks=PK.vector_right_normalized_amplitudes_complete_peaks(PK.vector_numbers_small_complete_peaks);
-            PK.vector_left_velocities_small_complete_peaks=PK.vector_left_velocities_complete_peaks(PK.vector_numbers_small_complete_peaks); % in AU/s
-            PK.vector_right_velocities_small_complete_peaks=PK.vector_right_velocities_complete_peaks(PK.vector_numbers_small_complete_peaks); % in AU/s
-            PK.vector_areas_small_complete_peaks=PK.vector_effective_areas_complete_peaks(PK.vector_numbers_small_complete_peaks); % in AU*s
-            PK.vector_frequency_small_complete_peaks(i)=PK.vector_number_small_complete_peaks(i)/max(PK.vector_time); % in pk/s
-            PK.matrix_numbers_small_complete_peaks(1:PK.vector_number_small_complete_peaks(i),i)=PK.vector_numbers_small_complete_peaks;
-            PK.matrix_left_durations_small_complete_peaks(1:PK.vector_number_small_complete_peaks(i),i)=PK.vector_left_durations_small_complete_peaks; % in s
-            PK.matrix_right_durations_small_complete_peaks(1:PK.vector_number_small_complete_peaks(i),i)=PK.vector_right_durations_small_complete_peaks; % in s
-            PK.matrix_left_amplitudes_small_complete_peaks(1:PK.vector_number_small_complete_peaks(i),i)=PK.vector_left_amplitudes_small_complete_peaks; % in AU
-            PK.matrix_left_normalized_amplitudes_small_complete_peaks(1:PK.vector_number_small_complete_peaks(i),i)=PK.vector_left_normalized_amplitudes_small_complete_peaks;
-            PK.matrix_right_amplitudes_small_complete_peaks(1:PK.vector_number_small_complete_peaks(i),i)=PK.vector_right_amplitudes_small_complete_peaks; % in AU
-            PK.matrix_right_normalized_amplitudes_small_complete_peaks(1:PK.vector_number_small_complete_peaks(i),i)=PK.vector_right_normalized_amplitudes_small_complete_peaks;
-            PK.matrix_left_velocities_small_complete_peaks(1:PK.vector_number_small_complete_peaks(i),i)=PK.vector_left_velocities_small_complete_peaks; % in AU/s
-            PK.matrix_right_velocities_small_complete_peaks(1:PK.vector_number_small_complete_peaks(i),i)=PK.vector_right_velocities_small_complete_peaks; % in AU/s
-            PK.matrix_areas_small_complete_peaks(1:PK.vector_number_small_complete_peaks(i),i)=PK.vector_areas_small_complete_peaks; % in AU*s
-            
-            PK.vector_numbers_medium_complete_peaks=find(PK.vector_left_amplitudes_complete_peaks>=(PK.vector_threshold_small_medium_peaks(i)*PK.vector_maximum_left_amplitude_complete_peaks(i)) & PK.vector_left_amplitudes_complete_peaks<(PK.vector_threshold_medium_large_peaks(i)*PK.vector_maximum_left_amplitude_complete_peaks(i)));
-            PK.vector_number_medium_complete_peaks(i)=length(PK.vector_numbers_medium_complete_peaks);
-            PK.vector_left_durations_medium_complete_peaks=PK.vector_left_durations_complete_peaks(PK.vector_numbers_medium_complete_peaks); % in s
-            PK.vector_right_durations_medium_complete_peaks=PK.vector_right_durations_complete_peaks(PK.vector_numbers_medium_complete_peaks); % in s
-            PK.vector_left_amplitudes_medium_complete_peaks=PK.vector_left_amplitudes_complete_peaks(PK.vector_numbers_medium_complete_peaks); % in AU
-            PK.vector_left_normalized_amplitudes_medium_complete_peaks=PK.vector_left_normalized_amplitudes_complete_peaks(PK.vector_numbers_medium_complete_peaks);
-            PK.vector_right_amplitudes_medium_complete_peaks=PK.vector_right_amplitudes_complete_peaks(PK.vector_numbers_medium_complete_peaks); % in AU
-            PK.vector_right_normalized_amplitudes_medium_complete_peaks=PK.vector_right_normalized_amplitudes_complete_peaks(PK.vector_numbers_medium_complete_peaks);
-            PK.vector_left_velocities_medium_complete_peaks=PK.vector_left_velocities_complete_peaks(PK.vector_numbers_medium_complete_peaks); % in AU/s
-            PK.vector_right_velocities_medium_complete_peaks=PK.vector_right_velocities_complete_peaks(PK.vector_numbers_medium_complete_peaks); % in AU/s
-            PK.vector_areas_medium_complete_peaks=PK.vector_effective_areas_complete_peaks(PK.vector_numbers_medium_complete_peaks); % in AU*s
-            PK.vector_frequency_medium_complete_peaks(i)=PK.vector_number_medium_complete_peaks(i)/max(PK.vector_time); % in pk/s
-            PK.matrix_numbers_medium_complete_peaks(1:PK.vector_number_medium_complete_peaks(i),i)=PK.vector_numbers_medium_complete_peaks;
-            PK.matrix_left_durations_medium_complete_peaks(1:PK.vector_number_medium_complete_peaks(i),i)=PK.vector_left_durations_medium_complete_peaks; % in s
-            PK.matrix_right_durations_medium_complete_peaks(1:PK.vector_number_medium_complete_peaks(i),i)=PK.vector_right_durations_medium_complete_peaks; % in s
-            PK.matrix_left_amplitudes_medium_complete_peaks(1:PK.vector_number_medium_complete_peaks(i),i)=PK.vector_left_amplitudes_medium_complete_peaks; % in AU
-            PK.matrix_left_normalized_amplitudes_medium_complete_peaks(1:PK.vector_number_medium_complete_peaks(i),i)=PK.vector_left_normalized_amplitudes_medium_complete_peaks;
-            PK.matrix_right_amplitudes_medium_complete_peaks(1:PK.vector_number_medium_complete_peaks(i),i)=PK.vector_right_amplitudes_medium_complete_peaks; % in AU
-            PK.matrix_right_normalized_amplitudes_medium_complete_peaks(1:PK.vector_number_medium_complete_peaks(i),i)=PK.vector_right_normalized_amplitudes_medium_complete_peaks;
-            PK.matrix_left_velocities_medium_complete_peaks(1:PK.vector_number_medium_complete_peaks(i),i)=PK.vector_left_velocities_medium_complete_peaks; % in AU/s
-            PK.matrix_right_velocities_medium_complete_peaks(1:PK.vector_number_medium_complete_peaks(i),i)=PK.vector_right_velocities_medium_complete_peaks; % in AU/s
-            PK.matrix_areas_medium_complete_peaks(1:PK.vector_number_medium_complete_peaks(i),i)=PK.vector_areas_medium_complete_peaks; % in AU*s
-            
-            PK.vector_numbers_large_complete_peaks=find(PK.vector_left_amplitudes_complete_peaks>=(PK.vector_threshold_medium_large_peaks(i)*PK.vector_maximum_left_amplitude_complete_peaks(i)));
-            PK.vector_number_large_complete_peaks(i)=length(PK.vector_numbers_large_complete_peaks);
-            PK.vector_left_durations_large_complete_peaks=PK.vector_left_durations_complete_peaks(PK.vector_numbers_large_complete_peaks); % in s
-            PK.vector_right_durations_large_complete_peaks=PK.vector_right_durations_complete_peaks(PK.vector_numbers_large_complete_peaks); % in s
-            PK.vector_left_amplitudes_large_complete_peaks=PK.vector_left_amplitudes_complete_peaks(PK.vector_numbers_large_complete_peaks); % in AU
-            PK.vector_left_normalized_amplitudes_large_complete_peaks=PK.vector_left_normalized_amplitudes_complete_peaks(PK.vector_numbers_large_complete_peaks);
-            PK.vector_right_amplitudes_large_complete_peaks=PK.vector_right_amplitudes_complete_peaks(PK.vector_numbers_large_complete_peaks); % in AU
-            PK.vector_right_normalized_amplitudes_large_complete_peaks=PK.vector_right_normalized_amplitudes_complete_peaks(PK.vector_numbers_large_complete_peaks);
-            PK.vector_left_velocities_large_complete_peaks=PK.vector_left_velocities_complete_peaks(PK.vector_numbers_large_complete_peaks); % in AU/s
-            PK.vector_right_velocities_large_complete_peaks=PK.vector_right_velocities_complete_peaks(PK.vector_numbers_large_complete_peaks); % in AU/s
-            PK.vector_areas_large_complete_peaks=PK.vector_effective_areas_complete_peaks(PK.vector_numbers_large_complete_peaks); % in AU*s
-            PK.vector_frequency_large_complete_peaks(i)=PK.vector_number_large_complete_peaks(i)/max(PK.vector_time); % in pk/s
-            PK.matrix_numbers_large_complete_peaks(1:PK.vector_number_large_complete_peaks(i),i)=PK.vector_numbers_large_complete_peaks;
-            PK.matrix_left_durations_large_complete_peaks(1:PK.vector_number_large_complete_peaks(i),i)=PK.vector_left_durations_large_complete_peaks; % in s
-            PK.matrix_right_durations_large_complete_peaks(1:PK.vector_number_large_complete_peaks(i),i)=PK.vector_right_durations_large_complete_peaks; % in s
-            PK.matrix_left_amplitudes_large_complete_peaks(1:PK.vector_number_large_complete_peaks(i),i)=PK.vector_left_amplitudes_large_complete_peaks; % in AU
-            PK.matrix_left_normalized_amplitudes_large_complete_peaks(1:PK.vector_number_large_complete_peaks(i),i)=PK.vector_left_normalized_amplitudes_large_complete_peaks;
-            PK.matrix_right_amplitudes_large_complete_peaks(1:PK.vector_number_large_complete_peaks(i),i)=PK.vector_right_amplitudes_large_complete_peaks; % in AU
-            PK.matrix_right_normalized_amplitudes_large_complete_peaks(1:PK.vector_number_large_complete_peaks(i),i)=PK.vector_right_normalized_amplitudes_large_complete_peaks;
-            PK.matrix_left_velocities_large_complete_peaks(1:PK.vector_number_large_complete_peaks(i),i)=PK.vector_left_velocities_large_complete_peaks; % in AU/s
-            PK.matrix_right_velocities_large_complete_peaks(1:PK.vector_number_large_complete_peaks(i),i)=PK.vector_right_velocities_large_complete_peaks; % in AU/s
-            PK.matrix_areas_large_complete_peaks(1:PK.vector_number_large_complete_peaks(i),i)=PK.vector_areas_large_complete_peaks; % in AU*s
-            
-            
-        end
+  
         
         function PK = CalculateParameters(PK,varargin)
             p=inputParser;
@@ -539,6 +149,7 @@ classdef AnalysisPeaks < handle
 
             PK.Mper(:,:,i)=nan*ones(PK.ltab,5,1);
             PK.posper(:,:,i)=nan*ones(PK.ltab,5,1);
+          
             
             
            
@@ -652,8 +263,10 @@ classdef AnalysisPeaks < handle
                             ll(ii)=ll(ii)+locc(ii)-1;
                             
                             [mmvg(count),vvg(ii)]=min(ss(locr(pl-1):locc(ii)));
+%                              [mmvg(count),vvg(ii)]=min(Signal(locr(pl-1):locc(ii)));
                             vvg(ii)=vvg(ii)+locr(pl-1)-1;
                             [mmvd(count),vvd(ii)]=min(ss(locr(pl):locc(ii+1)));
+%                             [mmvd(count),vvd(ii)]=min(Signal(locr(pl):locc(ii+1)));
                             vvd(ii)=vvd(ii)+locr(pl)-1;
                                                            
                             
@@ -739,74 +352,12 @@ classdef AnalysisPeaks < handle
         
         
         
+     
         
         
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+    
         function PK=Save(PK,varargin)
-            results_pathname=varargin{1};
-            
-            
-            
-            for x=1:PK.number_cells
-                
-                clear Tf
-                Tf= array2table(NaN*ones(PK.ltab,16));
-                Tf.Properties.VariableNames = {'peak_time', 'freq_small_Ca_events',...
-                    'freq_medium_Ca_events','frequency_of_Ca_transients','ascending_time','decay_time','decay_time_90','decay_time_70','decay_time_50','decay_time_30','decay_time_20',...
-                    'abs_amp_of_Ca_trans','abs_amp_max','norm_amp_of_Ca_trans','norm_amp_max','velocity'};
-                
-                
-                
-                val=PK.matrix_time_complete_peaks(PK.matrix_time_complete_peaks(:,x)>0,x);
-                Tf.peak_time(1:length(val))=val;
-                val=PK.vector_frequency_small_complete_peaks(:,x);
-                Tf.freq_small_Ca_events(1:length(val))=val;
-                val=PK.vector_frequency_medium_complete_peaks(:,x);
-                Tf.freq_medium_Ca_events(1:length(val))=val;
-                val=PK.vector_frequency_large_complete_peaks(:,x);
-                Tf.frequency_of_Ca_transients(1:length(val))=val;
-                val=PK.matrix_left_durations_large_complete_peaks(PK.matrix_left_durations_large_complete_peaks(:,x)>0,x);
-                Tf.ascending_time(1:length(val))=val;
-                val=PK.matrix_right_durations_large_complete_peaks(PK.matrix_right_durations_large_complete_peaks(:,x)>0,x);
-                Tf.decay_time(1:length(val))=val;
-                val=0.9*Tf.decay_time;
-                Tf.decay_time_90(1:length(val))=val;
-                val=0.7*Tf.decay_time;
-                Tf.decay_time_70(1:length(val))=val;
-                val=0.5*Tf.decay_time;
-                Tf.decay_time_50(1:length(val))=val;
-                val=0.2*Tf.decay_time;
-                Tf.decay_time_20(1:length(val))=val;
-                val=PK.matrix_left_amplitudes_large_complete_peaks(PK.matrix_left_amplitudes_large_complete_peaks(:,x)>0,x);
-                Tf.abs_amp_of_Ca_trans(1:length(val))=val;
-                val=0.3*Tf.decay_time;
-                Tf.decay_time_30(1:length(val))=val;
-                val=PK.vector_maximum_left_amplitude_complete_peaks(:,x);
-                Tf.abs_amp_max(1:length(val))=val;
-                val=PK.matrix_left_normalized_amplitudes_large_complete_peaks(PK.matrix_left_normalized_amplitudes_large_complete_peaks(:,x)>0,x);
-                Tf.norm_amp_of_Ca_trans(1:length(val))=val;
-                val=PK.vector_maximum_left_normalized_amplitude_complete_peaks(:,x);
-                Tf.norm_amp_max(1:length(val))=val;
-                val=PK.matrix_left_velocities_large_complete_peaks(PK.matrix_left_velocities_large_complete_peaks(:,x)>0,x);
-                Tf.velocity(1:length(val))=val;
-                
-                writetable(Tf,results_pathname,'sheet',['cell' num2str(x)])
-                
-            end
-            
-        end
-        
-        function PK=SaveOne(PK,varargin)
             results_pathname=varargin{1};
             
         Tf= array2table(zeros(PK.number_cells,38));
@@ -857,16 +408,6 @@ classdef AnalysisPeaks < handle
             Tf.decay_time_90_std=nanstd(PK.posper(:,5)-PK.posM,1)';
             
             
-            
-            
-
-
-
- 
-
-
-
-%save([results_pathname,'myresult.mat'],'Tf')
 writetable(Tf,results_pathname,'WriteRowNames',true)           
             
         end

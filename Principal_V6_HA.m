@@ -4,9 +4,17 @@ clear
 close all;
 folder='/data1/thoman/ownCloud/flux_calcique/';
     %% load data
-    [file,rough_data_foldername]=uigetfile([folder,'*.xls*']);
+    [file,rough_data_foldername]=uigetfile([folder,'*.*']);
     rough_data_pathname=[rough_data_foldername, file];
-    matrix_rough_data=xlsread(rough_data_pathname);
+ if strcmp(file(end-2:end),'csv')
+    tutu=readtable(rough_data_pathname,'Delimiter',';');
+    for ii=1:size(tutu,2)
+        matrix_rough_data(1:size(tutu,1)-2,ii)=str2double(strrep(tutu{3:end,ii},',','.'));     
+    end
+ else
+     matrix_rough_data=xlsread(rough_data_pathname);
+ end
+
     
 
 %% param 
@@ -34,12 +42,12 @@ close all
 end
 
 %%
-clc
+
     
 
     results_pathname=[results_foldername filesep 'Results_' file(1:end-5),'.xlsx'];
     save([results_foldername filesep 'Results_' file(1:end-5),'.mat'],'PK');
-    PK.SaveOne(results_pathname);
+    PK.Save(results_pathname);
 
 
 
