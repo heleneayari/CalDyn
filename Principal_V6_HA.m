@@ -34,11 +34,12 @@ close all
 end
 
 %%
-
+clc
     
 
-    results_pathname=[results_foldername filesep 'Results' file(1:end-5),'.xlsx'];
-    PK.Save(results_pathname);
+    results_pathname=[results_foldername filesep 'Results_' file(1:end-5),'.xlsx'];
+    save([results_foldername filesep 'Results_' file(1:end-5),'.mat'],'PK');
+    PK.SaveOne(results_pathname);
 
 
 

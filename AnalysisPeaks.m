@@ -154,6 +154,7 @@ classdef AnalysisPeaks < handle
         ltab
         dd2
         smooth_signal
+ 
         
     end
     methods
@@ -675,6 +676,9 @@ classdef AnalysisPeaks < handle
                             PK.Taud(count,i)=(xmr(count)-xMc(count))/PK.framerate;
                             PK.Aire(count,i)=sum(Signal(max(1,round(xmc(count))):min(round(xmr(count)),length(Signal))));
                             PK.Taus(count,i)=(xmr(count)-xmc(count))/PK.framerate;
+
+                 
+                            
                             PK.pc(count,i)=maxc(ii)*PK.PixelSize*PK.framerate;
                             PK.pr(count,i)=minr(pl)*PK.PixelSize*PK.framerate;
                             PK.hr(count,i)=-minr(pl)*(xmr(count)-xMr(count))*PK.PixelSize;
@@ -727,36 +731,10 @@ classdef AnalysisPeaks < handle
 %             PK.locc(1:length(locc),i)=locc/PK.SamplingFrequency;
 %             PK.locr(1:length(locr),i)=locr/PK.SamplingFrequency;
             
+           
+
             
             
-%             PK.MedTauc = median(PK.Tauc);
-%             PK.StdTauc = std(PK.Tauc);
-%             PK.MedTaur = median(PK.Taur);
-%             PK.StdTaur = std(PK.Taur);
-%             PK.MedTaus = median(PK.Taus);
-%             PK.StdTaus = std(PK.Taus);
-%             PK.MedTausBaz = median(PK.TausBaz);
-%             PK.StdTausBaz = std(PK.TausBaz);
-%             PK.MedTaud = median(PK.Taud);
-%             PK.StdTaud = std(PK.Taud);
-%             PK.MedTaudBaz = median(PK.TaudBaz);
-%             PK.StdTaudBaz = std(PK.TaudBaz);
-%             PK.MedAire = median(PK.Aire);
-%             PK.StdAire = std(PK.Aire);
-%             PK.Medpc = median(PK.pc);
-%             PK.Stdpc = std(PK.pc);
-%             PK.Medpr = median(PK.pr);
-%             PK.Stdpr = std(PK.pr);
-%             PK.Medhr = median(PK.hr);
-%             PK.Stdhr = std(PK.hr);
-%             PK.Medhc = median(PK.hc);
-%             PK.Stdhc = std(PK.hc);
-%             PK.MedM = median(PK.M);
-%             PK.StdM = std(PK.M);
-%             PK.Medmmvg = median(PK.mmvg);
-%             PK.Stdmmvg = std(PK.mmvg);
-%             PK.Medmmvd = median(PK.mmvd);
-%             PK.Stdmmvd = std(PK.mmvd);
         end
         
         
@@ -829,6 +807,67 @@ classdef AnalysisPeaks < handle
         end
         
         function PK=SaveOne(PK,varargin)
+            results_pathname=varargin{1};
+            
+        Tf= array2table(zeros(PK.number_cells,38));
+        Tf.Properties.VariableNames = {'Period','Period_std','ascending_time','ascending_time_std','decay_time','decay_time_std',...
+    'decay_time_90','decay_time_90_std','decay_time_70','decay_time_70_std','decay_time_50','decay_time_50_std','decay_time_30','decay_time_30_std','decay_time_20','decay_time_20_std',...
+   'Tau_systole','Tau_systole_std','Baz_Tau_syst','Baz_Tau_syst_std','Tau_diast','Tau_diast_std','Baz_Tau_diast','Baz_Tau_diast_std','AUC','AUC_std','Pente_contraction','Pente_contraction_std','Pente_relax','Pente_relax_std',...
+     'abs_amp_contraction','abs_amp_contraction_std','abs_amp_relax','abs_amp_relax_std','amp_max','amp_max_std','min','min_std'};
+
+            MedT=nanmedian(diff(PK.posM,1,1),1);
+            TabMedT=repmat(MedT,PK.ltab,1);
+            Tf.Period=MedT';
+            Tf.Period_std=nanstd(diff(PK.posM,1,1),1)';           
+            Tf.ascending_time= nanmedian(PK.Tauc,1)';
+            Tf.ascending_time_std= nanstd(PK.Tauc,1)';
+            Tf.decay_time = nanmedian(PK.Taur,1)';
+            Tf.decay_time_std= nanstd(PK.Taur,1)';
+            Tf.Tau_systole = nanmedian(PK.Taus,1)';
+            Tf.Tau_systole_std= nanstd(PK.Taus,1)';
+            Tf.Baz_Tau_syst = nanmedian(PK.Taus./sqrt(TabMedT),1)';
+            Tf.Baz_Tau_syst_std = nanstd(PK.Taus./sqrt(TabMedT),1)';
+            Tf.Tau_diast = nanmedian(PK.Taud,1)';
+            Tf.Tau_diast_std = nanstd(PK.Taud,1)';
+            Tf.Baz_Tau_diast = nanmedian(PK.Taud./sqrt(TabMedT),1)';
+            Tf.Baz_Tau_diast_std = nanstd(PK.Taud./sqrt(TabMedT),1)';
+            Tf.AUC= nanmedian(PK.Aire,1)';
+            Tf.AUC_std = nanstd(PK.Aire,1)';
+            Tf.Pente_contraction = nanmedian(PK.pc,1)';
+            Tf.Pente_contraction_std = nanstd(PK.pc,1)';
+            Tf.Pente_relax= nanmedian(PK.pr,1)';
+            Tf.Pente_relax_std = nanstd(PK.pr,1)';
+            Tf.abs_amp_relax = nanmedian(PK.hr,1)';
+            Tf.abs_amp_relax_std = nanstd(PK.hr,1)';
+            Tf.abs_amp_contraction = nanmedian(PK.hc,1)';
+            Tf.abs_amp_contraction_std = nanstd(PK.hc,1)';
+            Tf.amp_max = nanmedian(PK.M,1)';
+            Tf.amp_max_std = nanstd(PK.M,1)';
+            Tf.min = nanmedian(PK.mmvg,1)';
+            Tf.min_std = nanstd(PK.mmvg,1)';
+            Tf.decay_time_20=nanmedian(PK.posper(:,1)-PK.posM,1)';
+            Tf.decay_time_20_std=nanstd(PK.posper(:,1)-PK.posM,1)';
+            Tf.decay_time_30=nanmedian(PK.posper(:,2)-PK.posM,1)';
+            Tf.decay_time_30_std=nanstd(PK.posper(:,2)-PK.posM,1)';
+            Tf.decay_time_50=nanmedian(PK.posper(:,3)-PK.posM,1)';
+            Tf.decay_time_50_std=nanstd(PK.posper(:,3)-PK.posM)';
+            Tf.decay_time_70=nanmedian(PK.posper(:,4)-PK.posM,1)';
+            Tf.decay_time_70_std=nanstd(PK.posper(:,4)-PK.posM,1)';
+            Tf.decay_time_90=nanmedian(PK.posper(:,5)-PK.posM,1)';
+            Tf.decay_time_90_std=nanstd(PK.posper(:,5)-PK.posM,1)';
+            
+            
+            
+            
+
+
+
+ 
+
+
+
+%save([results_pathname,'myresult.mat'],'Tf')
+writetable(Tf,results_pathname,'WriteRowNames',true)           
             
         end
         
