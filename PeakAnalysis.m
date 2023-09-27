@@ -59,30 +59,21 @@ handles.col=[0.5 0.5 0.5];
 
 
 set(handles.frame_length,'string',num2str(handles.PK.vector_filtering_frame_length(handles.i)))
-set(handles.smooth_length,'string',num2str(handles.PK.sm(handles.i)))
 set(handles.prop,'string',num2str(handles.PK.prop(handles.i)))
 
-
-
-handles.PK.Filter(handles.i);
+error=1;
+while error
+    try
+        handles.PK.Filter(handles.i);
 handles.PK.CalculateParameters(handles.i);
-pos=handles.PK.posper(:,:,handles.i);
-M=handles.PK.Mper(:,:,handles.i);
-% handles.PK.Thresh(handles.i);
-% handles.PK.Calculate(handles.i);
-
-
-hold(handles.axes_image,'on');
-plot(handles.PK.matrix_rough_fluorescences(:,handles.i),'color',handles.col,'parent',handles.axes_image)
-plot(handles.PK.matrix_filtered_fluorescences(:,handles.i),'linewidth',2,'color','b','parent',handles.axes_image)
-plot(handles.PK.xmc(:,handles.i),handles.PK.mmvg(:,handles.i),'+c','parent',handles.axes_image)
-plot(handles.PK.xMc(:,handles.i),handles.PK.M(:,handles.i),'+y','parent',handles.axes_image)
-plot(handles.PK.xmr(:,handles.i),handles.PK.mmvd(:,handles.i),'+g','parent',handles.axes_image)
-plot(handles.PK.xMr(:,handles.i),handles.PK.M(:,handles.i),'+r','parent',handles.axes_image)
-plot(handles.PK.posm(:,handles.i),handles.PK.ms(:,handles.i),'+k','parent',handles.axes_image)
-plot(handles.PK.posM(:,handles.i),handles.PK.Ms(:,handles.i),'+k','parent',handles.axes_image)
-plot(pos(:),M(:),'+m','parent',handles.axes_image)
-
+error=0;
+set(handles.smooth_length,'string',num2str(handles.PK.sm(handles.i)))
+    catch
+        handles.PK.sm(:)=handles.PK.sm(1)+10;
+        
+    end
+end
+plot_graphs(handles);
 
 guidata(hObject, handles);
 uiwait(handles.figure1);
@@ -94,6 +85,7 @@ if (isfield(handles,'closeFigure') && handles.closeFigure)
 end
 function figure1_CloseRequestFcn(hObject, ~, ~)
 delete(hObject);
+
 function Discard_Callback(hObject, eventdata, handles)
 
 guidata(hObject, handles);
@@ -119,31 +111,35 @@ function frame_length_Callback(hObject, eventdata, handles)
 % Hints: get(hObject,'String') returns contents of frame_length as text
 %        str2double(get(hObject,'String')) returns contents of frame_length as a double
 input = str2double(get(hObject,'string'));
+
+old=handles.PK.vector_filtering_frame_length(handles.i);
+
+try
+    if input>2 && mod(input,2)==1
 handles.PK.vector_filtering_frame_length(handles.i:end)=input;
-
+    else 
+        if input<3
+          handles.PK.vector_filtering_frame_length(handles.i:end)=3;
+          set(handles.frame_length,'string',num2str(3));
+        else
+            handles.PK.vector_filtering_frame_length(handles.i:end)=input+1;
+            set(handles.frame_length,'string',num2str(input+1));
+        end
+    end
 handles.PK.Filter(handles.i);
-
 handles.PK.CalculateParameters(handles.i);
-pos=handles.PK.posper(:,:,handles.i);
-M=handles.PK.Mper(:,:,handles.i);
 
 
-% handles.PK.Thresh(handles.i);
-% handles.PK.Calculate(handles.i);
+plot_graphs(handles);
 
 
-cla(handles.axes_image)
+catch
+    set(handles.frame_length,'string',num2str(old))
+    handles.PK.vector_filtering_frame_length(handles.i:end)=old;
+    handles.PK.Filter(handles.i);
+end
 
-hold(handles.axes_image,'on');
-plot(handles.PK.matrix_rough_fluorescences(:,handles.i),'color',handles.col,'parent',handles.axes_image)
-plot(handles.PK.matrix_filtered_fluorescences(:,handles.i),'linewidth',2,'color','b','parent',handles.axes_image)
-plot(handles.PK.xmc(:,handles.i),handles.PK.mmvg(:,handles.i),'+c','parent',handles.axes_image)
-plot(handles.PK.xMc(:,handles.i),handles.PK.M(:,handles.i),'+y','parent',handles.axes_image)
-plot(handles.PK.xmr(:,handles.i),handles.PK.mmvd(:,handles.i),'+g','parent',handles.axes_image)
-plot(handles.PK.xMr(:,handles.i),handles.PK.M(:,handles.i),'+r','parent',handles.axes_image)
-plot(handles.PK.posm(:,handles.i),handles.PK.ms(:,handles.i),'+k','parent',handles.axes_image)
-plot(handles.PK.posM(:,handles.i),handles.PK.Ms(:,handles.i),'+k','parent',handles.axes_image)
-plot(pos(:),M(:),'+m','parent',handles.axes_image)
+
 guidata(hObject, handles);
 
 
@@ -169,24 +165,23 @@ function smooth_length_Callback(hObject, eventdata, handles)
 % Hints: get(hObject,'String') returns contents of smooth_length as text
 %        str2double(get(hObject,'String')) returns contents of smooth_length as a double
 input = str2double(get(hObject,'string'));
+old=handles.PK.sm(handles.i);
+try
 handles.PK.sm(handles.i:end)=input;
 handles.PK.Filter(handles.i);
 handles.PK.CalculateParameters(handles.i);
 % handles.PK.Thresh(handles.i);
 % handles.PK.Calculate(handles.i);
-cla(handles.axes_image)
-pos=handles.PK.posper(:,:,handles.i);
-M=handles.PK.Mper(:,:,handles.i);
-hold(handles.axes_image,'on');
-plot(handles.PK.matrix_rough_fluorescences(:,handles.i),'color',handles.col,'parent',handles.axes_image)
-plot(handles.PK.matrix_filtered_fluorescences(:,handles.i),'linewidth',2,'color','b','parent',handles.axes_image)
-plot(handles.PK.xmc(:,handles.i),handles.PK.mmvg(:,handles.i),'+c','parent',handles.axes_image)
-plot(handles.PK.xMc(:,handles.i),handles.PK.M(:,handles.i),'+y','parent',handles.axes_image)
-plot(handles.PK.xmr(:,handles.i),handles.PK.mmvd(:,handles.i),'+g','parent',handles.axes_image)
-plot(handles.PK.xMr(:,handles.i),handles.PK.M(:,handles.i),'+r','parent',handles.axes_image)
-plot(handles.PK.posm(:,handles.i),handles.PK.ms(:,handles.i),'+k','parent',handles.axes_image)
-plot(handles.PK.posM(:,handles.i),handles.PK.Ms(:,handles.i),'+k','parent',handles.axes_image)
-plot(pos(:),M(:),'+m','parent',handles.axes_image)
+  plot_graphs(handles);
+
+
+catch
+    set(handles.smooth_length,'string',num2str(old))
+    handles.PK.sm(handles.i:end)=old;
+    handles.PK.Filter(handles.i);
+
+    
+    end
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
@@ -211,26 +206,23 @@ function prop_Callback(hObject, eventdata, handles)
 % Hints: get(hObject,'String') returns contents of prop as text
 %        str2double(get(hObject,'String')) returns contents of prop as a double
 input = str2double(get(hObject,'string'));
-
+old=handles.PK.prop(handles.i);
+try
 
 handles.PK.prop(handles.i:end)=input;
 handles.PK.Filter(handles.i);
 handles.PK.CalculateParameters(handles.i);
-% handles.PK.Thresh(handles.i);
-% handles.PK.Calculate(handles.i);
-cla(handles.axes_image)
-pos=handles.PK.posper(:,:,handles.i);
-M=handles.PK.Mper(:,:,handles.i);
-hold(handles.axes_image,'on');
-plot(handles.PK.matrix_rough_fluorescences(:,handles.i),'color',handles.col,'parent',handles.axes_image)
-plot(handles.PK.matrix_filtered_fluorescences(:,handles.i),'linewidth',2,'color','b','parent',handles.axes_image)
-plot(handles.PK.xmc(:,handles.i),handles.PK.mmvg(:,handles.i),'+c','parent',handles.axes_image)
-plot(handles.PK.xMc(:,handles.i),handles.PK.M(:,handles.i),'+y','parent',handles.axes_image)
-plot(handles.PK.xmr(:,handles.i),handles.PK.mmvd(:,handles.i),'+g','parent',handles.axes_image)
-plot(handles.PK.xMr(:,handles.i),handles.PK.M(:,handles.i),'+r','parent',handles.axes_image)
-plot(handles.PK.posm(:,handles.i),handles.PK.ms(:,handles.i),'+k','parent',handles.axes_image)
-plot(handles.PK.posM(:,handles.i),handles.PK.Ms(:,handles.i),'+k','parent',handles.axes_image)
-plot(pos(:),M(:),'+m','parent',handles.axes_image)
+
+plot_graphs(handles);
+
+catch
+   handles.PK.prop(handles.i:end)=old;
+   set(handles.prop,'string',old);
+   handles.PK.Filter(handles.i);
+
+   
+end
+
 
 guidata(hObject, handles);
 
@@ -245,3 +237,32 @@ function prop_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+function handles=plot_graphs(handles)
+    %for plots
+pos=handles.PK.posper(:,:,handles.i);
+M=handles.PK.Mper(:,:,handles.i);
+
+cla(handles.axes_image)
+pos=handles.PK.posper(:,:,handles.i);
+M=handles.PK.Mper(:,:,handles.i);
+hold(handles.axes_image,'on');
+plot(handles.PK.matrix_rough_fluorescences(:,handles.i),'color',handles.col,'parent',handles.axes_image)
+plot(handles.PK.matrix_filtered_fluorescences(:,handles.i),'linewidth',2,'color','b','parent',handles.axes_image)
+plot(handles.PK.xmc(:,handles.i),handles.PK.mmvg(:,handles.i),'+c','parent',handles.axes_image)
+plot(handles.PK.xMc(:,handles.i),handles.PK.M(:,handles.i),'+y','parent',handles.axes_image)
+plot(handles.PK.xmr(:,handles.i),handles.PK.mmvd(:,handles.i),'+g','parent',handles.axes_image)
+plot(handles.PK.xMr(:,handles.i),handles.PK.M(:,handles.i),'+r','parent',handles.axes_image)
+plot(handles.PK.posm(:,handles.i),handles.PK.ms(:,handles.i),'+k','parent',handles.axes_image)
+plot(handles.PK.posM(:,handles.i),handles.PK.Ms(:,handles.i),'+k','parent',handles.axes_image)
+plot(pos(:),M(:),'+m','parent',handles.axes_image)
+
+cla(handles.axes2)
+hold(handles.axes2,'on')
+yyaxis(handles.axes2,'left')
+plot(handles.PK.matrix_filtered_fluorescences(:,handles.i),'--','linewidth',1,'color','b','parent',handles.axes2)
+plot(handles.PK.smooth_signal(:,handles.i),'-','linewidth',1,'color','k','parent',handles.axes2)
+yyaxis(handles.axes2,'right')
+plot(handles.PK.dd2(:,handles.i),'linewidth',2,'color','r','parent',handles.axes2)
+

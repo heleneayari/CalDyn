@@ -153,7 +153,7 @@ classdef AnalysisPeaks < handle
         Mper
         ltab
         dd2
-        
+        smooth_signal
         
     end
     methods
@@ -182,6 +182,8 @@ classdef AnalysisPeaks < handle
             PK.vector_filtering_polynomial_order=2*ones(1,PK.number_cells);
             PK.vector_filtering_frame_length=pol_length*ones(1,PK.number_cells);
             PK.matrix_filtered_fluorescences=zeros(PK.number_acquisitions,PK.number_cells);
+            PK.smooth_signal=zeros(PK.number_acquisitions,PK.number_cells);
+            PK.dd2=zeros(PK.number_acquisitions,PK.number_cells);
             PK.vector_threshold_peaks_detection=pkh*ones(1,PK.number_cells);
             PK.vector_number_peaks=zeros(1,PK.number_cells);
             PK.vector_number_valleys=zeros(1,PK.number_cells);
@@ -549,6 +551,8 @@ classdef AnalysisPeaks < handle
             
             
             dd2=gradient(ss);
+            PK.dd2(1:length(Signal),i)=dd2;
+            PK.smooth_signal(1:length(Signal),i)=ss;
             dd=gradient(Signal);
             
             %                 if(sl~=80||prop~=0.05)
