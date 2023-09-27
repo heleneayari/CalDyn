@@ -172,13 +172,16 @@ classdef AnalysisPeaks < handle
             sm=p.Results.Smoothness;
             PK.ltab=10000;
             prop=p.Results.proportion;
-            PK.PixelSize = p.Results.PixelSize;
-            PK.SamplingFrequency=p.Results.SamplingFrequency;
-            PK.framerate = (PK.SamplingFrequency)/1000; %fps in ms
-            PK.number_acquisitions=size(p.Results.Signal,1);
+            PK.number_acquisitions=length(p.Results.Signal(~isnan(p.Results.Signal(:,1)),1));
             PK.number_cells=size(p.Results.Signal,2)-1;
-            PK.vector_time=p.Results.Signal(:,1);
-            PK.matrix_rough_fluorescences=p.Results.Signal(:,2:(PK.number_cells+1));
+            PK.vector_time=p.Results.Signal(1:PK.number_acquisitions,1);
+            PK.PixelSize = p.Results.PixelSize;
+            PK.framerate=1/median(diff(PK.vector_time));
+%             PK.SamplingFrequency=p.Results.SamplingFrequency;
+%             PK.framerate = (PK.SamplingFrequency)/1000; %fps in ms
+
+
+            PK.matrix_rough_fluorescences=p.Results.Signal(1:PK.number_acquisitions,2:(PK.number_cells+1));
             PK.vector_filtering_polynomial_order=2*ones(1,PK.number_cells);
             PK.vector_filtering_frame_length=pol_length*ones(1,PK.number_cells);
             PK.matrix_filtered_fluorescences=zeros(PK.number_acquisitions,PK.number_cells);
@@ -642,21 +645,16 @@ classdef AnalysisPeaks < handle
                     if (pl-1)>0
                         
                         if locc(ii)>locr(pl-1)
-                            %
-                            %                                                                                 plot(locc(ii),PK.Area(kk).FinalSignal(locc(ii)),'+r')
-                            %                                                                                 plot(locr(pl-1),PK.Area(kk).FinalSignal(locr(pl-1)),'+g')
-                            %                                 %
+               
+                            %                                 
                             [M(count),ll(ii)]=max(Signal(locc(ii):locr(pl)));
                             ll(ii)=ll(ii)+locc(ii)-1;
                             
-                            % [mmvg(count),vvg(ii)]=min(PK.Area(kk).FinalSignal(locr(pl-1):locc(ii)));
                             [mmvg(count),vvg(ii)]=min(ss(locr(pl-1):locc(ii)));
                             vvg(ii)=vvg(ii)+locr(pl-1)-1;
-                            %             [mmvd(count),vvd(ii)]=min(PK.Area(kk).FinalSignal(locr(pl):locc(ii+1)));
                             [mmvd(count),vvd(ii)]=min(ss(locr(pl):locc(ii+1)));
                             vvd(ii)=vvd(ii)+locr(pl)-1;
-                            %                                                                                plot(ll(ii),M(ii),'+b')
-                            %                                                                                 plot(vv(ii),mmv(ii),'+y')
+                                                           
                             
                             
                             b=Signal(locc(ii))-maxc(ii)*locc(ii);
@@ -677,8 +675,8 @@ classdef AnalysisPeaks < handle
                             PK.Taud(count,i)=(xmr(count)-xMc(count))/PK.framerate;
                             PK.Aire(count,i)=sum(Signal(max(1,round(xmc(count))):min(round(xmr(count)),length(Signal))));
                             PK.Taus(count,i)=(xmr(count)-xmc(count))/PK.framerate;
-                            PK.pc(count,i)=maxc(ii)*PK.PixelSize*PK.SamplingFrequency;
-                            PK.pr(count,i)=minr(pl)*PK.PixelSize*PK.SamplingFrequency;
+                            PK.pc(count,i)=maxc(ii)*PK.PixelSize*PK.framerate;
+                            PK.pr(count,i)=minr(pl)*PK.PixelSize*PK.framerate;
                             PK.hr(count,i)=-minr(pl)*(xmr(count)-xMr(count))*PK.PixelSize;
                             PK.hc(count,i)=maxc(ii)*(xMc(count)-xmc(count))*PK.PixelSize;
                             PK.M(count,i)=M(count)*PK.PixelSize;
@@ -716,16 +714,16 @@ classdef AnalysisPeaks < handle
             end
             end
             
-            PK.posper(1:size(posper,1),:,i)=posper/PK.SamplingFrequency;
+            PK.posper(1:size(posper,1),:,i)=posper/PK.framerate;
             PK.Mper(1:size(posper,1),:,i)=Mper*PK.PixelSize;
-            PK.posm(1:length(xmc),i)=posm/PK.SamplingFrequency;
-            PK.posM(1:length(xmc),i)=posM/PK.SamplingFrequency;
+            PK.posm(1:length(xmc),i)=posm/PK.framerate;
+            PK.posM(1:length(xmc),i)=posM/PK.framerate;
             PK.ms(1:length(xmc),i)=ms*PK.PixelSize;
             PK.Ms(1:length(xmc),i)=Ms*PK.PixelSize;
-            PK.xmc(1:length(xmc),i)=xmc/PK.SamplingFrequency;
-            PK.xMc(1:length(xMc),i)=xMc/PK.SamplingFrequency;
-            PK.xmr(1:length(xmr),i)=xmr/PK.SamplingFrequency;
-            PK.xMr(1:length(xMr),i)=xMr/PK.SamplingFrequency;
+            PK.xmc(1:length(xmc),i)=xmc/PK.framerate;
+            PK.xMc(1:length(xMc),i)=xMc/PK.framerate;
+            PK.xmr(1:length(xmr),i)=xmr/PK.framerate;
+            PK.xMr(1:length(xMr),i)=xMr/PK.framerate;
 %             PK.locc(1:length(locc),i)=locc/PK.SamplingFrequency;
 %             PK.locr(1:length(locr),i)=locr/PK.SamplingFrequency;
             

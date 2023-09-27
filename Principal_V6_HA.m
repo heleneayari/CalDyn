@@ -1,6 +1,7 @@
 
 clc
 clear
+close all;
 folder='/data1/thoman/ownCloud/flux_calcique/';
     %% load data
     [file,rough_data_foldername]=uigetfile([folder,'*.xls*']);
@@ -15,7 +16,7 @@ folder='/data1/thoman/ownCloud/flux_calcique/';
 
 %%
 close all
-results_foldername=[rough_data_foldername,filesep,'Results',filesep];
+results_foldername=[rough_data_foldername,filesep,'Results_',file(1:end-5), filesep];
 if ~exist(results_foldername,'file')
     mkdir(results_foldername);
 end
@@ -36,8 +37,8 @@ end
 
     
 
-    results_pathname=[results_foldername filesep 'Results.xlsx'];
+    results_pathname=[results_foldername filesep 'Results' file(1:end-5),'.xlsx'];
     PK.Save(results_pathname);
 
 
-close all;
+

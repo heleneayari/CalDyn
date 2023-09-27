@@ -7,10 +7,11 @@ folder='/data1/thoman/ownCloud/flux_calcique/';
     rough_data_pathname=[rough_data_foldername, file];
     matrix_rough_data=xlsread(rough_data_pathname);
     
-slow=1;
-if slow
-    
-    
+
+%% param 
+    pol_length=31;
+    sm=20;
+    prop=0.1; 
 
 %%
 close all
@@ -19,7 +20,7 @@ if ~exist(results_foldername,'file')
     mkdir(results_foldername);
 end
 
-PK=AnalysisPeaks(matrix_rough_data);
+PK=AnalysisPeaks(matrix_rough_data,'Pol_length',pol_length,'smoothness',sm,'prop',prop);
 
 %% rest
 
@@ -35,9 +36,8 @@ end
 
     
 
-    results_pathname=[results_foldername filesep 'Results.xlsx'];
+    results_pathname=[results_foldername filesep 'Results' file(1:end-5)','.xlsx'];
     PK.Save(results_pathname);
 
 
 close all;
-clc;
