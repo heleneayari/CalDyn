@@ -22,7 +22,7 @@ function varargout = PeakAnalysis(varargin)
 
 % Edit the above text to modify the response to help PeakAnalysis
 
-% Last Modified by GUIDE v2.5 24-Sep-2023 18:34:00
+% Last Modified by GUIDE v2.5 06-Oct-2023 22:02:51
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -43,7 +43,7 @@ else
 end
 % End initialization code - DO NOT EDIT
 
-function PeakAnalysis_OpeningFcn(hObject, eventdata, handles, varargin)
+function PeakAnalysis_OpeningFcn(hObject, ~, handles, varargin)
 handles.output = hObject;
 set(handles.figure1,'toolbar','figure');
 
@@ -56,22 +56,62 @@ handles.PK = p.Results.PK;
 handles.i = p.Results.i;
 handles.ResDir=p.Results.ResDir;
 handles.col=[0.5 0.5 0.5];
-
+handles.bb=0;
 
 set(handles.frame_length,'string',num2str(handles.PK.vector_filtering_frame_length(handles.i)))
 set(handles.prop,'string',num2str(handles.PK.prop(handles.i)))
-
-error=1;
-while error
-    try
-        handles.PK.Filter(handles.i);
-        handles.PK.CalculateParameters(handles.i);
-        error=0;
-        set(handles.smooth_length,'string',num2str(handles.PK.sm(handles.i)))
-    catch
-        handles.PK.sm(:)=handles.PK.sm(1)+10;
-        
+set(handles.type,'value',handles.PK.type)
+set(handles.th_smpks,'string',num2str(handles.PK.th_smpks(handles.i)))
+set(handles.th_medpks,'string',num2str(handles.PK.th_medpks(handles.i)))
+set(handles.fac_multi,'string',num2str(handles.PK.th_multi(handles.i)))
+% set(handles.smooth_length,'string',num2str(handles.PK.sm(handles.i)))
+if handles.PK.type==2
+    
+    set(handles.panel_stat,'Visible','off');
+    error=1;
+%     while error
+%         try
+            handles.PK.Filter(handles.i);
+            handles.PK.CalculateParameters(handles.i);
+            error=0;
+            set(handles.smooth_length,'string',num2str(handles.PK.sm(handles.i)))
+%         catch
+%             handles.PK.sm(handles.i)=handles.PK.sm(1)+10;
+%             
+%         end
+%         
+%     end
+else
+    error=1;
+    while error
+        try
+            handles.PK.Filter(handles.i);
+            handles.PK.CalculateParameters(handles.i);
+            error=0;
+            set(handles.smooth_length,'string',num2str(handles.PK.sm(handles.i)))
+        catch
+            handles.PK.sm(:)=handles.PK.sm(1)+1;
+            
+        end
     end
+    
+    error=1;
+    while error&&handles.PK.prop(handles.i)>0
+        try
+            
+            handles.PK.CalculateParameters(handles.i);
+            handles.PK.prop(handles.i)=handles.PK.prop(handles.i)-0.01;
+            set(handles.prop,'string',num2str(handles.PK.prop(handles.i),'%0.3f'))
+        catch
+            handles.PK.prop(handles.i)=handles.PK.prop(handles.i)+0.01;
+            handles.PK.prop(handles.i)
+            handles.PK.CalculateParameters(handles.i);
+            set(handles.prop,'string',num2str(handles.PK.prop(handles.i),'%0.3f'))
+            error=0;
+        end
+    end
+    
+    
 end
 plot_graphs(handles);
 
@@ -86,11 +126,11 @@ end
 function figure1_CloseRequestFcn(hObject, ~, ~)
 delete(hObject);
 
-function Discard_Callback(hObject, eventdata, handles)
+function Discard_Callback(hObject, ~, handles)
 
 guidata(hObject, handles);
 
-function pushbutton_save_Callback(hObject, eventdata, handles)
+function pushbutton_save_Callback(hObject, ~, handles)
 hgexport(handles.figure1, [handles.ResDir, 'Peak_Analysis_cell', num2str(handles.i),'.png'], hgexport('factorystyle'), 'Format', 'png');
 
 
@@ -103,7 +143,7 @@ guidata(hObject, handles);
 
 
 
-function frame_length_Callback(hObject, eventdata, handles)
+function frame_length_Callback(hObject, ~, handles)
 % hObject    handle to frame_length (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -127,6 +167,9 @@ try
         end
     end
     handles.PK.Filter(handles.i);
+    if handles.bb
+        handles.PK.remove_base(handles.i);
+    end
     handles.PK.CalculateParameters(handles.i);
     
     
@@ -144,7 +187,7 @@ guidata(hObject, handles);
 
 
 % --- Executes during object creation, after setting all properties.
-function frame_length_CreateFcn(hObject, eventdata, handles)
+function frame_length_CreateFcn(hObject, ~, ~)
 % hObject    handle to frame_length (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -157,7 +200,7 @@ end
 
 
 
-function smooth_length_Callback(hObject, eventdata, handles)
+function smooth_length_Callback(hObject, ~, handles)
 % hObject    handle to smooth_length (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -166,24 +209,27 @@ function smooth_length_Callback(hObject, eventdata, handles)
 %        str2double(get(hObject,'String')) returns contents of smooth_length as a double
 input = str2double(get(hObject,'string'));
 old=handles.PK.sm(handles.i);
-try
-    handles.PK.sm(handles.i:end)=input;
+% try
+    handles.PK.sm(handles.i)=input;
     handles.PK.Filter(handles.i);
+    if handles.bb
+        handles.PK.remove_base(handles.i);
+    end
     handles.PK.CalculateParameters(handles.i);
     plot_graphs(handles);
     
     
-catch
-    set(handles.smooth_length,'string',num2str(old))
-    handles.PK.sm(handles.i:end)=old;
-    handles.PK.Filter(handles.i);
-    
-    
-end
+% catch
+%     set(handles.smooth_length,'string',num2str(old))
+%     handles.PK.sm(handles.i)=old;
+%     handles.PK.Filter(handles.i);
+%     
+%     
+% end
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
-function smooth_length_CreateFcn(hObject, eventdata, handles)
+function smooth_length_CreateFcn(hObject, ~, ~)
 % hObject    handle to smooth_length (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -196,7 +242,7 @@ end
 
 
 
-function prop_Callback(hObject, eventdata, handles)
+function prop_Callback(hObject, ~, handles)
 % hObject    handle to prop (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
@@ -207,14 +253,13 @@ input = str2double(get(hObject,'string'));
 old=handles.PK.prop(handles.i);
 try
     
-    handles.PK.prop(handles.i:end)=input;
-    handles.PK.Filter(handles.i);
+    handles.PK.prop(handles.i)=input;
     handles.PK.CalculateParameters(handles.i);
     
     plot_graphs(handles);
     
 catch
-    handles.PK.prop(handles.i:end)=old;
+    handles.PK.prop(handles.i)=old;
     set(handles.prop,'string',old);
     handles.PK.Filter(handles.i);
     
@@ -225,7 +270,7 @@ end
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
-function prop_CreateFcn(hObject, eventdata, handles)
+function prop_CreateFcn(hObject, ~, ~)
 % hObject    handle to prop (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    empty - handles not created until after all CreateFcns called
@@ -239,6 +284,7 @@ end
 
 function handles=plot_graphs(handles)
 %for plots
+
 pos=handles.PK.posper(:,:,handles.i);
 M=handles.PK.Mper(:,:,handles.i);
 
@@ -249,19 +295,182 @@ hold(handles.axes_image,'on');
 
 plot(handles.PK.vector_time,handles.PK.matrix_rough_fluorescences(:,handles.i),'color',handles.col,'parent',handles.axes_image)
 plot(handles.PK.vector_time,handles.PK.matrix_filtered_fluorescences(:,handles.i),'linewidth',2,'color','b','parent',handles.axes_image)
-plot(handles.PK.xmc(:,handles.i),handles.PK.mmvg(:,handles.i),'+c','parent',handles.axes_image)
-plot(handles.PK.xMc(:,handles.i),handles.PK.M(:,handles.i),'+y','parent',handles.axes_image)
-plot(handles.PK.xmr(:,handles.i),handles.PK.mmvd(:,handles.i),'+g','parent',handles.axes_image)
-plot(handles.PK.xMr(:,handles.i),handles.PK.M(:,handles.i),'+r','parent',handles.axes_image)
-plot(handles.PK.posm(:,handles.i),handles.PK.ms(:,handles.i),'+k','parent',handles.axes_image)
-plot(handles.PK.posM(:,handles.i),handles.PK.Ms(:,handles.i),'+k','parent',handles.axes_image)
-plot(pos(:),M(:),'+m','parent',handles.axes_image)
+%plot(handles.PK.vector_time,handles.PK.base(:,handles.i),'linewidth',1,'color','r','parent',handles.axes_image)
+plot(handles.PK.xmc(:,handles.i),handles.PK.mmvg(:,handles.i),'+c','linewidth',2,'parent',handles.axes_image)
+plot(handles.PK.xMc(:,handles.i),handles.PK.M(:,handles.i),'+y','linewidth',2,'parent',handles.axes_image)
+plot(handles.PK.xmr(:,handles.i),handles.PK.mmvd(:,handles.i),'+g','linewidth',2,'parent',handles.axes_image)
+plot(handles.PK.xMr(:,handles.i),handles.PK.M(:,handles.i),'+r','linewidth',2,'parent',handles.axes_image)
+plot(handles.PK.posm(:,handles.i),handles.PK.ms(:,handles.i),'+k','linewidth',2,'parent',handles.axes_image)
+plot(handles.PK.posM(:,handles.i),handles.PK.Ms(:,handles.i),'+k','linewidth',2,'parent',handles.axes_image)
+plot(pos(:),M(:),'+m','linewidth',2,'parent',handles.axes_image)
 xlabel(handles.axes_image,'Time')
-cla(handles.axes2)
+
+if handles.PK.type==1
+    
+    handles.PK.statpks(handles.i);
+    %     plot(handles.PK.vector_time,(handles.PK.base(:,handles.i)),'color','m','parent',handles.axes_image)
+    %     plot(handles.PK.vector_time,(handles.PK.basefit(:,handles.i)),'color','m','parent',handles.axes_image)
+    set(handles.Npks_val,'string',num2str(handles.PK.N(handles.i)));
+    set(handles.fsmpk_val,'string',num2str(handles.PK.f_smpks(handles.i)));
+    set(handles.fmedpk_val,'string',num2str(handles.PK.f_medpks(handles.i)));
+    set(handles.fmultipk_val,'string',num2str(handles.PK.f_multipks(handles.i)));
+
+    for ii=1:handles.PK.N(handles.i)
+
+        if handles.PK.ind_medpks(ii,handles.i)
+            
+            y1=handles.PK.matrix_filtered_fluorescences(round(handles.PK.xmcr(ii,handles.i)):round(handles.PK.posmr(ii,handles.i)),handles.i);            
+            x1=handles.PK.vector_time(round(handles.PK.xmcr(ii,handles.i)):round(handles.PK.posmr(ii,handles.i)));
+            
+            plot(x1,y1,'color',[0.47 0.25 0.80],'linewidth',2,'parent',handles.axes_image)
+        end
+        
+         if handles.PK.ind_smpks(ii,handles.i)
+            
+            y1=handles.PK.matrix_filtered_fluorescences(round(handles.PK.xmcr(ii,handles.i)):round(handles.PK.posmr(ii,handles.i)),handles.i);            
+            x1=handles.PK.vector_time(round(handles.PK.xmcr(ii,handles.i)):round(handles.PK.posmr(ii,handles.i)));
+            
+            plot(x1,y1,'y','linewidth',2,'parent',handles.axes_image)
+         end
+        
+          if handles.PK.ind_multipks(ii,handles.i)
+            y1=handles.PK.matrix_filtered_fluorescences(round(handles.PK.xmcr(ii,handles.i)):round(handles.PK.posmr(ii,handles.i)),handles.i);            
+            x1=handles.PK.vector_time(round(handles.PK.xmcr(ii,handles.i)):round(handles.PK.posmr(ii,handles.i)));
+            
+            plot(x1,y1,'--g','linewidth',2,'parent',handles.axes_image)
+         end
+        
+         
+        
+    end
+    
+end
+
+cla(handles.axes2,'reset')
+
 hold(handles.axes2,'on')
 yyaxis(handles.axes2,'left')
 plot(handles.PK.vector_time,handles.PK.matrix_filtered_fluorescences(:,handles.i),'--','linewidth',1,'color','b','parent',handles.axes2)
 plot(handles.PK.vector_time,handles.PK.smooth_signal(:,handles.i),'-','linewidth',1,'color','k','parent',handles.axes2)
+
 yyaxis(handles.axes2,'right')
+
 plot(handles.PK.vector_time,handles.PK.dd2(:,handles.i),'linewidth',2,'color','r','parent',handles.axes2)
+plot([0, handles.PK.vector_time(end)],[handles.PK.mder(handles.i), handles.PK.mder(handles.i)],'r','parent',handles.axes2)
+plot([0, handles.PK.vector_time(end)],[handles.PK.Mder(handles.i), handles.PK.Mder(handles.i)],'r','parent',handles.axes2)
 xlabel('Time')
+
+
+% --- Executes on selection change in type.
+function type_Callback(~, ~, ~)
+% hObject    handle to type (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns type contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from type
+
+
+% --- Executes during object creation, after setting all properties.
+function type_CreateFcn(hObject, ~, ~)
+% hObject    handle to type (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function th_smpks_Callback(hObject, ~, handles)
+% hObject    handle to th_smpks (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of th_smpks as text
+%        str2double(get(hObject,'String')) returns contents of th_smpks as a double
+input = str2double(get(hObject,'string'));
+handles.PK.th_smpks(handles.i)=input;
+plot_graphs(handles);
+guidata(hObject, handles);
+
+
+% --- Executes during object creation, after setting all properties.
+function th_smpks_CreateFcn(hObject, ~, ~)
+% hObject    handle to th_smpks (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+
+function th_medpks_Callback(hObject, ~, handles)
+% hObject    handle to th_medpks (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of th_medpks as text
+%        str2double(get(hObject,'String')) returns contents of th_medpks as a double
+input = str2double(get(hObject,'string'));
+handles.PK.th_medpks(handles.i)=input;
+plot_graphs(handles)
+guidata(hObject, handles);
+
+% --- Executes during object creation, after setting all properties.
+function th_medpks_CreateFcn(hObject, ~, ~)
+% hObject    handle to th_medpks (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in rem_base_line.
+function rem_base_line_Callback(hObject, ~, handles)
+% hObject    handle to rem_base_line (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+handles.bb=1;
+handles.PK.remove_base(handles.i);
+handles.PK.CalculateParameters(handles.i);
+plot_graphs(handles)
+guidata(hObject, handles);
+
+
+
+
+function fac_multi_Callback(hObject, ~, handles)
+% hObject    handle to fac_multi (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of fac_multi as text
+%        str2double(get(hObject,'String')) returns contents of fac_multi as a double
+input = str2double(get(hObject,'string'));
+handles.PK.th_multi(handles.i)=input;
+plot_graphs(handles)
+guidata(hObject, handles);
+
+% --- Executes during object creation, after setting all properties.
+function fac_multi_CreateFcn(hObject, ~, ~)
+% hObject    handle to fac_multi (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end

@@ -1,7 +1,7 @@
 
 clc
 clear
-close all;
+% close all;
 folder='/data1/thoman/ownCloud/flux_calcique/';
 %% load data
     [file,rough_data_foldername]=uigetfile([folder,'*.*']);
@@ -18,18 +18,21 @@ folder='/data1/thoman/ownCloud/flux_calcique/';
     
 
 %% param 
-    pol_length=31;
-    sm=20;
-    prop=0.1; 
+    pol_length=3;
+    sm=1;
+    prop=0.2; 
     type=1;%1 for calcic signals, 2 for electrics 
+    th_smpks=0.2;
+    th_medpks=0.5;
+    th_multi=0.2;
 %%
-close all
+
 results_foldername=[rough_data_foldername,filesep,'Results_',file(1:end-5), filesep];
 if ~exist(results_foldername,'file')
     mkdir(results_foldername);
 end
 
-PK=AnalysisPeaks(matrix_rough_data,'Pol_length',pol_length,'smoothness',sm,'prop',prop,'type',type);
+PK=AnalysisPeaks(matrix_rough_data,'Pol_length',pol_length,'smoothness',sm,'prop',prop,'type',type,'th_smpks',th_smpks,'th_medpks',th_medpks,'th_multi',th_multi);
 
 %% rest
 
