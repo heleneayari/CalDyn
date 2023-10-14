@@ -57,6 +57,7 @@ handles.i = p.Results.i;
 handles.ResDir=p.Results.ResDir;
 handles.col=[0.5 0.5 0.5];
 handles.bb=0;
+handles.cut_freq=20;
 
 set(handles.frame_length,'string',num2str(handles.PK.vector_filtering_frame_length(handles.i)))
 set(handles.prop,'string',num2str(handles.PK.prop(handles.i)))
@@ -65,7 +66,7 @@ set(handles.th_smpks,'string',num2str(handles.PK.th_smpks(handles.i)))
 set(handles.th_medpks,'string',num2str(handles.PK.th_medpks(handles.i)))
 set(handles.fac_multi,'string',num2str(handles.PK.th_multi(handles.i)))
 % set(handles.smooth_length,'string',num2str(handles.PK.sm(handles.i)))
-if handles.PK.type==2
+if handles.PK.type>1
     
     set(handles.panel_stat,'Visible','off');
     error=1;
@@ -179,7 +180,10 @@ try
 catch
     set(handles.frame_length,'string',num2str(old))
     handles.PK.vector_filtering_frame_length(handles.i:end)=old;
+
     handles.PK.Filter(handles.i);
+ 
+       
 end
 
 

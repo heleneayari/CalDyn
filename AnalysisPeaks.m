@@ -58,6 +58,7 @@ classdef AnalysisPeaks < handle
         mder
         Mder
         th_multi
+        cut_freq
         
         
     end
@@ -69,12 +70,15 @@ classdef AnalysisPeaks < handle
             addOptional(p, 'PixelSize', 1);
             addOptional(p, 'SamplingFrequency', 1);
             addOptional(p, 'Pol_length', 111);
+            addOptional(p,'Pol_order',2)
             addOptional(p, 'Smoothness', 200);
             addOptional(p, 'proportion', 0.1);
             addOptional(p,'type',1)
+            addOptional(p,'cut_freq',20)
             addOptional(p,'th_smpks',0.2)
             addOptional(p,'th_medpks',0.5)
             addOptional(p,'th_multi',1.5)
+            
             parse(p, varargin{:});
             
             pol_length=p.Results.Pol_length;
@@ -85,10 +89,11 @@ classdef AnalysisPeaks < handle
             PK.ltab=50000;
             prop=p.Results.proportion;
             PK.type=p.Results.type;
-            
+            pol_order=p.Results.Pol_order;
             PK.number_cells=size(p.Results.Signal,2)-1;
             time=p.Results.Signal(:,1);
             PK.PixelSize = p.Results.PixelSize;
+            PK.cut_freq=p.Results.cut_freq;
             
             %             PK.SamplingFrequency=p.Results.SamplingFrequency;
             %             PK.framerate = (PK.SamplingFrequency)/1000; %fps in ms
@@ -100,7 +105,7 @@ classdef AnalysisPeaks < handle
             PK.framerate=1/nanmean(diff(PK.vector_time));
             PK.matrix_rough_fluorescences=p.Results.Signal(ind,2:(PK.number_cells+1));
             
-            PK.vector_filtering_polynomial_order=2*ones(1,PK.number_cells);
+            PK.vector_filtering_polynomial_order=pol_order*ones(1,PK.number_cells);
             PK.vector_filtering_frame_length=pol_length*ones(1,PK.number_cells);
             PK.matrix_filtered_fluorescences=zeros(PK.number_acquisitions,PK.number_cells);
             PK.smooth_signal=zeros(PK.number_acquisitions,PK.number_cells);
@@ -146,6 +151,7 @@ classdef AnalysisPeaks < handle
             
         end
         
+ 
         function PK=remove_base(PK,varargin)
             p=inputParser;
             addRequired(p,'i');
@@ -182,8 +188,15 @@ classdef AnalysisPeaks < handle
         
         function PK=Filter(PK,varargin)
             i=varargin{1};
+            if PK.type<3
             PK.matrix_filtered_fluorescences(:,i)=sgolayfilt(PK.matrix_rough_fluorescences(:,i),PK.vector_filtering_polynomial_order(i),PK.vector_filtering_frame_length(i)); % in AU
             %  PK.matrix_filtered_fluorescences(:,i)=PK.matrix_rough_fluorescences(:,i);
+            else
+                F=fft(PK.matrix_rough_fluorescences(:,i));
+                         F(PK.cut_freq+1:end-PK.cut_freq)=0;
+                        PK.matrix_filtered_fluorescences(:,i)=real(ifft(F));
+            end
+            
         end
         
         

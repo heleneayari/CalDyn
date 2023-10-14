@@ -1,3 +1,4 @@
+
 clc
 clear
 close all;
@@ -21,12 +22,12 @@ folder='/data1/thoman/ownCloud/flux_calcique/';
  end
 
 
-%% param 
-    pol_length=31;
-    sm=50;
-    prop=0.1; 
-    type=2;%1 for calcic signals, 2 for electrics 
 
+%% param 
+    pol_length=51;
+    sm=30;
+    prop=0.3; 
+    type=2;%1 for calcic signals, 2 for electrics 
 %%
 close all
 results_foldername=[rough_data_foldername,filesep,'Results_',file(1:end-5), filesep];
@@ -40,6 +41,7 @@ PK=AnalysisPeaks(matrix_rough_data,'Pol_length',pol_length,'smoothness',sm,'prop
 
 % 
 for i=1:PK.number_cells
+
 
 PK=PeakAnalysis(PK,i,results_foldername);
 close all
