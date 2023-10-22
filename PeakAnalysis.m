@@ -22,7 +22,7 @@ function varargout = PeakAnalysis(varargin)
 
 % Edit the above text to modify the response to help PeakAnalysis
 
-% Last Modified by GUIDE v2.5 06-Oct-2023 22:02:51
+% Last Modified by GUIDE v2.5 20-Oct-2023 10:51:24
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -56,7 +56,6 @@ handles.PK = p.Results.PK;
 handles.i = p.Results.i;
 handles.ResDir=p.Results.ResDir;
 handles.col=[0.5 0.5 0.5];
-handles.bb=0;
 handles.cut_freq=20;
 
 set(handles.frame_length,'string',num2str(handles.PK.vector_filtering_frame_length(handles.i)))
@@ -65,6 +64,15 @@ set(handles.type,'value',handles.PK.type)
 set(handles.th_smpks,'string',num2str(handles.PK.th_smpks(handles.i)))
 set(handles.th_medpks,'string',num2str(handles.PK.th_medpks(handles.i)))
 set(handles.fac_multi,'string',num2str(handles.PK.th_multi(handles.i)))
+set(handles.remove_base_line,'Value',handles.PK.bb)
+
+if handles.PK.bb
+ set(handles.bool_baselineref,'Value',handles.PK.bool_baselineref)   
+else
+set(handles.bool_baselineref,'Visible','off');
+end
+
+handles.PK.type_bl=get(handles.type_bl,'value');
 % set(handles.smooth_length,'string',num2str(handles.PK.sm(handles.i)))
 if handles.PK.type>1
     
@@ -96,25 +104,31 @@ else
         end
     end
     
-    error=1;
-    while error&&handles.PK.prop(handles.i)>0
-        try
-            
-            handles.PK.CalculateParameters(handles.i);
-            handles.PK.prop(handles.i)=handles.PK.prop(handles.i)-0.01;
-            set(handles.prop,'string',num2str(handles.PK.prop(handles.i),'%0.3f'))
-        catch
-            handles.PK.prop(handles.i)=handles.PK.prop(handles.i)+0.01;
-            handles.PK.prop(handles.i)
-            handles.PK.CalculateParameters(handles.i);
-            set(handles.prop,'string',num2str(handles.PK.prop(handles.i),'%0.3f'))
-            error=0;
-        end
-    end
+%     error=1;
+%     while error&&handles.PK.prop(handles.i)>0
+%         try
+%             
+%             handles.PK.CalculateParameters(handles.i);
+%             handles.PK.prop(handles.i)=handles.PK.prop(handles.i)-0.01;
+%             set(handles.prop,'string',num2str(handles.PK.prop(handles.i),'%0.3f'))
+%         catch
+%             handles.PK.prop(handles.i)=handles.PK.prop(handles.i)+0.01;
+%             handles.PK.prop(handles.i)
+%             handles.PK.CalculateParameters(handles.i);
+%             set(handles.prop,'string',num2str(handles.PK.prop(handles.i),'%0.3f'))
+%             error=0;
+%         end
+%     end
     
     
 end
+if handles.PK.bb
+    handles.PK.remove_base(handles.i);
+    handles.PK.CalculateParameters(handles.i);
+    plot_graphs(handles);
+else
 plot_graphs(handles);
+end
 
 guidata(hObject, handles);
 uiwait(handles.figure1);
@@ -168,7 +182,7 @@ try
         end
     end
     handles.PK.Filter(handles.i);
-    if handles.bb
+    if handles.PK.bb
         handles.PK.remove_base(handles.i);
     end
     handles.PK.CalculateParameters(handles.i);
@@ -213,23 +227,23 @@ function smooth_length_Callback(hObject, ~, handles)
 %        str2double(get(hObject,'String')) returns contents of smooth_length as a double
 input = str2double(get(hObject,'string'));
 old=handles.PK.sm(handles.i);
-% try
+try
     handles.PK.sm(handles.i)=input;
     handles.PK.Filter(handles.i);
-    if handles.bb
+    if handles.PK.bb
         handles.PK.remove_base(handles.i);
     end
     handles.PK.CalculateParameters(handles.i);
     plot_graphs(handles);
     
     
-% catch
-%     set(handles.smooth_length,'string',num2str(old))
-%     handles.PK.sm(handles.i)=old;
-%     handles.PK.Filter(handles.i);
-%     
-%     
-% end
+catch
+    set(handles.smooth_length,'string',num2str(old))
+    handles.PK.sm(handles.i)=old;
+    handles.PK.Filter(handles.i);
+    
+    
+end
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
@@ -293,20 +307,26 @@ pos=handles.PK.posper(:,:,handles.i);
 M=handles.PK.Mper(:,:,handles.i);
 
 cla(handles.axes_image)
+
 pos=handles.PK.posper(:,:,handles.i);
 M=handles.PK.Mper(:,:,handles.i);
 hold(handles.axes_image,'on');
-
+% dcm=datacursormode(handles.figure1);
+% dcm.Enable = 'on';
+% dcm.DisplayStyle = 'window';
 plot(handles.PK.vector_time,handles.PK.matrix_rough_fluorescences(:,handles.i),'color',handles.col,'parent',handles.axes_image)
 plot(handles.PK.vector_time,handles.PK.matrix_filtered_fluorescences(:,handles.i),'linewidth',2,'color','b','parent',handles.axes_image)
 %plot(handles.PK.vector_time,handles.PK.base(:,handles.i),'linewidth',1,'color','r','parent',handles.axes_image)
 plot(handles.PK.xmc(:,handles.i),handles.PK.mmvg(:,handles.i),'+c','linewidth',2,'parent',handles.axes_image)
-plot(handles.PK.xMc(:,handles.i),handles.PK.M(:,handles.i),'+y','linewidth',2,'parent',handles.axes_image)
+%plot(handles.PK.xMc(:,handles.i),handles.PK.M(:,handles.i),'+y','linewidth',2,'parent',handles.axes_image)
 plot(handles.PK.xmr(:,handles.i),handles.PK.mmvd(:,handles.i),'+g','linewidth',2,'parent',handles.axes_image)
-plot(handles.PK.xMr(:,handles.i),handles.PK.M(:,handles.i),'+r','linewidth',2,'parent',handles.axes_image)
+%plot(handles.PK.xMr(:,handles.i),handles.PK.M(:,handles.i),'+r','linewidth',2,'parent',handles.axes_image)
 plot(handles.PK.posm(:,handles.i),handles.PK.ms(:,handles.i),'+k','linewidth',2,'parent',handles.axes_image)
-plot(handles.PK.posM(:,handles.i),handles.PK.Ms(:,handles.i),'+k','linewidth',2,'parent',handles.axes_image)
+plot(handles.PK.posM(:,handles.i),handles.PK.M(:,handles.i),'+k','linewidth',2,'parent',handles.axes_image)
 plot(pos(:),M(:),'+m','linewidth',2,'parent',handles.axes_image)
+if(handles.PK.bb)
+    plot(handles.PK.vector_time,handles.PK.basefit(:,handles.i),'linewidth',1,'color',[0.2,0,0],'parent',handles.axes_image)
+end
 xlabel(handles.axes_image,'Time')
 
 if handles.PK.type==1
@@ -446,7 +466,7 @@ function rem_base_line_Callback(hObject, ~, handles)
 % hObject    handle to rem_base_line (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-handles.bb=1;
+handles.PK.bb=1;
 handles.PK.remove_base(handles.i);
 handles.PK.CalculateParameters(handles.i);
 plot_graphs(handles)
@@ -478,3 +498,110 @@ function fac_multi_CreateFcn(hObject, ~, ~)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --- Executes on button press in remove_pk.
+function remove_pk_Callback(hObject, eventdata, handles)
+% hObject    handle to remove_pk (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+axes(handles.axes_image);
+[x,~] = ginput(1);
+[~,pos]=min(abs(handles.PK.posM(:,handles.i)-x));
+handles.PK.Tauc(pos,handles.i)=NaN;
+handles.PK.Taud(pos,handles.i)=NaN;
+handles.PK.Taur(pos,handles.i)=NaN;
+handles.PK.Taus(pos,handles.i)=NaN;
+handles.PK.Aire(pos,handles.i)=NaN;
+handles.PK.pc(pos,handles.i)=NaN;
+handles.PK.pr(pos,handles.i)=NaN;
+handles.PK.hc(pos,handles.i)=NaN;
+handles.PK.hr(pos,handles.i)=NaN;
+handles.PK.M(pos,handles.i)=NaN;
+handles.PK.mmvg(pos,handles.i)=NaN;
+handles.PK.mmvd(pos,handles.i)=NaN;
+handles.PK.xmc(pos,handles.i)=NaN;
+handles.PK.xMc(pos,handles.i)=NaN;
+handles.PK.xmr(pos,handles.i)=NaN;
+handles.PK.xMr(pos,handles.i)=NaN;
+
+handles.PK.posm(pos,handles.i)=NaN;
+handles.PK.posM(pos,handles.i)=NaN;
+handles.PK.ms(pos,handles.i)=NaN;
+handles.PK.Ms(pos,handles.i)=NaN;
+handles.PK.posper(pos,:,handles.i)=NaN;
+handles.PK.Mper(pos,:,handles.i)=NaN;
+
+plot_graphs(handles);
+guidata(hObject, handles);
+
+
+
+% --- Executes on selection change in type_bl.
+function type_bl_Callback(hObject, eventdata, handles)
+% hObject    handle to type_bl (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: contents = cellstr(get(hObject,'String')) returns type_bl contents as cell array
+%        contents{get(hObject,'Value')} returns selected item from type_bl
+handles.PK.type_bl=get(handles.type_bl,'value');
+handles.PK.bb=1;
+set(handles.remove_base_line,'Value',1);
+handles.PK.remove_base(handles.i);
+handles.PK.CalculateParameters(handles.i);
+plot_graphs(handles);
+
+guidata(hObject, handles);
+
+
+
+% --- Executes during object creation, after setting all properties.
+function type_bl_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to type_bl (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: popupmenu controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
+
+
+% --- Executes on button press in remove_base_line.
+function remove_base_line_Callback(hObject, eventdata, handles)
+% hObject    handle to remove_base_line (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of remove_base_line
+
+handles.PK.bb=get(hObject,'Value');
+if handles.PK.bb
+set(handles.bool_baselineref,'Visible','on');
+handles.PK.remove_base(handles.i);
+handles.PK.CalculateParameters(handles.i);
+plot_graphs(handles);
+else
+   set(handles.bool_baselineref,'Visible','off');
+   handles.PK.bool_baselineref=0;
+   handles.PK.matrix_filtered_fluorescences(:,handles.i)=handles.PK.matrix_filtered_fluorescences_ori(:,handles.i);
+   handles.PK.CalculateParameters(handles.i);
+   plot_graphs(handles);
+end
+
+guidata(hObject, handles);
+
+
+% --- Executes on button press in bool_baselineref.
+function bool_baselineref_Callback(hObject, eventdata, handles)
+% hObject    handle to bool_baselineref (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of bool_baselineref
+handles.PK.bool_baselineref=get(hObject,'Value');
+handles.PK.CalculateParameters(handles.i);
+plot_graphs(handles);
+guidata(hObject, handles);

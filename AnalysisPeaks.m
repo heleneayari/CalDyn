@@ -8,6 +8,7 @@ classdef AnalysisPeaks < handle
         vector_filtering_polynomial_order
         vector_filtering_frame_length
         matrix_filtered_fluorescences
+        matrix_filtered_fluorescences_ori
         sm
         prop
         PixelSize
@@ -59,6 +60,10 @@ classdef AnalysisPeaks < handle
         Mder
         th_multi
         cut_freq
+        type_bl
+        bb
+        bool_baselineref
+        iter
         
         
     end
@@ -78,14 +83,17 @@ classdef AnalysisPeaks < handle
             addOptional(p,'th_smpks',0.2)
             addOptional(p,'th_medpks',0.5)
             addOptional(p,'th_multi',1.5)
-            
+            addOptional(p,'baselinefit',0)
+            addOptional(p,'bool_baselineref',0)
             parse(p, varargin{:});
-            
+            PK.iter=0;
             pol_length=p.Results.Pol_length;
             sm=p.Results.Smoothness;
             th_smpks=p.Results.th_smpks;
             th_medpks=p.Results.th_medpks;
             th_multi=p.Results.th_multi;
+            PK.bool_baselineref=p.Results.bool_baselineref;
+            PK.bb=p.Results.baselinefit;
             PK.ltab=50000;
             prop=p.Results.proportion;
             PK.type=p.Results.type;
@@ -102,7 +110,7 @@ classdef AnalysisPeaks < handle
             
             PK.number_acquisitions=sum(ind);
             PK.vector_time=time(ind);
-            PK.framerate=1/nanmean(diff(PK.vector_time));
+            PK.framerate=1/nanmedian(diff(PK.vector_time));
             PK.matrix_rough_fluorescences=p.Results.Signal(ind,2:(PK.number_cells+1));
             
             PK.vector_filtering_polynomial_order=pol_order*ones(1,PK.number_cells);
@@ -155,46 +163,50 @@ classdef AnalysisPeaks < handle
         function PK=remove_base(PK,varargin)
             p=inputParser;
             addRequired(p,'i');
-            %             addRequired(p,'keep')
             parse(p,varargin{1:end});
-            %             keep=p.Results.keep;
             i=p.Results.i;
-            %             F=fft(PK.matrix_rough_fluorescences(:,i));
-            %             length(F)
-            % %              figure
-            % %              plot(abs(F),'+')
-            %             fun=@(x) a*x+b;
-            %              F(keep+1:end-keep)=0;
-            % %             PK.base(:,i)=real(ifft(F));
-            %             titi=robustfit(PK.vector_time,PK.matrix_rough_fluorescences(:,i));
-            % %             PK.base(:,i)=PK.matrix_rough_fluorescences(:,i)-detrend(PK.matrix_rough_fluorescences(:,i));
-            %             PK.base(:,i)=titi(2).*PK.vector_time+titi(1);
-            PK.base(:,i)=nan*ones(PK.number_acquisitions,1);
-            % PK.base(:,i)=ones(PK.number_acquisitions,1);
-           
-            PK.base(PK.nindpk(:,i),i)= PK.matrix_filtered_fluorescences(PK.nindpk(:,i),i);
-            ind=~isnan(PK.base(:,i));
-       
-              titi=robustfit(PK.vector_time(ind),PK.matrix_filtered_fluorescences(ind,i));
-            ff=fit(PK.vector_time(ind),PK.matrix_filtered_fluorescences(ind,i),'poly3');
-            PK.basefit(:,i)=titi(2).*PK.vector_time+titi(1);
-            PK.basefit(:,i)=ff(PK.vector_time);
             
-         PK.matrix_filtered_fluorescences(:,i)=PK.matrix_filtered_fluorescences(:,i)-PK.basefit(:,i);
+            
+            PK.base(:,i)=nan*ones(PK.number_acquisitions,1);
+            PK.base(PK.nindpk(:,i),i)= PK.matrix_filtered_fluorescences_ori(PK.nindpk(:,i),i);
+            ind=~isnan(PK.base(:,i));
+            switch PK.type_bl
+                case 1
+ 
+                    ct=nanmean(PK.matrix_filtered_fluorescences_ori(ind,i));
+                    PK.basefit(:,i)=ct*ones(length(PK.vector_time),1);
+                case 2
+                    titi=robustfit(PK.vector_time(ind),PK.matrix_filtered_fluorescences_ori(ind,i));
+                    PK.basefit(:,i)=titi(2).*PK.vector_time+titi(1);
+                case 3
+                    ff=fit(PK.vector_time(ind),PK.matrix_filtered_fluorescences_ori(ind,i),'poly2');
+                    PK.basefit(:,i)=ff(PK.vector_time);
+                    
+                case 4
+                    ff=fit(PK.vector_time(ind),PK.matrix_filtered_fluorescences_ori(ind,i),'poly3');
+                    PK.basefit(:,i)=ff(PK.vector_time);
+            end
+        
+            
+
+            
+            
+         PK.matrix_filtered_fluorescences(:,i)=PK.matrix_filtered_fluorescences_ori(:,i)-PK.basefit(:,i);
          PK.CalculateParameters(i);
-% figure 
-% plot( PK.matrix_filtered_fluorescences(:,i));
+
         end
         
         function PK=Filter(PK,varargin)
             i=varargin{1};
             if PK.type<3
             PK.matrix_filtered_fluorescences(:,i)=sgolayfilt(PK.matrix_rough_fluorescences(:,i),PK.vector_filtering_polynomial_order(i),PK.vector_filtering_frame_length(i)); % in AU
+            PK.matrix_filtered_fluorescences_ori(:,i)=PK.matrix_filtered_fluorescences(:,i);
             %  PK.matrix_filtered_fluorescences(:,i)=PK.matrix_rough_fluorescences(:,i);
             else
                 F=fft(PK.matrix_rough_fluorescences(:,i));
                          F(PK.cut_freq+1:end-PK.cut_freq)=0;
                         PK.matrix_filtered_fluorescences(:,i)=real(ifft(F));
+                        PK.matrix_filtered_fluorescences_ori(:,i)=PK.matrix_filtered_fluorescences(:,i);
             end
             
         end
@@ -207,7 +219,7 @@ classdef AnalysisPeaks < handle
             addRequired(p,'i')
             parse(p, varargin{1:end});
             i=p.Results.i;
-            dper=[0.8 0.7 0.5 0.3 0.1];
+            dper=[0.8 0.7 0.5 0.3 0.05];
             PK.posm(:,i)=nan*ones(PK.ltab,1);
             PK.posM(:,i)=nan*ones(PK.ltab,1);
             PK.ms(:,i)=nan*ones(PK.ltab,1);
@@ -246,10 +258,11 @@ classdef AnalysisPeaks < handle
             
             
             ss=smooth(Signal,sl,'loess');
-%             ss=Signal;
+%                         ss=Signal;
 %                         figure;
 %                         hold on
 %                         plot(Signal,'linewidth',2)
+%                         plot(PK.vector_time,Signal)
 %                         plot(PK.matrix_rough_fluorescences(:,i),'color',[0.9 0.9 0.9])
             
             dd2=gradient(ss);
@@ -313,8 +326,8 @@ classdef AnalysisPeaks < handle
 %                 locr=[sl2 locr];
 %                 minr=[dd2(sl2) minr];   
 %             end
-            
-             if abs(dd2(sl))<-PK.prop(i)*nn/2
+            windf=10;
+             if abs(nanmean(dd2(sl:sl+windf)))<-PK.prop(i)*nn/2
                 locr=[sl2 locr];
                 minr=[dd2(sl2) minr];   
             end    
@@ -329,7 +342,7 @@ classdef AnalysisPeaks < handle
 %             end
 
 
-            if abs(nanmean(dd2(end-2*sl:end-sl)))<-PK.prop(i)*nn/2
+            if abs(nanmean(dd2(end-sl-windf:end-sl)))<-PK.prop(i)*nn/2
                 locc=[locc length(dd2)-sl2];
                 maxc=[maxc dd2(end-sl2)];
             end
@@ -353,8 +366,9 @@ classdef AnalysisPeaks < handle
                         if locc(ii)>locr(pl-1)
                             
                             %
-                            [M(count),ll(ii)]=max(Signal(locc(ii):locr(pl)));
-                            ll(ii)=ll(ii)+locc(ii)-1;
+                            [M(count),posM(count)]=max(Signal(locc(ii):locr(pl)));
+                            posM(count)=posM(count)+locc(ii)-1;
+          
                             
                             [mmvg(count),vvg(ii)]=min(ss(locr(pl-1):locc(ii)));
                             %                              [mmvg(count),vvg(ii)]=min(Signal(locr(pl-1):locc(ii)));
@@ -372,12 +386,20 @@ classdef AnalysisPeaks < handle
 %                             plot(locr(pl-1),ss(locr(pl-1)),'+g')
 %                             plot(locc(ii),ss(locc(ii)),'+m')
                             
+
+                            if PK.bool_baselineref&&PK.iter~=0
+       
+                               mmvg(count)=0;
+                               mmvd(count)=0;
+                    
+                            end
                             b=Signal(locc(ii))-maxc(ii)*locc(ii);
-                            xmc(count)=(mmvg(count)-b)/maxc(ii);
+                          
+                            xmc(count)=round((mmvg(count)-b)/maxc(ii));
                             xMc(count)=(M(count)-b)/maxc(ii);
                             b=Signal(locr(pl))-minr(pl)*locr(pl);
                             xMr(count)=(M(count)-b)/minr(pl);
-                            xmr(count)=(mmvd(count)-b)/minr(pl);
+                            xmr(count)=round((mmvd(count)-b)/minr(pl));
                             
                             %% correct the value of mmvd first calculated so that it fits on the curve
 %                             mmvd(count)=Signal(round(xmr(count)));
@@ -387,14 +409,10 @@ classdef AnalysisPeaks < handle
                             %                             plot(xmr(count),mmvd(count),'+g')
                             %                             plot(xMr(count),M(count),'+r')
                             
-                            PK.Tauc(count,i)=(xMc(count)-xmc(count))/PK.framerate;
-                            PK.Taur(count,i)=(xmr(count)-xMr(count))/PK.framerate;
-                            PK.Taud(count,i)=(xmr(count)-xMc(count))/PK.framerate;
-                            PK.Aire(count,i)=sum(Signal(max(1,round(xmc(count))):min(round(xmr(count)),length(Signal))));
-                            PK.Taus(count,i)=(xmr(count)-xmc(count))/PK.framerate;
+
                             
                             PK.pc(count,i)=maxc(ii)*PK.PixelSize*PK.framerate;
-                            PK.pr(count,i)=minr(pl)*PK.PixelSize*PK.framerate;
+
 %                             PK.hr(count,i)= (PK.M(count)-mmvd(count))*PK.PixelSize;
                             PK.hr(count,i)=-minr(pl)*(xmr(count)-xMr(count))*PK.PixelSize;
                             PK.hc(count,i)=maxc(ii)*(xMc(count)-xmc(count))*PK.PixelSize;
@@ -402,9 +420,10 @@ classdef AnalysisPeaks < handle
                             PK.mmvg(count,i)=mmvg(count)*PK.PixelSize;
                             PK.mmvd(count,i)=mmvd(count)*PK.PixelSize;
                             
-                            [Ms(count),posM(count)]=max(Signal(round(max(1,xmc(count))):round(min(length(Signal),xmr(count)))));
-                            posM(count)=posM(count)+xmc(count)-1;
-                            
+%                             [Ms(count),posM(count)]=max(Signal(round(max(1,xmc(count))):round(min(length(Signal),xmr(count)))));
+%                             posM(count)=posM(count)+round(max(1,xmc(count)))-1;
+                    
+%                             plot(posM(count),Ms(count),'k+')
                             
                             count=count+1;
                         end
@@ -423,9 +442,14 @@ classdef AnalysisPeaks < handle
             %           plot(posm,ms,'+')
             %           plot(posM,Ms,'+')
             
-            for kk=1:length(xMr(:))
+            if PK.bool_baselineref&& PK.iter~=0
+                ms=zeros(1,length(ms));
+            end
+            posper=round(repmat(xmr',1,5));
+            for kk=1:length(xmr(:))
                 for uu=1:5
-                    dd=dper(uu)*(Ms(kk)-ms(kk));
+                    % 5 is for 90% and 1 for 10%
+                    dd=dper(uu)*(M(kk)-ms(kk));
                     tutu=find(diff(Signal(round(posM(kk)):round(posm(kk)))-ms(kk)>dd)==-1);
                     if ~isempty(tutu)
                         posper(kk,uu)=tutu(1);
@@ -434,35 +458,75 @@ classdef AnalysisPeaks < handle
    
 %                         Mper(kk,uu)=Signal(posper(kk,uu));
                         
-                    end
-                    
-                    
+                    end                                       
                 end
-%                 try 
+
+                pr(kk)=mean(dd2(max(posM(kk)+1,1):min(length(dd2),posper(kk,5)+1)));
+                b=M(kk)-pr(kk)*posM(kk);
+                xmrn(kk)=(mmvd(kk)-b)/pr(kk);
+       
+                if kk<length(xMr(:))
+                if xmrn(kk)<xmr(kk)||xmrn(kk)>xmc(kk+1)
+                    xmrn(kk)=xmr(kk);
+                end
+                else 
+                   if xmrn(kk)<xmr(kk)||xmrn(kk)>length(Signal)
+                    xmrn(kk)=xmr(kk);
+                   end
+                end
+                PK.Aire(kk,i)=sum(Signal(max(1,round(xmc(kk))):min(round(xmr(kk)),length(Signal))))/PK.framerate;
+                xmrn=round(xmrn);
+                PK.Tauc(kk,i)=PK.vector_time(posM(kk))-PK.vector_time(xmc(kk));
+                PK.Taur(kk,i)=PK.vector_time(xmrn(kk))-PK.vector_time(posM(kk));
+                PK.Taud(kk,i)=PK.vector_time(xmrn(kk))-PK.vector_time(posM(kk));
+                PK.Taus(kk,i)=PK.vector_time(xmrn(kk))-PK.vector_time(xmc(kk));
+                
+                
+                
+                
                 PK.nindpk(max(1,round(xmc(kk))):min(round(posper(kk,5)),length(Signal)),i)=0;
 %                 catch
 %                 end
             end
-
-            PK.nindpk(posm(end):end,i)=0;
-         
-            PK.posper(1:size(posper,1),:,i)=reshape(PK.vector_time(posper(:)),size(posper));
-            PK.Mper(1:size(posper,1),:,i)=Mper*PK.PixelSize;
-            PK.posm(1:length(xmc),i)=(posm-1)/PK.framerate;
-            PK.posmr(1:length(xmc),i)=posm;
-            PK.posM(1:length(xmc),i)=(posM-1)/PK.framerate;
+            
+            
+               
+            
+            PK.nindpk(round(posm(end)):end,i)=0;
+            PK.pr(1:length(xMr),i)=pr*PK.PixelSize*PK.framerate;
+                   
             PK.ms(1:length(xmc),i)=ms*PK.PixelSize;
-            PK.Ms(1:length(xmc),i)=Ms*PK.PixelSize;
-            PK.xmc(1:length(xmc),i)=(xmc-1)/PK.framerate;
-            PK.xmcr(1:length(xmc),i)=xmc;
-            PK.xMc(1:length(xMc),i)=(xMc-1)/PK.framerate;
-            PK.xmr(1:length(xmr),i)=(xmr-1)/PK.framerate;
-            PK.xMr(1:length(xMr),i)=(xMr-1)/PK.framerate;
+%            PK.Ms(1:length(xmc),i)=Ms*PK.PixelSize;
+            PK.posper(1:size(posper,1),:,i)=reshape(PK.vector_time(posper(:)+1),size(posper));
+            PK.Mper(1:size(posper,1),:,i)=reshape(Signal(posper(:)+1),size(posper));   
+
+%             PK.posm(1:length(xmc),i)=(posm-1)/PK.framerate;
+%             PK.posmr(1:length(xmc),i)=posm;
+%             PK.posM(1:length(xmc),i)=(posM-1)/PK.framerate;
+%             PK.ms(1:length(xmc),i)=ms*PK.PixelSize;
+%             PK.Ms(1:length(xmc),i)=Ms*PK.PixelSize;
+%             PK.xmc(1:length(xmc),i)=(xmc-1)/PK.framerate;
+%             PK.xmcr(1:length(xmc),i)=xmc;
+%             PK.xMc(1:length(xMc),i)=(xMc-1)/PK.framerate;
+%             PK.xmr(1:length(xmr),i)=(xmr-1)/PK.framerate;
+%             PK.xMr(1:length(xMr),i)=(xMr-1)/PK.framerate;
+
+           
+            PK.posm(1:length(xmc),i)=PK.vector_time(round(posm));
+            PK.posmr(1:length(xmc),i)=round(posm);
+            PK.posM(1:length(xmc),i)=PK.vector_time(posM);
+            PK.xmc(1:length(xmc),i)=PK.vector_time(round(xmc));
+            PK.xmcr(1:length(xmc),i)=round(xmc);
+   %         PK.xMc(1:length(xMc),i)=PK.vector_time(round(xMc));
+            PK.xmr(1:length(xmr),i)=PK.vector_time(round(xmrn));
+      %      PK.xMr(1:length(xMr),i)=PK.vector_time(round(xMr));
+            
+            
             %             PK.locc(1:length(locc),i)=locc/PK.SamplingFrequency;
             %             PK.locr(1:length(locr),i)=locr/PK.SamplingFrequency;
             
-            
-  
+%             plot(PK.posM(:,i),PK.Ms(:,i),'+k')
+            PK.iter=PK.iter+1;
             
         end
         
@@ -480,7 +544,7 @@ classdef AnalysisPeaks < handle
             contsmpks=0;
             contmultipks=0;
             contmedpks=0;
-            M=nanmax(cat(1,PK.hr(:,i),PK.hc(:,i)));
+            MM=nanmax(cat(1,PK.hr(:,i),PK.hc(:,i)));
             titi=cat(1,PK.mmvg(~isnan(PK.mmvg(:,i)),i),PK.mmvd(~isnan(PK.mmvd(:,i)),i));
             bb=quantile(titi,0.4);
 %             bb=nanmedian(cat(1,PK.mmvg(:,i),PK.mmvd(:,i)));
@@ -491,11 +555,11 @@ classdef AnalysisPeaks < handle
           
         for ii=1:length(PK.posM(~isnan(PK.posM(:,i)),i))
 
-            if max(PK.hr(ii,i),PK.hc(ii,i))<M*PK.th_smpks(i)
+            if max(PK.hr(ii,i),PK.hc(ii,i))<MM*PK.th_smpks(i)
                 contsmpks=contsmpks+1;
                 PK.ind_smpks(ii,i)=1;
             end
-             if max(PK.hr(ii,i),PK.hc(ii,i))<M*PK.th_medpks(i)&& max(PK.hr(ii,i),PK.hc(ii,i))>M*PK.th_smpks(i)
+             if max(PK.hr(ii,i),PK.hc(ii,i))<MM*PK.th_medpks(i)&& max(PK.hr(ii,i),PK.hc(ii,i))>MM*PK.th_smpks(i)
                 contmedpks=contmedpks+1;
                 PK.ind_medpks(ii,i)=1;
              end
@@ -525,18 +589,17 @@ classdef AnalysisPeaks < handle
             results_pathname=varargin{1};
             
             if (PK.type==2)
-                
-            Tf= array2table(zeros(PK.number_cells,38));
-            
-            Tf.Properties.VariableNames = {'Period','Period_std','ascending_time','ascending_time_std','decay_time','decay_time_std',...
+             Tf= array2table(zeros(PK.number_cells,39));  
+
+            Tf.Properties.VariableNames = {'N_pks','Period','Period_std','ascending_time','ascending_time_std','decay_time','decay_time_std',...
                 'decay_time_90','decay_time_90_std','decay_time_70','decay_time_70_std','decay_time_50','decay_time_50_std','decay_time_30','decay_time_30_std','decay_time_20','decay_time_20_std',...
                 'Tau_systole','Tau_systole_std','Baz_Tau_syst','Baz_Tau_syst_std','Tau_diast','Tau_diast_std','Baz_Tau_diast','Baz_Tau_diast_std','AUC','AUC_std','Pente_contraction','Pente_contraction_std','Pente_relax','Pente_relax_std',...
                 'abs_amp_contraction','abs_amp_contraction_std','abs_amp_relax','abs_amp_relax_std','amp_max','amp_max_std','min','min_std'};
             
             else
                 
+
             Tf= array2table(zeros(PK.number_cells,42));
-            
             Tf.Properties.VariableNames = {'Period','Period_std','ascending_time','ascending_time_std','decay_time','decay_time_std',...
                 'decay_time_90','decay_time_90_std','decay_time_70','decay_time_70_std','decay_time_50','decay_time_50_std','decay_time_30','decay_time_30_std','decay_time_20','decay_time_20_std',...
                 'Tau_systole','Tau_systole_std','Baz_Tau_syst','Baz_Tau_syst_std','Tau_diast','Tau_diast_std','Baz_Tau_diast','Baz_Tau_diast_std','AUC','AUC_std','Pente_contraction','Pente_contraction_std','Pente_relax','Pente_relax_std',...
@@ -545,53 +608,63 @@ classdef AnalysisPeaks < handle
             
             
             end
-            MedT=nanmedian(diff(PK.posM,1,1),1);
+            MedT=NaN*ones(1,PK.number_cells);
+            StdT=NaN*ones(1,PK.number_cells);
+            for uu=1:PK.number_cells
+                MedT(uu)=median(diff(PK.posM(~isnan(PK.posM(:,uu)),uu)));
+                StdT(uu)=std(diff(PK.posM(~isnan(PK.posM(:,uu)),uu)));
+             end
             TabMedT=repmat(MedT,PK.ltab,1);
+        
             Tf.Period=MedT';
-            Tf.Period_std=nanstd(diff(PK.posM,1,1),1)';
-            Tf.ascending_time= nanmedian(PK.Tauc,1)';
+            Tf.Period_std=StdT';
+            Tf.ascending_time= nanmean(PK.Tauc,1)';
             Tf.ascending_time_std= nanstd(PK.Tauc,1)';
-            Tf.decay_time = nanmedian(PK.Taur,1)';
+            Tf.decay_time = nanmean(PK.Taur,1)';
             Tf.decay_time_std= nanstd(PK.Taur,1)';
-            Tf.Tau_systole = nanmedian(PK.Taus,1)';
+            Tf.Tau_systole = nanmean(PK.Taus,1)';
             Tf.Tau_systole_std= nanstd(PK.Taus,1)';
-            Tf.Baz_Tau_syst = nanmedian(PK.Taus./sqrt(TabMedT),1)';
+            Tf.Baz_Tau_syst = nanmean(PK.Taus./sqrt(TabMedT),1)';
             Tf.Baz_Tau_syst_std = nanstd(PK.Taus./sqrt(TabMedT),1)';
-            Tf.Tau_diast = nanmedian(PK.Taud,1)';
+            Tf.Tau_diast = nanmean(PK.Taud,1)';
             Tf.Tau_diast_std = nanstd(PK.Taud,1)';
-            Tf.Baz_Tau_diast = nanmedian(PK.Taud./sqrt(TabMedT),1)';
+            Tf.Baz_Tau_diast = nanmean(PK.Taud./sqrt(TabMedT),1)';
             Tf.Baz_Tau_diast_std = nanstd(PK.Taud./sqrt(TabMedT),1)';
-            Tf.AUC= nanmedian(PK.Aire,1)';
+            Tf.AUC= nanmean(PK.Aire,1)';
             Tf.AUC_std = nanstd(PK.Aire,1)';
-            Tf.Pente_contraction = nanmedian(PK.pc,1)';
+            Tf.Pente_contraction = nanmean(PK.pc,1)';
             Tf.Pente_contraction_std = nanstd(PK.pc,1)';
-            Tf.Pente_relax= nanmedian(PK.pr,1)';
+            Tf.Pente_relax= nanmean(PK.pr,1)';
             Tf.Pente_relax_std = nanstd(PK.pr,1)';
-            Tf.abs_amp_relax = nanmedian(PK.hr,1)';
+            Tf.abs_amp_relax = nanmean(PK.hr,1)';
             Tf.abs_amp_relax_std = nanstd(PK.hr,1)';
-            Tf.abs_amp_contraction = nanmedian(PK.hc,1)';
+            Tf.abs_amp_contraction = nanmean(PK.hc,1)';
             Tf.abs_amp_contraction_std = nanstd(PK.hc,1)';
-            Tf.amp_max = nanmedian(PK.M,1)';
+            Tf.amp_max = nanmean(PK.M,1)';
             Tf.amp_max_std = nanstd(PK.M,1)';
-            Tf.min = nanmedian(PK.mmvg,1)';
+            Tf.min = nanmean(PK.mmvg,1)';
             Tf.min_std = nanstd(PK.mmvg,1)';
-            Tf.decay_time_20=nanmedian(squeeze(PK.posper(:,1,:))-PK.posM,1)';
+            Tf.decay_time_20=nanmean(squeeze(PK.posper(:,1,:))-PK.posM,1)';
             Tf.decay_time_20_std=nanstd(squeeze(PK.posper(:,1,:))-PK.posM,1)';
-            Tf.decay_time_30=nanmedian(squeeze(PK.posper(:,2,:))-PK.posM,1)';
+            Tf.decay_time_30=nanmean(squeeze(PK.posper(:,2,:))-PK.posM,1)';
             Tf.decay_time_30_std=nanstd(squeeze(PK.posper(:,2,:))-PK.posM,1)';
-            Tf.decay_time_50=nanmedian(squeeze(PK.posper(:,3,:))-PK.posM,1)';
+            Tf.decay_time_50=nanmean(squeeze(PK.posper(:,3,:))-PK.posM,1)';
             Tf.decay_time_50_std=nanstd(squeeze(PK.posper(:,3,:))-PK.posM)';
-            Tf.decay_time_70=nanmedian(squeeze(PK.posper(:,4,:))-PK.posM,1)';
+            Tf.decay_time_70=nanmean(squeeze(PK.posper(:,4,:))-PK.posM,1)';
             Tf.decay_time_70_std=nanstd(squeeze(PK.posper(:,4,:))-PK.posM,1)';
-            Tf.decay_time_90=nanmedian(squeeze(PK.posper(:,5,:))-PK.posM,1)';
+            Tf.decay_time_90=nanmean(squeeze(PK.posper(:,5,:))-PK.posM,1)';
             Tf.decay_time_90_std=nanstd(squeeze(PK.posper(:,5,:))-PK.posM,1)';
-            if(PK.type==1)
             Tf.N_pks=PK.N';
+            if(PK.type==1)            
             Tf.f_smpks=PK.f_smpks';
             Tf.f_medpks=PK.f_medpks';
             Tf.f_multipks=PK.f_multipks';
             end
-            writetable(Tf,results_pathname,'WriteRowNames',true)
+      
+            Tfa = table2array(Tf);
+            Tff = array2table(Tfa.');
+            Tff.Properties.RowNames = Tf.Properties.VariableNames;
+            writetable(Tff,results_pathname,'WriteRowNames',true)
             
         end
         

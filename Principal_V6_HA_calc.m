@@ -25,7 +25,7 @@ folder='/data1/thoman/ownCloud/flux_calcique/';
 %% param 
     pol_length=3;
     sm=1;
-    prop=0.2; 
+    prop=0.05; 
     type=1;%1 for calcic signals, 2 for electrics 
     th_smpks=0.2;
     th_medpks=0.5;
