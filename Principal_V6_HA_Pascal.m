@@ -29,7 +29,7 @@ if ~exist(results_foldername,'file')
     mkdir(results_foldername);
 end
 
-PK=AnalysisPeaks(matrix_rough_data,'Pol_length',pol_length,'smoothness',sm,'prop',prop,'type',type,'baselinefit',1,'bool_baselineref',1);
+PK=AnalysisPeaks(matrix_rough_data,'param_filter',pol_length,'smoothness',sm,'prop',prop,'type',type,'baselinefit',1,'bool_baselineref',1);
 
 
 %% rest

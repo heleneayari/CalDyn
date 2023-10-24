@@ -2,7 +2,7 @@
 clc
 clear
 close all;
-folder='/data1/thoman/ownCloud/flux_calcique/';
+folder='/data1/thoman/ownCloud/flux_calcique/Signaux_OM/';
 %% load data
     [file,rough_data_foldername]=uigetfile([folder,'*.*']);
     rough_data_pathname=[rough_data_foldername, file];
@@ -18,7 +18,8 @@ folder='/data1/thoman/ownCloud/flux_calcique/';
          matrix_rough_data=TT{:,tab};
      end
  else
-     matrix_rough_data=xlsread(rough_data_pathname);
+     warning('off','MATLAB:table:ModifiedAndSavedVarnames')
+     matrix_rough_data=table2array(readtable(rough_data_pathname));
  end
 
 
@@ -34,7 +35,7 @@ results_foldername=[rough_data_foldername,filesep,'Results_',file(1:end-5), file
 if ~exist(results_foldername,'file')
     mkdir(results_foldername);
 end
-PK=AnalysisPeaks(matrix_rough_data,'Pol_length',pol_length,'smoothness',sm,'prop',prop,'type',type);
+PK=AnalysisPeaks(matrix_rough_data,'param_filter',pol_length,'smoothness',sm,'prop',prop,'type',type);
 
 %% rest
 

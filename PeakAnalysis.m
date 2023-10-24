@@ -67,67 +67,83 @@ set(handles.fac_multi,'string',num2str(handles.PK.th_multi(handles.i)))
 set(handles.remove_base_line,'Value',handles.PK.bb)
 
 if handles.PK.bb
- set(handles.bool_baselineref,'Value',handles.PK.bool_baselineref)   
+    set(handles.bool_baselineref,'Value',handles.PK.bool_baselineref)
 else
-set(handles.bool_baselineref,'Visible','off');
+    set(handles.bool_baselineref,'Visible','off');
 end
 
 handles.PK.type_bl=get(handles.type_bl,'value');
 % set(handles.smooth_length,'string',num2str(handles.PK.sm(handles.i)))
-if handles.PK.type>1
-    
-    set(handles.panel_stat,'Visible','off');
-    error=1;
-%     while error
-%         try
-            handles.PK.Filter(handles.i);
-            handles.PK.CalculateParameters(handles.i);
-            error=0;
-            set(handles.smooth_length,'string',num2str(handles.PK.sm(handles.i)))
-%         catch
-%             handles.PK.sm(handles.i)=handles.PK.sm(1)+10;
-%             
-%         end
-%         
-%     end
-else
-    error=1;
-    while error
-        try
-            handles.PK.Filter(handles.i);
-            handles.PK.CalculateParameters(handles.i);
-            error=0;
-            set(handles.smooth_length,'string',num2str(handles.PK.sm(handles.i)))
-        catch
-            handles.PK.sm(:)=handles.PK.sm(1)+1;
-            
+switch handles.PK.type
+    case 2
+        
+        set(handles.panel_stat,'Visible','off');
+        error=1;
+        %     while error
+        %         try
+        handles.PK.Filter(handles.i);
+        handles.PK.CalculateParameters(handles.i);
+        error=0;
+        set(handles.smooth_length,'string',num2str(handles.PK.sm(handles.i)))
+        %         catch
+        %             handles.PK.sm(handles.i)=handles.PK.sm(1)+10;
+        %
+        %         end
+        %
+        %     end
+    case 1
+        
+        set(handles.panel_stat,'Visible','on');
+        error=1;
+        while error
+            try
+                handles.PK.Filter(handles.i);
+                handles.PK.CalculateParameters(handles.i);
+                error=0;
+                set(handles.smooth_length,'string',num2str(handles.PK.sm(handles.i)))
+            catch
+                handles.PK.sm(:)=handles.PK.sm(1)+1;
+                
+            end
         end
-    end
-    
-%     error=1;
-%     while error&&handles.PK.prop(handles.i)>0
-%         try
-%             
-%             handles.PK.CalculateParameters(handles.i);
-%             handles.PK.prop(handles.i)=handles.PK.prop(handles.i)-0.01;
-%             set(handles.prop,'string',num2str(handles.PK.prop(handles.i),'%0.3f'))
-%         catch
-%             handles.PK.prop(handles.i)=handles.PK.prop(handles.i)+0.01;
-%             handles.PK.prop(handles.i)
-%             handles.PK.CalculateParameters(handles.i);
-%             set(handles.prop,'string',num2str(handles.PK.prop(handles.i),'%0.3f'))
-%             error=0;
-%         end
-%     end
-    
-    
+        
+        %     error=1;
+        %     while error&&handles.PK.prop(handles.i)>0
+        %         try
+        %
+        %             handles.PK.CalculateParameters(handles.i);
+        %             handles.PK.prop(handles.i)=handles.PK.prop(handles.i)-0.01;
+        %             set(handles.prop,'string',num2str(handles.PK.prop(handles.i),'%0.3f'))
+        %         catch
+        %             handles.PK.prop(handles.i)=handles.PK.prop(handles.i)+0.01;
+        %             handles.PK.prop(handles.i)
+        %             handles.PK.CalculateParameters(handles.i);
+        %             set(handles.prop,'string',num2str(handles.PK.prop(handles.i),'%0.3f'))
+        %             error=0;
+        %         end
+        %     end
+    case 3
+        set(handles.param_filt_string,'String','num cut freq')
+        set(handles.remove_base_line,'Visible', 'off')
+        set(handles.type_bl,'Visible', 'off')
+        set(handles.remove_pk,'Visible', 'off')
+        set(handles.smooth_length,'Visible', 'off')
+        set(handles.string_smooth,'Visible', 'off')
+        handles.PK.Filter(handles.i);
+        handles.PK.CalculateParameters(handles.i);
+        handles.PK.Analyse_MEA(handles.i);
+        cla(handles.axes2,'reset')
+        set(handles.axes2,'Visible','off')
+        
+        plot_graphs(handles);
+        
 end
 if handles.PK.bb
     handles.PK.remove_base(handles.i);
     handles.PK.CalculateParameters(handles.i);
     plot_graphs(handles);
 else
-plot_graphs(handles);
+    plot_graphs(handles);
 end
 
 guidata(hObject, handles);
@@ -166,8 +182,9 @@ function frame_length_Callback(hObject, ~, handles)
 % Hints: get(hObject,'String') returns contents of frame_length as text
 %        str2double(get(hObject,'String')) returns contents of frame_length as a double
 input = str2double(get(hObject,'string'));
-
 old=handles.PK.vector_filtering_frame_length(handles.i);
+if handles.PK.type<3
+
 
 try
     if input>2 && mod(input,2)==1
@@ -194,13 +211,28 @@ try
 catch
     set(handles.frame_length,'string',num2str(old))
     handles.PK.vector_filtering_frame_length(handles.i:end)=old;
-
+    
     handles.PK.Filter(handles.i);
- 
-       
+    
+    
 end
 
-
+else
+   
+    try
+     handles.PK.vector_filtering_frame_length(handles.i:end)=input;    
+    handles.PK.cut_freq=input;
+    handles.PK.Filter(handles.i);
+    handles.PK.CalculateParameters(handles.i);
+    handles.PK.Analyse_MEA(handles.i);
+    plot_graphs(handles);
+    catch
+            set(handles.frame_length,'string',num2str(old))
+    handles.PK.vector_filtering_frame_length(handles.i:end)=old;
+    
+    handles.PK.Filter(handles.i);
+    end
+end
 guidata(hObject, handles);
 
 
@@ -272,8 +304,12 @@ old=handles.PK.prop(handles.i);
 try
     
     handles.PK.prop(handles.i)=input;
+    if handles.PK.type<3
     handles.PK.CalculateParameters(handles.i);
-    
+    else
+    handles.PK.CalculateParameters(handles.i);
+    handles.PK.Analyse_MEA(handles.i);
+    end
     plot_graphs(handles);
     
 catch
@@ -303,86 +339,122 @@ end
 function handles=plot_graphs(handles)
 %for plots
 
-pos=handles.PK.posper(:,:,handles.i);
-M=handles.PK.Mper(:,:,handles.i);
-
-cla(handles.axes_image)
-
-pos=handles.PK.posper(:,:,handles.i);
-M=handles.PK.Mper(:,:,handles.i);
-hold(handles.axes_image,'on');
-% dcm=datacursormode(handles.figure1);
-% dcm.Enable = 'on';
-% dcm.DisplayStyle = 'window';
-plot(handles.PK.vector_time,handles.PK.matrix_rough_fluorescences(:,handles.i),'color',handles.col,'parent',handles.axes_image)
-plot(handles.PK.vector_time,handles.PK.matrix_filtered_fluorescences(:,handles.i),'linewidth',2,'color','b','parent',handles.axes_image)
-%plot(handles.PK.vector_time,handles.PK.base(:,handles.i),'linewidth',1,'color','r','parent',handles.axes_image)
-plot(handles.PK.xmc(:,handles.i),handles.PK.mmvg(:,handles.i),'+c','linewidth',2,'parent',handles.axes_image)
-%plot(handles.PK.xMc(:,handles.i),handles.PK.M(:,handles.i),'+y','linewidth',2,'parent',handles.axes_image)
-plot(handles.PK.xmr(:,handles.i),handles.PK.mmvd(:,handles.i),'+g','linewidth',2,'parent',handles.axes_image)
-%plot(handles.PK.xMr(:,handles.i),handles.PK.M(:,handles.i),'+r','linewidth',2,'parent',handles.axes_image)
-plot(handles.PK.posm(:,handles.i),handles.PK.ms(:,handles.i),'+k','linewidth',2,'parent',handles.axes_image)
-plot(handles.PK.posM(:,handles.i),handles.PK.M(:,handles.i),'+k','linewidth',2,'parent',handles.axes_image)
-plot(pos(:),M(:),'+m','linewidth',2,'parent',handles.axes_image)
-if(handles.PK.bb)
-    plot(handles.PK.vector_time,handles.PK.basefit(:,handles.i),'linewidth',1,'color',[0.2,0,0],'parent',handles.axes_image)
-end
-xlabel(handles.axes_image,'Time')
-
-if handles.PK.type==1
+if handles.PK.type<3
+    pos=handles.PK.posper(:,:,handles.i);
+    M=handles.PK.Mper(:,:,handles.i);
     
-    handles.PK.statpks(handles.i);
-    %     plot(handles.PK.vector_time,(handles.PK.base(:,handles.i)),'color','m','parent',handles.axes_image)
-    %     plot(handles.PK.vector_time,(handles.PK.basefit(:,handles.i)),'color','m','parent',handles.axes_image)
-    set(handles.Npks_val,'string',num2str(handles.PK.N(handles.i)));
-    set(handles.fsmpk_val,'string',num2str(handles.PK.f_smpks(handles.i)));
-    set(handles.fmedpk_val,'string',num2str(handles.PK.f_medpks(handles.i)));
-    set(handles.fmultipk_val,'string',num2str(handles.PK.f_multipks(handles.i)));
-
-    for ii=1:handles.PK.N(handles.i)
-
-        if handles.PK.ind_medpks(ii,handles.i)
+    cla(handles.axes_image,'reset')
+    
+    pos=handles.PK.posper(:,:,handles.i);
+    M=handles.PK.Mper(:,:,handles.i);
+    hold(handles.axes_image,'on');
+    gca=handles.axes_image;
+    set(gca,'ylimmode','auto','xlimmode','auto')
+    % ylim('auto')
+    % dcm=datacursormode(handles.figure1);
+    % dcm.Enable = 'on';
+    % dcm.DisplayStyle = 'window';
+    plot(handles.PK.vector_time,handles.PK.matrix_rough_fluorescences(:,handles.i),'color',handles.col,'parent',handles.axes_image)
+    plot(handles.PK.vector_time,handles.PK.matrix_filtered_fluorescences(:,handles.i),'linewidth',2,'color','b','parent',handles.axes_image)
+    plot(handles.PK.xmc(:,handles.i),handles.PK.mmvg(:,handles.i),'+c','linewidth',2,'parent',handles.axes_image)
+    plot(handles.PK.xmr(:,handles.i),handles.PK.mmvd(:,handles.i),'+g','linewidth',2,'parent',handles.axes_image)
+    plot(handles.PK.posm(:,handles.i),handles.PK.ms(:,handles.i),'+k','linewidth',2,'parent',handles.axes_image)
+    plot(handles.PK.posM(:,handles.i),handles.PK.M(:,handles.i),'+k','linewidth',2,'parent',handles.axes_image)
+    plot(pos(:),M(:),'+m','linewidth',2,'parent',handles.axes_image)
+    if(handles.PK.bb)
+        plot(handles.PK.vector_time,handles.PK.basefit(:,handles.i),'linewidth',1,'color',[0.2,0,0],'parent',handles.axes_image)
+    end
+    xlabel(handles.axes_image,'Time')
+    
+    if handles.PK.type==1
+        
+        handles.PK.statpks(handles.i);
+        %     plot(handles.PK.vector_time,(handles.PK.base(:,handles.i)),'color','m','parent',handles.axes_image)
+        %     plot(handles.PK.vector_time,(handles.PK.basefit(:,handles.i)),'color','m','parent',handles.axes_image)
+        set(handles.Npks_val,'string',num2str(handles.PK.N(handles.i)));
+        set(handles.fsmpk_val,'string',num2str(handles.PK.f_smpks(handles.i)));
+        set(handles.fmedpk_val,'string',num2str(handles.PK.f_medpks(handles.i)));
+        set(handles.fmultipk_val,'string',num2str(handles.PK.f_multipks(handles.i)));
+        
+        for ii=1:handles.PK.N(handles.i)
             
-            y1=handles.PK.matrix_filtered_fluorescences(round(handles.PK.xmcr(ii,handles.i)):round(handles.PK.posmr(ii,handles.i)),handles.i);            
-            x1=handles.PK.vector_time(round(handles.PK.xmcr(ii,handles.i)):round(handles.PK.posmr(ii,handles.i)));
+            if handles.PK.ind_medpks(ii,handles.i)
+                
+                y1=handles.PK.matrix_filtered_fluorescences(round(handles.PK.xmcr(ii,handles.i)):round(handles.PK.posmr(ii,handles.i)),handles.i);
+                x1=handles.PK.vector_time(round(handles.PK.xmcr(ii,handles.i)):round(handles.PK.posmr(ii,handles.i)));
+                
+                plot(x1,y1,'color',[0.47 0.25 0.80],'linewidth',2,'parent',handles.axes_image)
+            end
             
-            plot(x1,y1,'color',[0.47 0.25 0.80],'linewidth',2,'parent',handles.axes_image)
+            if handles.PK.ind_smpks(ii,handles.i)
+                
+                y1=handles.PK.matrix_filtered_fluorescences(round(handles.PK.xmcr(ii,handles.i)):round(handles.PK.posmr(ii,handles.i)),handles.i);
+                x1=handles.PK.vector_time(round(handles.PK.xmcr(ii,handles.i)):round(handles.PK.posmr(ii,handles.i)));
+                
+                plot(x1,y1,'y','linewidth',2,'parent',handles.axes_image)
+            end
+            
+            if handles.PK.ind_multipks(ii,handles.i)
+                y1=handles.PK.matrix_filtered_fluorescences(round(handles.PK.xmcr(ii,handles.i)):round(handles.PK.posmr(ii,handles.i)),handles.i);
+                x1=handles.PK.vector_time(round(handles.PK.xmcr(ii,handles.i)):round(handles.PK.posmr(ii,handles.i)));
+                
+                plot(x1,y1,'--g','linewidth',2,'parent',handles.axes_image)
+            end
+            
+            
+            
         end
-        
-         if handles.PK.ind_smpks(ii,handles.i)
-            
-            y1=handles.PK.matrix_filtered_fluorescences(round(handles.PK.xmcr(ii,handles.i)):round(handles.PK.posmr(ii,handles.i)),handles.i);            
-            x1=handles.PK.vector_time(round(handles.PK.xmcr(ii,handles.i)):round(handles.PK.posmr(ii,handles.i)));
-            
-            plot(x1,y1,'y','linewidth',2,'parent',handles.axes_image)
-         end
-        
-          if handles.PK.ind_multipks(ii,handles.i)
-            y1=handles.PK.matrix_filtered_fluorescences(round(handles.PK.xmcr(ii,handles.i)):round(handles.PK.posmr(ii,handles.i)),handles.i);            
-            x1=handles.PK.vector_time(round(handles.PK.xmcr(ii,handles.i)):round(handles.PK.posmr(ii,handles.i)));
-            
-            plot(x1,y1,'--g','linewidth',2,'parent',handles.axes_image)
-         end
-        
-         
         
     end
     
+    cla(handles.axes2,'reset')
+    
+    hold(handles.axes2,'on')
+    yyaxis(handles.axes2,'left')
+    plot(handles.PK.vector_time,handles.PK.matrix_filtered_fluorescences(:,handles.i),'--','linewidth',1,'color','b','parent',handles.axes2)
+    plot(handles.PK.vector_time,handles.PK.smooth_signal(:,handles.i),'-','linewidth',1,'color','k','parent',handles.axes2)
+    
+    yyaxis(handles.axes2,'right')
+    
+    plot(handles.PK.vector_time,handles.PK.dd2(:,handles.i),'linewidth',2,'color','r','parent',handles.axes2)
+    plot([0, handles.PK.vector_time(end)],[handles.PK.mder(handles.i), handles.PK.mder(handles.i)],'r','parent',handles.axes2)
+    plot([0, handles.PK.vector_time(end)],[handles.PK.Mder(handles.i), handles.PK.Mder(handles.i)],'r','parent',handles.axes2)
+    xlabel('Time')
+else
+
+    cla(handles.axes_image,'reset')
+    hold(handles.axes_image,'on');
+    gca=handles.axes_image;
+    set(gca,'ylimmode','auto','xlimmode','auto')
+   
+    plot(handles.PK.vector_time,handles.PK.matrix_rough_fluorescences(:,handles.i),'color',handles.col,'parent',handles.axes_image)
+    plot(handles.PK.vector_time,handles.PK.matrix_filtered_fluorescences(:,handles.i),'linewidth',2,'color','b','parent',handles.axes_image)
+    %plot(handles.PK.xmcmea(:,handles.i),handles.PK.mcmea(:,handles.i),'+c','linewidth',2,'parent',handles.axes_image)
+    plot(handles.PK.posM2mea(:,handles.i),handles.PK.M2mea(:,handles.i),'+g','linewidth',2,'parent',handles.axes_image)
+    plot(handles.PK.posmmea(:,handles.i),handles.PK.mmea(:,handles.i),'+k','linewidth',2,'parent',handles.axes_image)
+    plot(handles.PK.posMmea(:,handles.i),handles.PK.Mmea(:,handles.i),'+r','linewidth',2,'parent',handles.axes_image)
+    
+    plot([0, handles.PK.vector_time(end)],[handles.PK.th(handles.i), handles.PK.th(handles.i)],'r','parent',handles.axes_image)
+
+    xlabel(handles.axes_image,'Time')
+    
+%         cla(handles.axes2,'reset')
+%     
+%     hold(handles.axes2,'on')
+%     yyaxis(handles.axes2,'left')
+%     plot(handles.PK.vector_time,handles.PK.matrix_filtered_fluorescences(:,handles.i),'--','linewidth',1,'color','b','parent',handles.axes2)
+%     plot(handles.PK.vector_time,handles.PK.smooth_signal(:,handles.i),'-','linewidth',1,'color','k','parent',handles.axes2)
+%     
+%     yyaxis(handles.axes2,'right')
+%     
+%     plot(handles.PK.vector_time,handles.PK.dd2(:,handles.i),'linewidth',2,'color','r','parent',handles.axes2)
+%     plot([0, handles.PK.vector_time(end)],[handles.PK.mder(handles.i), handles.PK.mder(handles.i)],'r','parent',handles.axes2)
+%     plot([0, handles.PK.vector_time(end)],[handles.PK.Mder(handles.i), handles.PK.Mder(handles.i)],'r','parent',handles.axes2)
+%     xlabel('Time')
+    
+
+
 end
-
-cla(handles.axes2,'reset')
-
-hold(handles.axes2,'on')
-yyaxis(handles.axes2,'left')
-plot(handles.PK.vector_time,handles.PK.matrix_filtered_fluorescences(:,handles.i),'--','linewidth',1,'color','b','parent',handles.axes2)
-plot(handles.PK.vector_time,handles.PK.smooth_signal(:,handles.i),'-','linewidth',1,'color','k','parent',handles.axes2)
-
-yyaxis(handles.axes2,'right')
-
-plot(handles.PK.vector_time,handles.PK.dd2(:,handles.i),'linewidth',2,'color','r','parent',handles.axes2)
-plot([0, handles.PK.vector_time(end)],[handles.PK.mder(handles.i), handles.PK.mder(handles.i)],'r','parent',handles.axes2)
-plot([0, handles.PK.vector_time(end)],[handles.PK.Mder(handles.i), handles.PK.Mder(handles.i)],'r','parent',handles.axes2)
-xlabel('Time')
 
 
 % --- Executes on selection change in type.
@@ -579,16 +651,17 @@ function remove_base_line_Callback(hObject, eventdata, handles)
 
 handles.PK.bb=get(hObject,'Value');
 if handles.PK.bb
-set(handles.bool_baselineref,'Visible','on');
-handles.PK.remove_base(handles.i);
-handles.PK.CalculateParameters(handles.i);
-plot_graphs(handles);
+    set(handles.bool_baselineref,'Visible','on');
+    set(handles.bool_baselineref,'Value',0);
+    handles.PK.remove_base(handles.i);
+    handles.PK.CalculateParameters(handles.i);
+    plot_graphs(handles);
 else
-   set(handles.bool_baselineref,'Visible','off');
-   handles.PK.bool_baselineref=0;
-   handles.PK.matrix_filtered_fluorescences(:,handles.i)=handles.PK.matrix_filtered_fluorescences_ori(:,handles.i);
-   handles.PK.CalculateParameters(handles.i);
-   plot_graphs(handles);
+    set(handles.bool_baselineref,'Visible','off');
+    handles.PK.bool_baselineref=0;
+    handles.PK.matrix_filtered_fluorescences(:,handles.i)=handles.PK.matrix_filtered_fluorescences_ori(:,handles.i);
+    handles.PK.CalculateParameters(handles.i);
+    plot_graphs(handles);
 end
 
 guidata(hObject, handles);

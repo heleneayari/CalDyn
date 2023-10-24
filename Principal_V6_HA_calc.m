@@ -2,13 +2,13 @@
 clc
 clear
 % close all;
-folder='/data1/thoman/ownCloud/flux_calcique/';
+folder='/data1/thoman/ownCloud/flux_calcique/Signaux_calciques/';
 %% load data
     [file,rough_data_foldername]=uigetfile([folder,'*.*']);
     rough_data_pathname=[rough_data_foldername, file];
  if strcmp(file(end-2:end),'csv')
-     try
-    tutu=readtable(rough_data_pathname,'Delimiter',';');
+    try
+        tutu=readtable(rough_data_pathname,'Delimiter',';');
     for ii=1:size(tutu,2)
         matrix_rough_data(1:size(tutu,1)-2,ii)=str2double(strrep(tutu{3:end,ii},',','.'));     
     end
@@ -16,7 +16,8 @@ folder='/data1/thoman/ownCloud/flux_calcique/';
          matrix_rough_data=table2array(readtable(rough_data_pathname,'Delimiter',','));
      end
  else
-     matrix_rough_data=xlsread(rough_data_pathname);
+     warning('off','MATLAB:table:ModifiedAndSavedVarnames')
+     matrix_rough_data=table2array(readtable(rough_data_pathname));
      
  end
 
@@ -37,7 +38,7 @@ if ~exist(results_foldername,'file')
     mkdir(results_foldername);
 end
 
-PK=AnalysisPeaks(matrix_rough_data,'Pol_length',pol_length,'smoothness',sm,'prop',prop,'type',type,'th_smpks',th_smpks,'th_medpks',th_medpks,'th_multi',th_multi);
+PK=AnalysisPeaks(matrix_rough_data,'param_filter',pol_length,'smoothness',sm,'prop',prop,'type',type,'th_smpks',th_smpks,'th_medpks',th_medpks,'th_multi',th_multi);
 
 %% rest
 
