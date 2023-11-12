@@ -18,7 +18,8 @@ folder='/data1/thoman/ownCloud/flux_calcique/Signaux_electriques/';
      end
  else
      warning('off','MATLAB:table:ModifiedAndSavedVarnames')
-     matrix_rough_data=table2array(readtable(rough_data_pathname));
+    matrix_rough_data=table2array(readtable(rough_data_pathname));
+
  end
 
 
@@ -26,7 +27,7 @@ folder='/data1/thoman/ownCloud/flux_calcique/Signaux_electriques/';
     pol_length=29;
     sm=50;
     prop=0.5; 
-    type=2;%1 for calcic signals, 2 for electrics 
+    type=1;%1 for calcic signals, 2 for electrics 
 
 %%
 close all

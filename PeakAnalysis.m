@@ -22,7 +22,7 @@ function varargout = PeakAnalysis(varargin)
 
 % Edit the above text to modify the response to help PeakAnalysis
 
-% Last Modified by GUIDE v2.5 20-Oct-2023 10:51:24
+% Last Modified by GUIDE v2.5 10-Nov-2023 09:43:30
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -60,7 +60,6 @@ handles.cut_freq=20;
 
 set(handles.frame_length,'string',num2str(handles.PK.vector_filtering_frame_length(handles.i)))
 set(handles.prop,'string',num2str(handles.PK.prop(handles.i)))
-set(handles.type,'value',handles.PK.type)
 set(handles.th_smpks,'string',num2str(handles.PK.th_smpks(handles.i)))
 set(handles.th_medpks,'string',num2str(handles.PK.th_medpks(handles.i)))
 set(handles.fac_multi,'string',num2str(handles.PK.th_multi(handles.i)))
@@ -74,59 +73,36 @@ end
 
 handles.PK.type_bl=get(handles.type_bl,'value');
 % set(handles.smooth_length,'string',num2str(handles.PK.sm(handles.i)))
+if handles.PK.pks_class
+   set(handles.panel_stat,'Visible','on'); 
+else
+     set(handles.panel_stat,'Visible','off'); 
+end
 switch handles.PK.type
-    case 2
-        
-        set(handles.panel_stat,'Visible','off');
-        error=1;
-        %     while error
-        %         try
-        handles.PK.Filter(handles.i);
-        handles.PK.CalculateParameters(handles.i);
-        error=0;
-        set(handles.smooth_length,'string',num2str(handles.PK.sm(handles.i)))
-        %         catch
-        %             handles.PK.sm(handles.i)=handles.PK.sm(1)+10;
-        %
-        %         end
-        %
-        %     end
+
+
     case 1
         
-        set(handles.panel_stat,'Visible','on');
-        error=1;
-        while error
-            try
+%        error=1;
+%         while error
+%             try
                 handles.PK.Filter(handles.i);
                 handles.PK.CalculateParameters(handles.i);
                 error=0;
                 set(handles.smooth_length,'string',num2str(handles.PK.sm(handles.i)))
-            catch
-                handles.PK.sm(:)=handles.PK.sm(1)+1;
-                
-            end
-        end
-        
-        %     error=1;
-        %     while error&&handles.PK.prop(handles.i)>0
-        %         try
-        %
-        %             handles.PK.CalculateParameters(handles.i);
-        %             handles.PK.prop(handles.i)=handles.PK.prop(handles.i)-0.01;
-        %             set(handles.prop,'string',num2str(handles.PK.prop(handles.i),'%0.3f'))
-        %         catch
-        %             handles.PK.prop(handles.i)=handles.PK.prop(handles.i)+0.01;
-        %             handles.PK.prop(handles.i)
-        %             handles.PK.CalculateParameters(handles.i);
-        %             set(handles.prop,'string',num2str(handles.PK.prop(handles.i),'%0.3f'))
-        %             error=0;
-        %         end
-        %     end
-    case 3
+%             catch
+%                 handles.PK.sm(:)=handles.PK.sm(1)+1;
+%                 
+%             end
+%         end
+
+    case 2
         set(handles.param_filt_string,'String','num cut freq')
         set(handles.remove_base_line,'Visible', 'off')
         set(handles.type_bl,'Visible', 'off')
         set(handles.remove_pk,'Visible', 'off')
+        set(handles.Param,'Visible', 'off')
+        set(handles.pks_class,'Visible', 'off')
         set(handles.smooth_length,'Visible', 'off')
         set(handles.string_smooth,'Visible', 'off')
         handles.PK.Filter(handles.i);
@@ -183,7 +159,7 @@ function frame_length_Callback(hObject, ~, handles)
 %        str2double(get(hObject,'String')) returns contents of frame_length as a double
 input = str2double(get(hObject,'string'));
 old=handles.PK.vector_filtering_frame_length(handles.i);
-if handles.PK.type<3
+if handles.PK.type<2
 
 
 try
@@ -260,7 +236,7 @@ function smooth_length_Callback(hObject, ~, handles)
 input = str2double(get(hObject,'string'));
 old=handles.PK.sm(handles.i);
 try
-    handles.PK.sm(handles.i)=input;
+    handles.PK.sm(handles.i:end)=input;
     handles.PK.Filter(handles.i);
     if handles.PK.bb
         handles.PK.remove_base(handles.i);
@@ -271,7 +247,7 @@ try
     
 catch
     set(handles.smooth_length,'string',num2str(old))
-    handles.PK.sm(handles.i)=old;
+    handles.PK.sm(handles.i:end)=old;
     handles.PK.Filter(handles.i);
     
     
@@ -303,8 +279,8 @@ input = str2double(get(hObject,'string'));
 old=handles.PK.prop(handles.i);
 try
     
-    handles.PK.prop(handles.i)=input;
-    if handles.PK.type<3
+    handles.PK.prop(handles.i:end)=input;
+    if handles.PK.type<2
     handles.PK.CalculateParameters(handles.i);
     else
     handles.PK.CalculateParameters(handles.i);
@@ -313,7 +289,7 @@ try
     plot_graphs(handles);
     
 catch
-    handles.PK.prop(handles.i)=old;
+    handles.PK.prop(handles.i:end)=old;
     set(handles.prop,'string',old);
     handles.PK.Filter(handles.i);
     
@@ -339,7 +315,7 @@ end
 function handles=plot_graphs(handles)
 %for plots
 
-if handles.PK.type<3
+if handles.PK.type<2
     pos=handles.PK.posper(:,:,handles.i);
     M=handles.PK.Mper(:,:,handles.i);
     
@@ -366,7 +342,7 @@ if handles.PK.type<3
     end
     xlabel(handles.axes_image,'Time')
     
-    if handles.PK.type==1
+    if handles.PK.pks_class
         
         handles.PK.statpks(handles.i);
         %     plot(handles.PK.vector_time,(handles.PK.base(:,handles.i)),'color','m','parent',handles.axes_image)
@@ -457,27 +433,7 @@ else
 end
 
 
-% --- Executes on selection change in type.
-function type_Callback(~, ~, ~)
-% hObject    handle to type (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 
-% Hints: contents = cellstr(get(hObject,'String')) returns type contents as cell array
-%        contents{get(hObject,'Value')} returns selected item from type
-
-
-% --- Executes during object creation, after setting all properties.
-function type_CreateFcn(hObject, ~, ~)
-% hObject    handle to type (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    empty - handles not created until after all CreateFcns called
-
-% Hint: popupmenu controls usually have a white background on Windows.
-%       See ISPC and COMPUTER.
-if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
-    set(hObject,'BackgroundColor','white');
-end
 
 
 
@@ -489,7 +445,7 @@ function th_smpks_Callback(hObject, ~, handles)
 % Hints: get(hObject,'String') returns contents of th_smpks as text
 %        str2double(get(hObject,'String')) returns contents of th_smpks as a double
 input = str2double(get(hObject,'string'));
-handles.PK.th_smpks(handles.i)=input;
+handles.PK.th_smpks(handles.i:end)=input;
 plot_graphs(handles);
 guidata(hObject, handles);
 
@@ -516,7 +472,7 @@ function th_medpks_Callback(hObject, ~, handles)
 % Hints: get(hObject,'String') returns contents of th_medpks as text
 %        str2double(get(hObject,'String')) returns contents of th_medpks as a double
 input = str2double(get(hObject,'string'));
-handles.PK.th_medpks(handles.i)=input;
+handles.PK.th_medpks(handles.i:end)=input;
 plot_graphs(handles)
 guidata(hObject, handles);
 
@@ -555,8 +511,8 @@ function fac_multi_Callback(hObject, ~, handles)
 % Hints: get(hObject,'String') returns contents of fac_multi as text
 %        str2double(get(hObject,'String')) returns contents of fac_multi as a double
 input = str2double(get(hObject,'string'));
-handles.PK.th_multi(handles.i)=input;
-plot_graphs(handles)
+handles.PK.th_multi(handles.i:end)=input;
+plot_graphs(handles);
 guidata(hObject, handles);
 
 % --- Executes during object creation, after setting all properties.
@@ -677,4 +633,53 @@ function bool_baselineref_Callback(hObject, eventdata, handles)
 handles.PK.bool_baselineref=get(hObject,'Value');
 handles.PK.CalculateParameters(handles.i);
 plot_graphs(handles);
+guidata(hObject, handles);
+
+
+% --- Executes on button press in Param.
+function Param_Callback(hObject, eventdata, handles)
+% hObject    handle to Param (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+[handles.PK.list_param_num,handles.PK.list_calc]=Parameters(handles.PK.list_allparam,handles.PK.list_param_num);
+handles.PK.list_param_name=handles.PK.list_allparam(handles.PK.list_param_num(:));
+
+guidata(hObject, handles);
+
+
+% --- Executes on button press in pks_class.
+function pks_class_Callback(hObject, eventdata, handles)
+% hObject    handle to pks_class (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of pks_class
+val=get(hObject,'Value');
+if val
+     set(handles.panel_stat,'Visible','on');
+     pos=strcmp(handles.PK.list_allparam,'f_smpks');
+     handles.PK.list_param_num(pos)=1;
+     pos=strcmp(handles.PK.list_allparam,'f_medpks');
+     handles.PK.list_param_num(pos)=1;
+     pos=strcmp(handles.PK.list_allparam,'f_multipks');
+     handles.PK.list_param_num(pos)=1;
+     handles.PK.list_param_name=handles.PK.list_allparam(handles.PK.list_param_num(:));
+     handles.PK.pks_class=1;
+     handles.PK.CalculateParameters(handles.i);
+     plot_graphs(handles);
+else
+    set(handles.panel_stat,'Visible','off');
+    
+     pos=strcmp(handles.PK.list_allparam,'f_smpks');
+     handles.PK.list_param_num(pos)=0;
+     pos=strcmp(handles.PK.list_allparam,'f_medpks');
+     handles.PK.list_param_num(pos)=0;
+     pos=strcmp(handles.PK.list_allparam,'f_multipks');
+     handles.PK.list_param_num(pos)=0;
+    handles.PK.list_param_name=handles.PK.list_allparam(handles.PK.list_param_num(:));
+    handles.PK.pks_class=0;
+    handles.PK.CalculateParameters(handles.i);
+    plot_graphs(handles);
+end
 guidata(hObject, handles);

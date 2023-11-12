@@ -21,7 +21,7 @@ folder='/data1/thoman/ownCloud/flux_calcique/Comparaison Matlab-Excel P Seyer/';
     pol_length=3;
     sm=1;
     prop=0.3; 
-    type=2;%1 for calcic signals, 2 for electrics 
+    type=1;% 2 for MEA, 1 for the rest 
 %%
 close all
 results_foldername=[rough_data_foldername,filesep,'Results_',file(1:end-5), filesep];

@@ -31,14 +31,14 @@ end
 
 
 %% param
-pol_length=3;
-sm=1;
-prop=0.05;
-type=1;% 2 for MEA,1 for the rest
+pol_length=31;
+sm=15;
+prop=0.1;
+type=1;%1 for calcic signals, 2 for electrics
+pks_class=1;
 th_smpks=0.2;
 th_medpks=0.5;
-th_multi=0.2;
-pks_class=1;
+th_multi=0.05;
 %%
 
 results_foldername=[rough_data_foldername,filesep,'Results_',file(1:end-5), filesep];

@@ -20,8 +20,9 @@ folder='/data1/thoman/ownCloud/flux_calcique/Signaux_MED/';
 %% param 
     sm=1;
     prop=0.4; 
-    type=3;%1 for calcic signals, 2 for electrics ; 3 MEA
+    type=2;%2 for MEA;1 for the rest
     param_filter=30;
+    list_param={'N_pks','FP_duration','FP_Amp'};
 
 results_foldername=[rough_data_foldername,filesep,'Results_',file(1:end-5), filesep];
 if ~exist(results_foldername,'file')
@@ -29,7 +30,7 @@ if ~exist(results_foldername,'file')
 end
 
 matrix_rough_data(:,2:end)=-matrix_rough_data(:,2:end);
-PK=AnalysisPeaks(matrix_rough_data,'prop',prop,'type',type,'param_filter',param_filter,'Smoothness',sm);
+PK=AnalysisPeaks(matrix_rough_data,'prop',prop,'type',type,'param_filter',param_filter,'Smoothness',sm,'list_param_name',list_param);
 
 
 
