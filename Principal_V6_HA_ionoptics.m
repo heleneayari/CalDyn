@@ -2,12 +2,11 @@
 clc
 clear
 % close all;
-folder='/data1/thoman/ownCloud/flux_calcique/Signaux_calciques/';
+folder='D:\owncloud\flux_calcique\Signaux_ionoptics\';
 %% load data
 [file,rough_data_foldername]=uigetfile([folder,'*.*']);
 rough_data_pathname=[rough_data_foldername, file];
 if strcmp(file(end-2:end),'csv')
-    
     try
         tutu=readtable(rough_data_pathname,'Delimiter',';');
         for ii=1:size(tutu,2)
@@ -16,40 +15,40 @@ if strcmp(file(end-2:end),'csv')
     catch
         matrix_rough_data=table2array(readtable(rough_data_pathname,'Delimiter',','));
     end
-    
 else
-    
     %      matrix_rough_data=xlsread(rough_data_pathname);
     warning('off','MATLAB:table:ModifiedAndSavedVarnames')
     
     matrix_rough_data=table2array(readtable(rough_data_pathname));
-    
     if iscell(matrix_rough_data)
-        
         clear matrix_rough_data
         tutu=readtable(rough_data_pathname);
-        matrix_rough_data=str2double(strrep(tutu{:,:},',','.'));        
+        matrix_rough_data=str2double(strrep(tutu{:,:},',','.'));
+        
     end
-    
 end
 
 
 
 %% param
-pol_length=31;
-sm=15;
-prop=0.1;
-type=1;%1 for calcic signals, 2 for electrics
-pks_class=1;
+pol_length=151;
+sm=30;
+prop=0.3;
+type=1;% 2 for MEA,1 for the rest
 th_smpks=0.2;
 th_medpks=0.5;
-th_multi=0.05;
+th_multi=0.2;
+pks_class=1;
 %%
 
 results_foldername=[rough_data_foldername,filesep,'Results_',file(1:end-5), filesep];
 if ~exist(results_foldername,'file')
     mkdir(results_foldername);
 end
+
+%%
+figure
+plot(matrix_rough_data(:,1),matrix_rough_data(:,2))
 
 PK=AnalysisPeaks(matrix_rough_data,'param_filter',pol_length,'smoothness',sm,'prop',prop,'type',type,'pks_class',pks_class,'th_smpks',th_smpks,'th_medpks',th_medpks,'th_multi',th_multi);
 

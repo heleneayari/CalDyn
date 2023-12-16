@@ -393,8 +393,8 @@ if handles.PK.type<2
     yyaxis(handles.axes2,'right')
     
     plot(handles.PK.vector_time,handles.PK.dd2(:,handles.i),'linewidth',2,'color','r','parent',handles.axes2)
-    plot([0, handles.PK.vector_time(end)],[handles.PK.mder(handles.i), handles.PK.mder(handles.i)],'r','parent',handles.axes2)
-    plot([0, handles.PK.vector_time(end)],[handles.PK.Mder(handles.i), handles.PK.Mder(handles.i)],'r','parent',handles.axes2)
+    plot([handles.PK.vector_time(1), handles.PK.vector_time(end)],[handles.PK.mder(handles.i), handles.PK.mder(handles.i)],'r','parent',handles.axes2)
+    plot([handles.PK.vector_time(1), handles.PK.vector_time(end)],[handles.PK.Mder(handles.i), handles.PK.Mder(handles.i)],'r','parent',handles.axes2)
     xlabel('Time')
 else
 

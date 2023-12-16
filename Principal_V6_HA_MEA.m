@@ -2,6 +2,7 @@ clc
 clear
 close all;
 folder='/data1/thoman/ownCloud/flux_calcique/Signaux_MED/';
+
 %% load data
     [file,rough_data_foldername]=uigetfile([folder,'*.*']);
     rough_data_pathname=[rough_data_foldername, file];
@@ -14,22 +15,34 @@ folder='/data1/thoman/ownCloud/flux_calcique/Signaux_MED/';
     end
  else
        warning('off','MATLAB:table:ModifiedAndSavedVarnames')
-     matrix_rough_data=table2array(readtable(rough_data_pathname));
+     matrix_rough_datat=table2array(readtable(rough_data_pathname));
+%      matrix_rough_data=xlsread(rough_data_pathname);
  end
 
 %% param 
     sm=1;
     prop=0.4; 
     type=2;%2 for MEA;1 for the rest
-    param_filter=30;
+    param_filter=100;
     list_param={'N_pks','FP_duration','FP_Amp'};
 
 results_foldername=[rough_data_foldername,filesep,'Results_',file(1:end-5), filesep];
 if ~exist(results_foldername,'file')
     mkdir(results_foldername);
 end
+%% keep only good columns
 
-matrix_rough_data(:,2:end)=-matrix_rough_data(:,2:end);
+goodcolumn=[1,2:3:size(matrix_rough_datat,2)];
+matrix_rough_data=-matrix_rough_datat(:,goodcolumn);
+
+%% test figure to see if data are correct for debugging
+figure
+plot(matrix_rough_data(:,1),matrix_rough_data(:,2))
+
+
+
+%%
+
 PK=AnalysisPeaks(matrix_rough_data,'prop',prop,'type',type,'param_filter',param_filter,'Smoothness',sm,'list_param_name',list_param);
 
 

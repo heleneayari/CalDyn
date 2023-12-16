@@ -78,7 +78,7 @@ classdef AnalysisPeaks < handle
         Mmea
         mmea
         list_allparam={'N_pks','f_smpks','f_medpks','f_multipks','Sig_noise','Period','Asc_time','Decay_time',...
-                        'Decay_time_90','Decay_time_70','Decay_time_50','Decay_time_30','Decay_time_20',...
+                        'Decay_time_95','Decay_time_70','Decay_time_50','Decay_time_30','Decay_time_20',...
                         'Taud','Baz_taud','AUC','Asc_slope','Decay_slope','Std_decay_slope','Decay_slope_0_50','Decay_slope_50_100',...
                         'Amp_asc','Amp_decay','Maxima','Minima','FP_duration','FP_Amp'};
         list_param_num
@@ -114,7 +114,7 @@ classdef AnalysisPeaks < handle
             addOptional(p,'list_calc',logical([1,1,1]))
             addOptional(p,'pks_class',0)
             addOptional(p,'list_param_name',{'N_pks','Period','Asc_time','Decay_time',...
-                        'Decay_time_90','Decay_time_70','Decay_time_50','Decay_time_30','Decay_time_20',...
+                        'Decay_time_95','Decay_time_70','Decay_time_50','Decay_time_30','Decay_time_20',...
                         'Taud','Baz_taud','AUC','Asc_slope','Decay_slope',...
                         'Amp_asc','Amp_decay','Maxima','Minima'})
             parse(p, varargin{:});
@@ -509,7 +509,7 @@ classdef AnalysisPeaks < handle
             
             for kk=1:length(xmr(:))
                 for uu=1:5
-                    % 5 is for 90% and 1 for 10%
+                    % 5 is for 95% and 1 for 10%
                     dd=dper(uu)*(M(kk)-ms(kk));
                     tutu=find(diff(Signal(round(posM(kk)):round(posm(kk)))-ms(kk)>dd)==-1);
                     if ~isempty(tutu)
@@ -703,9 +703,14 @@ classdef AnalysisPeaks < handle
             % other simpler method
                 ind2=posm(uu):posM(uu+1);
                 [Mt,post]=findpeaks(Signal(ind2),'SortStr','descend');
+                if~isempty(Mt)
                 M2(uu)=Mt(1);
                 posM2(uu)=post(1)+posm(uu)-1;
-
+                else
+                    M2(uu)=M(uu);
+                    posM2(uu)=posM(uu);
+                   
+                end
 
                 end
                 
@@ -737,110 +742,7 @@ classdef AnalysisPeaks < handle
         
         
         
-        
-        function PK=Save_old(PK,varargin)
-            results_pathname=varargin{1};
-            
-            switch PK.type
-                case 2
-                    Tf= array2table(zeros(PK.number_cells,35));
-                    
-                    Tf.Properties.VariableNames = {'N_pks','Period','Period_std','ascending_time','ascending_time_std','decay_time','decay_time_std',...
-                        'decay_time_90','decay_time_90_std','decay_time_70','decay_time_70_std','decay_time_50','decay_time_50_std','decay_time_30','decay_time_30_std','decay_time_20','decay_time_20_std',...
-                        'Tau_d','Tau_d_std','Baz_Tau_d','Baz_Tau_d_std','AUC','AUC_std','Pente_contraction','Pente_contraction_std','Pente_relax','Pente_relax_std',...
-                        'abs_amp_contraction','abs_amp_contraction_std','abs_amp_relax','abs_amp_relax_std','amp_max','amp_max_std','min','min_std'};
-                    
-                case 1
-                    
-                    
-                    Tf= array2table(zeros(PK.number_cells,38));
-                    Tf.Properties.VariableNames = {'N_pks','Period','Period_std','ascending_time','ascending_time_std','decay_time','decay_time_std',...
-                        'decay_time_90','decay_time_90_std','decay_time_70','decay_time_70_std','decay_time_50','decay_time_50_std','decay_time_30','decay_time_30_std','decay_time_20','decay_time_20_std',...
-                        'Tau_d','Tau_d_std','Baz_Tau_d','Baz_Tau_d_std','AUC','AUC_std','Pente_contraction','Pente_contraction_std','Pente_relax','Pente_relax_std',...
-                        'abs_amp_contraction','abs_amp_contraction_std','abs_amp_relax','abs_amp_relax_std','amp_max','amp_max_std','min','min_std',...
-                        'Sig_noise','f_smpks','f_medpks','f_multipks'};
-                    
-                case 3
-                    Tf= array2table(zeros(PK.number_cells,6));
-                    Tf.Properties.VariableNames = {'Period','Period_std','FP_Duration','FP_Duration_std','Amplitude','Amplitude_std'};
-                    
-                    
-            end
-            MedT=NaN*ones(1,PK.number_cells);
-            StdT=NaN*ones(1,PK.number_cells);
-            for uu=1:PK.number_cells
-                MedT(uu)=median(diff(PK.posM(~isnan(PK.posM(:,uu)),uu)));
-                StdT(uu)=std(diff(PK.posM(~isnan(PK.posM(:,uu)),uu)));
-            end
-            TabMedT=repmat(MedT,PK.ltab,1);
-            
-            
-            if PK.type<3
-                Tf.Period=MedT';
-                Tf.Period_std=StdT';
-                Tf.ascending_time= nanmean(PK.Tauc,1)';
-                Tf.ascending_time_std= nanstd(PK.Tauc,1)';
-                Tf.decay_time = nanmean(PK.Taur,1)';
-                Tf.decay_time_std= nanstd(PK.Taur,1)';
-                %             Tf.Tau_systole = nanmean(PK.Taus,1)';
-                %             Tf.Tau_systole_std= nanstd(PK.Taus,1)';
-                %             Tf.Baz_Tau_syst = nanmean(PK.Taus./sqrt(TabMedT),1)';
-                %             Tf.Baz_Tau_syst_std = nanstd(PK.Taus./sqrt(TabMedT),1)';
-                Tf.Tau_d = nanmean(PK.Taud,1)';
-                Tf.Tau_d_std = nanstd(PK.Taud,1)';
-                Tf.Baz_Tau_d = nanmean(PK.Taud./sqrt(TabMedT),1)';
-                Tf.Baz_Tau_d_std = nanstd(PK.Taud./sqrt(TabMedT),1)';
-                Tf.AUC= nanmean(PK.Aire,1)';
-                Tf.AUC_std = nanstd(PK.Aire,1)';
-                Tf.Pente_contraction = nanmean(PK.pc,1)';
-                Tf.Pente_contraction_std = nanstd(PK.pc,1)';
-                Tf.Pente_relax= nanmean(PK.pr,1)';
-                Tf.Pente_relax_std = nanstd(PK.pr,1)';
-                Tf.abs_amp_relax = nanmean(PK.hr,1)';
-                Tf.abs_amp_relax_std = nanstd(PK.hr,1)';
-                Tf.abs_amp_contraction = nanmean(PK.hc,1)';
-                Tf.abs_amp_contraction_std = nanstd(PK.hc,1)';
-                Tf.amp_max = nanmean(PK.M,1)';
-                Tf.amp_max_std = nanstd(PK.M,1)';
-                Tf.min = nanmean(PK.mmvg,1)';
-                Tf.min_std = nanstd(PK.mmvg,1)';
-                Tf.decay_time_20=nanmean(squeeze(PK.posper(:,1,:))-PK.posM,1)';
-                Tf.decay_time_20_std=nanstd(squeeze(PK.posper(:,1,:))-PK.posM,1)';
-                Tf.decay_time_30=nanmean(squeeze(PK.posper(:,2,:))-PK.posM,1)';
-                Tf.decay_time_30_std=nanstd(squeeze(PK.posper(:,2,:))-PK.posM,1)';
-                Tf.decay_time_50=nanmean(squeeze(PK.posper(:,3,:))-PK.posM,1)';
-                Tf.decay_time_50_std=nanstd(squeeze(PK.posper(:,3,:))-PK.posM)';
-                Tf.decay_time_70=nanmean(squeeze(PK.posper(:,4,:))-PK.posM,1)';
-                Tf.decay_time_70_std=nanstd(squeeze(PK.posper(:,4,:))-PK.posM,1)';
-                Tf.decay_time_90=nanmean(squeeze(PK.posper(:,5,:))-PK.posM,1)';
-                Tf.decay_time_90_std=nanstd(squeeze(PK.posper(:,5,:))-PK.posM,1)';
-                Tf.N_pks=PK.N';
-                
-                if(PK.type==1)
-                    Tf.f_smpks=PK.f_smpks';
-                    Tf.f_medpks=PK.f_medpks';
-                    Tf.f_multipks=PK.f_multipks';
-                end
-            end
-            if PK.type==3
-                Tf.Period=nanmean(PK.Tmea,1)';
-                Tf.Period_std=nanstd(PK.Tmea,1)';
-                Tf.Amplitude=nanmean(PK.Amea,1)';
-                Tf.Amplitude_std=nanstd(PK.Amea,1)';
-                Tf.FP_Duration=nanmean(PK.FPD,1)';
-                Tf.FP_Duration_std=nanstd(PK.FPD,1)';
-                
-                
-            end
-            
-            
-            Tfa = table2array(Tf);
-            Tff = array2table(Tfa.');
-            Tff.Properties.RowNames = Tf.Properties.VariableNames;
-            writetable(Tff,results_pathname,'WriteRowNames',true)
-            
-        end
-        
+    
            function PK=Save(PK,varargin)
                     results_pathname=varargin{1};
                     Tftot= array2table(zeros(PK.number_cells,(length(PK.list_allparam)-5)*3+5));
@@ -881,8 +783,8 @@ classdef AnalysisPeaks < handle
             end
             TabMedT=repmat(MedT,PK.ltab,1); 
             if PK.type<2
-                Tftot.Period_mean=MedT';
-                Tftot.Period_median=MeanT';
+                Tftot.Period_mean=MeanT';
+                Tftot.Period_median=MedT';
                 Tftot.Period_std=StdT';
                 Tftot.Asc_time_mean= nanmean(PK.Tauc,1)';
                 Tftot.Asc_time_median= nanmedian(PK.Tauc,1)';
@@ -891,7 +793,7 @@ classdef AnalysisPeaks < handle
                 Tftot.Decay_time_median = nanmedian(PK.Taur,1)';
                 Tftot.Decay_time_std= nanstd(PK.Taur,1)';
                 Tftot.Taud_mean = nanmean(PK.Taud,1)';
-                Tftot.Taud_median = nanmean(PK.Taud,1)';
+                Tftot.Taud_median = nanmedian(PK.Taud,1)';
                 Tftot.Taud_std = nanstd(PK.Taud,1)';
                 Tftot.Baz_taud_mean = nanmean(PK.Taud./sqrt(TabMedT),1)';
                 Tftot.Baz_taud_median = nanmedian(PK.Taud./sqrt(TabMedT),1)';
@@ -914,12 +816,12 @@ classdef AnalysisPeaks < handle
                 Tftot.Std_decay_slope_mean= nanmean(PK.Std_decay_slope,1)';
                 Tftot.Std_decay_slope_median= nanmedian(PK.Std_decay_slope,1)';
                 Tftot.Std_decay_slope_std = nanstd(PK.Std_decay_slope,1)';
-                Tftot.Amp_asc_mean = nanmean(PK.hr,1)';
-                Tftot.Amp_asc_median = nanmedian(PK.hr,1)';
-                Tftot.Amp_asc_std = nanstd(PK.hr,1)';
-                Tftot.Amp_decay_mean = nanmean(PK.hc,1)';
-                Tftot.Amp_decay_median=nanmedian(PK.hc,1)';
-                Tftot.Amp_decay_std = nanstd(PK.hc,1)';
+                Tftot.Amp_asc_mean = nanmean(PK.hc,1)';
+                Tftot.Amp_asc_median = nanmedian(PK.hc,1)';
+                Tftot.Amp_asc_std = nanstd(PK.hc,1)';
+                Tftot.Amp_decay_mean = nanmean(PK.hr,1)';
+                Tftot.Amp_decay_median=nanmedian(PK.hr,1)';
+                Tftot.Amp_decay_std = nanstd(PK.hr,1)';
                 Tftot.Maxima_mean = nanmean(PK.M,1)';
                 Tftot.Maxima_median = nanmedian(PK.M,1)';
                 Tftot.Maxima_std = nanstd(PK.M,1)';
@@ -938,9 +840,9 @@ classdef AnalysisPeaks < handle
                 Tftot.Decay_time_70_mean=nanmean(squeeze(PK.posper(:,4,:))-PK.posM,1)';
                 Tftot.Decay_time_70_median=nanmedian(squeeze(PK.posper(:,4,:))-PK.posM,1)';
                 Tftot.Decay_time_70_std=nanstd(squeeze(PK.posper(:,4,:))-PK.posM,1)';
-                Tftot.Decay_time_90_mean=nanmean(squeeze(PK.posper(:,5,:))-PK.posM,1)';
-                Tftot.Decay_time_90_median=nanmean(squeeze(PK.posper(:,5,:))-PK.posM,1)';
-                Tftot.Decay_time_90_std=nanstd(squeeze(PK.posper(:,5,:))-PK.posM,1)';
+                Tftot.Decay_time_95_mean=nanmean(squeeze(PK.posper(:,5,:))-PK.posM,1)';
+                Tftot.Decay_time_95_median=nanmedian(squeeze(PK.posper(:,5,:))-PK.posM,1)';
+                Tftot.Decay_time_95_std=nanstd(squeeze(PK.posper(:,5,:))-PK.posM,1)';
                 Tftot.N_pks=PK.N';  
                 Tftot.Sig_noise=(Tftot.Amp_asc_mean+Tftot.Amp_decay_mean)/2/PK.noise';
                 
