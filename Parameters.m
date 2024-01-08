@@ -22,7 +22,7 @@ function varargout = Parameters(varargin)
 
 % Edit the above text to modify the response to help Parameters
 
-% Last Modified by GUIDE v2.5 10-Nov-2023 17:40:04
+% Last Modified by GUIDE v2.5 22-Dec-2023 21:04:27
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -86,7 +86,7 @@ else
 end
 
 for ii=1:length(handles.list_param_name)
-    
+   
    eval(['set(handles.',handles.list_param_name{ii},',',char(39),'Value',char(39),',1)']);
    handles.list_param_num(strcmp(handles.list_allparam,handles.list_param_name(ii)))=1;
     
@@ -166,13 +166,13 @@ pos=strcmp(handles.list_allparam,nom);
 handles.list_param_num(pos)=val;
 guidata(hObject, handles);
 
-% --- Executes on button press in Decay_time_90.
-function Decay_time_90_Callback(hObject, eventdata, handles)
-% hObject    handle to Decay_time_90 (see GCBO)
+% --- Executes on button press in Decay_time_95.
+function Decay_time_95_Callback(hObject, eventdata, handles)
+% hObject    handle to Decay_time_95 (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
 
-% Hint: get(hObject,'Value') returns toggle state of Decay_time_90
+% Hint: get(hObject,'Value') returns toggle state of Decay_time_95
 val=get(hObject,'Value');
 nom=get(hObject,'Tag');
 pos=strcmp(handles.list_allparam,nom);

@@ -844,7 +844,7 @@ classdef AnalysisPeaks < handle
                 Tftot.Decay_time_95_median=nanmedian(squeeze(PK.posper(:,5,:))-PK.posM,1)';
                 Tftot.Decay_time_95_std=nanstd(squeeze(PK.posper(:,5,:))-PK.posM,1)';
                 Tftot.N_pks=PK.N';  
-                Tftot.Sig_noise=(Tftot.Amp_asc_mean+Tftot.Amp_decay_mean)/2/PK.noise';
+                Tftot.Sig_noise=(Tftot.Amp_asc_mean+Tftot.Amp_decay_mean)./2./PK.noise';
                 
                        if PK.pks_class
                 Tftot.f_smpks=PK.f_smpks';
@@ -872,6 +872,8 @@ classdef AnalysisPeaks < handle
             Tf=Tftot(:,Tf_num);
             Tfa = table2array(Tf);
             Tff = array2table(Tfa.');
+
+
             Tff.Properties.RowNames = Tf.Properties.VariableNames;
             if exist(results_pathname,'file')
                 delete(results_pathname)

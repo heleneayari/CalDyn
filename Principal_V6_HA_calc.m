@@ -3,6 +3,7 @@ clc
 clear
 % close all;
 folder='/data1/thoman/ownCloud/flux_calcique/Signaux_calciques/';
+folder='/data1/thoman/ownCloud/flux_calcique/Sarah/';
 %% load data
 [file,rough_data_foldername]=uigetfile([folder,'*.*']);
 rough_data_pathname=[rough_data_foldername, file];
