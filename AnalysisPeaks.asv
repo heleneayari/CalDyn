@@ -52,7 +52,6 @@ classdef AnalysisPeaks < handle
         f_multipks
         ind_smpks
         ind_medpks
-        ind_lgpks
         ind_multipks
         th_smpks
         th_medpks
@@ -207,9 +206,7 @@ classdef AnalysisPeaks < handle
             PK.Ms=nan*ones(PK.ltab,PK.number_cells);
             PK.posper=nan*ones(PK.ltab,5,PK.number_cells);
             PK.Mper=nan*ones(PK.ltab,5,PK.number_cells);
-            PK.Decay_slope_0_50=nan*ones(PK.ltab,PK.number_cells);
-            PK.Decay_slope_50_100=nan*ones(PK.ltab,PK.number_cells);
-            PK.Std_decay_slope=nan*ones(PK.ltab,PK.number_cells);
+            
             
         end
         
@@ -617,7 +614,6 @@ classdef AnalysisPeaks < handle
             PK.ind_smpks(:,i)=false(PK.ltab,1);
             PK.ind_medpks(:,i)=false(PK.ltab,1);
             PK.ind_multipks(:,i)=false(PK.ltab,1);
-            PK.ind_lgpks(:,i)=false(PK.ltab,1);
             contsmpks=0;
             contmultipks=0;
             contmedpks=0;
@@ -631,25 +627,20 @@ classdef AnalysisPeaks < handle
             %             bb_std=PK.th_multi(i)*nanstd(cat(1,PK.mmvg(:,i),PK.mmvd(:,i)));
             
             for ii=1:length(PK.posM(~isnan(PK.posM(:,i)),i))
-                lgpks=1;
+                
                 if max(PK.hr(ii,i),PK.hc(ii,i))<MM*PK.th_smpks(i)
                     contsmpks=contsmpks+1;
                     PK.ind_smpks(ii,i)=1;
-                    lgpks=0;
                 end
                 if max(PK.hr(ii,i),PK.hc(ii,i))<MM*PK.th_medpks(i)&& max(PK.hr(ii,i),PK.hc(ii,i))>MM*PK.th_smpks(i)
                     contmedpks=contmedpks+1;
                     PK.ind_medpks(ii,i)=1;
-                    lgpks=0;
                 end
                 
                 
                 if((PK.mmvg(ii,i))>(mm+Medpk))||((PK.mmvd(ii,i))>(mm+Medpk))
                     contmultipks=contmultipks+1;
                     PK.ind_multipks(ii,i)=1;
-                end
-                if lgpks
-                    PK.ind_lgpks(ii,1)=1;
                 end
                 
             end
@@ -752,29 +743,19 @@ classdef AnalysisPeaks < handle
         
         function PK=Save(PK,varargin)
             results_pathname=varargin{1};
-                PK.sheet=1;
-                PK.indtosave=true(PK.ltab,PK.number_cells);
+                PK.sheet='All_peaks';
+                PK.indtosave=ones(PK.ltab,PK.number_cells);
                 PK.Save_sheet(results_pathname);
                 
-            if PK.pks_class
-               
-                PK.sheet='small_peaks';
-                PK.ind_smpks=double(PK.ind_smpks);
-                PK.ind_smpks(PK.ind_smpks==0)=NaN;
-                PK.indtosave=PK.ind_smpks;
-                PK.Save_sheet(results_pathname);
-                PK.sheet='medium_peaks';
-                PK.ind_medpks=double(PK.ind_medpks);
-                PK.ind_medpks(PK.ind_medpks==0)=NaN;
-                PK.indtosave=PK.ind_medpks;
-                PK.Save_sheet(results_pathname);  
-                PK.sheet='large_peaks';
-                PK.ind_lgpks=double(PK.ind_lgpks);
-                PK.ind_lgpks(PK.ind_lgpks==0)=NaN;
-                PK.indtosave=PK.ind_lgpks;
-                PK.Save_sheet(results_pathname);     
-            end
-           
+%             if PK.pks_class
+%                 PK.sheet='small_peaks';
+%                 PK.Save_sheet(results_pathname);
+%                 indtosave=
+%             end
+%             ind=PK.ind_smpks(:,i)
+%             PK.ind_medpks(:,i)
+%             PK.ind_multipks(:,i)
+%             
         end
         
     
@@ -813,7 +794,7 @@ classdef AnalysisPeaks < handle
             StdT=NaN*ones(1,PK.number_cells);
  
             for uu=1:PK.number_cells
-                ind=~isnan(PK.posM(:,uu).*PK.indtosave(:,uu));
+                ind=PK.indtosave(:,uu)&~isnan(PK.posM(:,uu));
                 MedT(uu)=median(diff(PK.posM(ind,uu)));
                 MeanT(uu)=mean(diff(PK.posM(ind,uu)));
                 StdT(uu)=std(diff(PK.posM(ind,uu)));
@@ -823,63 +804,63 @@ classdef AnalysisPeaks < handle
                 Tftot.Period_mean=MeanT';
                 Tftot.Period_median=MedT';
                 Tftot.Period_std=StdT';
-                Tftot.Asc_time_mean= nanmean(PK.Tauc.*PK.indtosave,1)';
-                Tftot.Asc_time_median= nanmedian(PK.Tauc.*PK.indtosave,1)';
-                Tftot.Asc_time_std= nanstd(PK.Tauc.*PK.indtosave,1)';
-                Tftot.Decay_time_mean = nanmean(PK.Taur.*PK.indtosave,1)';
-                Tftot.Decay_time_median = nanmedian(PK.Taur.*PK.indtosave,1)';
-                Tftot.Decay_time_std= nanstd(PK.Taur.*PK.indtosave,1)';
-                Tftot.Taud_mean = nanmean(PK.Taud.*PK.indtosave,1)';
-                Tftot.Taud_median = nanmedian(PK.Taud.*PK.indtosave,1)';
-                Tftot.Taud_std = nanstd(PK.Taud.*PK.indtosave,1)';
-                Tftot.Baz_taud_mean = nanmean(PK.Taud.*PK.indtosave./sqrt(TabMedT.*PK.indtosave),1)';
-                Tftot.Baz_taud_median = nanmedian(PK.Taud.*PK.indtosave./sqrt(TabMedT.*PK.indtosave),1)';
-                Tftot.Baz_taud_std = nanstd(PK.Taud.*PK.indtosave./sqrt(TabMedT.*PK.indtosave),1)';
-                Tftot.AUC_mean= nanmean(PK.Aire.*PK.indtosave,1)';
-                Tftot.AUC_median= nanmedian(PK.Aire.*PK.indtosave,1)';
-                Tftot.AUC_std = nanstd(PK.Aire.*PK.indtosave,1)';
-                Tftot.Asc_slope_mean = nanmean(PK.pc.*PK.indtosave,1)';
-                Tftot.Asc_slope_median = nanmedian(PK.pc.*PK.indtosave,1)';
-                Tftot.Asc_slope_std = nanstd(PK.pc.*PK.indtosave,1)';
-                Tftot.Decay_slope_mean= nanmean(PK.pr.*PK.indtosave,1)';
-                Tftot.Decay_slope_median= nanmedian(PK.pr.*PK.indtosave,1)';
-                Tftot.Decay_slope_std = nanstd(PK.pr.*PK.indtosave,1)';
-                Tftot.Decay_slope_0_50_mean= nanmean(PK.Decay_slope_0_50.*PK.indtosave,1)';
-                Tftot.Decay_slope_0_50_median= nanmedian(PK.Decay_slope_0_50.*PK.indtosave,1)';
-                Tftot.Decay_slope_0_50_std = nanstd(PK.Decay_slope_0_50.*PK.indtosave,1)';
-                Tftot.Decay_slope_50_100_mean= nanmean(PK.Decay_slope_50_100.*PK.indtosave,1)';
-                Tftot.Decay_slope_50_100_median= nanmedian(PK.Decay_slope_50_100.*PK.indtosave,1)';
-                Tftot.Decay_slope_50_100_std = nanstd(PK.Decay_slope_50_100.*PK.indtosave,1)';
-                Tftot.Std_decay_slope_mean= nanmean(PK.Std_decay_slope.*PK.indtosave,1)';
-                Tftot.Std_decay_slope_median= nanmedian(PK.Std_decay_slope.*PK.indtosave,1)';
-                Tftot.Std_decay_slope_std = nanstd(PK.Std_decay_slope.*PK.indtosave,1)';
-                Tftot.Amp_asc_mean = nanmean(PK.hc.*PK.indtosave,1)';
-                Tftot.Amp_asc_median = nanmedian(PK.hc.*PK.indtosave,1)';
-                Tftot.Amp_asc_std = nanstd(PK.hc.*PK.indtosave,1)';
-                Tftot.Amp_decay_mean = nanmean(PK.hr.*PK.indtosave,1)';
-                Tftot.Amp_decay_median=nanmedian(PK.hr.*PK.indtosave,1)';
-                Tftot.Amp_decay_std = nanstd(PK.hr.*PK.indtosave,1)';
-                Tftot.Maxima_mean = nanmean(PK.M.*PK.indtosave,1)';
-                Tftot.Maxima_median = nanmedian(PK.M.*PK.indtosave,1)';
-                Tftot.Maxima_std = nanstd(PK.M.*PK.indtosave,1)';
-                Tftot.Minima_mean = nanmean(PK.mmvg.*PK.indtosave,1)';
-                Tftot.Minima_median = nanmedian(PK.mmvg.*PK.indtosave,1)';
-                Tftot.Minima_std = nanstd(PK.mmvg.*PK.indtosave,1)';
-                Tftot.Decay_time_20_mean=nanmean(squeeze(PK.posper(:,1,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
-                Tftot.Decay_time_20_median=nanmedian(squeeze(PK.posper(:,1,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
-                Tftot.Decay_time_20_std=nanstd(squeeze(PK.posper(:,1,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
-                Tftot.Decay_time_30_mean=nanmean(squeeze(PK.posper(:,2,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
-                Tftot.Decay_time_30_median=nanmedian(squeeze(PK.posper(:,2,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
-                Tftot.Decay_time_30_std=nanstd(squeeze(PK.posper(:,2,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
-                Tftot.Decay_time_50_mean=nanmean(squeeze(PK.posper(:,3,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
-                Tftot.Decay_time_50_median=nanmedian(squeeze(PK.posper(:,3,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
-                Tftot.Decay_time_50_std=nanstd(squeeze(PK.posper(:,3,:)).*PK.indtosave-PK.posM.*PK.indtosave)';
-                Tftot.Decay_time_70_mean=nanmean(squeeze(PK.posper(:,4,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
-                Tftot.Decay_time_70_median=nanmedian(squeeze(PK.posper(:,4,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
-                Tftot.Decay_time_70_std=nanstd(squeeze(PK.posper(:,4,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
-                Tftot.Decay_time_95_mean=nanmean(squeeze(PK.posper(:,5,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
-                Tftot.Decay_time_95_median=nanmedian(squeeze(PK.posper(:,5,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
-                Tftot.Decay_time_95_std=nanstd(squeeze(PK.posper(:,5,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
+                Tftot.Asc_time_mean= nanmean(PK.Tauc(PK.indtosave),1)';
+                Tftot.Asc_time_median= nanmedian(PK.Tauc,1)';
+                Tftot.Asc_time_std= nanstd(PK.Tauc,1)';
+                Tftot.Decay_time_mean = nanmean(PK.Taur,1)';
+                Tftot.Decay_time_median = nanmedian(PK.Taur,1)';
+                Tftot.Decay_time_std= nanstd(PK.Taur,1)';
+                Tftot.Taud_mean = nanmean(PK.Taud,1)';
+                Tftot.Taud_median = nanmedian(PK.Taud,1)';
+                Tftot.Taud_std = nanstd(PK.Taud,1)';
+                Tftot.Baz_taud_mean = nanmean(PK.Taud./sqrt(TabMedT),1)';
+                Tftot.Baz_taud_median = nanmedian(PK.Taud./sqrt(TabMedT),1)';
+                Tftot.Baz_taud_std = nanstd(PK.Taud./sqrt(TabMedT),1)';
+                Tftot.AUC_mean= nanmean(PK.Aire,1)';
+                Tftot.AUC_median= nanmedian(PK.Aire,1)';
+                Tftot.AUC_std = nanstd(PK.Aire,1)';
+                Tftot.Asc_slope_mean = nanmean(PK.pc,1)';
+                Tftot.Asc_slope_median = nanmedian(PK.pc,1)';
+                Tftot.Asc_slope_std = nanstd(PK.pc,1)';
+                Tftot.Decay_slope_mean= nanmean(PK.pr,1)';
+                Tftot.Decay_slope_median= nanmedian(PK.pr,1)';
+                Tftot.Decay_slope_std = nanstd(PK.pr,1)';
+                Tftot.Decay_slope_0_50_mean= nanmean(PK.Decay_slope_0_50,1)';
+                Tftot.Decay_slope_0_50_median= nanmedian(PK.Decay_slope_0_50,1)';
+                Tftot.Decay_slope_0_50_std = nanstd(PK.Decay_slope_0_50,1)';
+                Tftot.Decay_slope_50_100_mean= nanmean(PK.Decay_slope_50_100,1)';
+                Tftot.Decay_slope_50_100_median= nanmedian(PK.Decay_slope_50_100,1)';
+                Tftot.Decay_slope_50_100_std = nanstd(PK.Decay_slope_50_100,1)';
+                Tftot.Std_decay_slope_mean= nanmean(PK.Std_decay_slope,1)';
+                Tftot.Std_decay_slope_median= nanmedian(PK.Std_decay_slope,1)';
+                Tftot.Std_decay_slope_std = nanstd(PK.Std_decay_slope,1)';
+                Tftot.Amp_asc_mean = nanmean(PK.hc,1)';
+                Tftot.Amp_asc_median = nanmedian(PK.hc,1)';
+                Tftot.Amp_asc_std = nanstd(PK.hc,1)';
+                Tftot.Amp_decay_mean = nanmean(PK.hr,1)';
+                Tftot.Amp_decay_median=nanmedian(PK.hr,1)';
+                Tftot.Amp_decay_std = nanstd(PK.hr,1)';
+                Tftot.Maxima_mean = nanmean(PK.M,1)';
+                Tftot.Maxima_median = nanmedian(PK.M,1)';
+                Tftot.Maxima_std = nanstd(PK.M,1)';
+                Tftot.Minima_mean = nanmean(PK.mmvg,1)';
+                Tftot.Minima_median = nanmedian(PK.mmvg,1)';
+                Tftot.Minima_std = nanstd(PK.mmvg,1)';
+                Tftot.Decay_time_20_mean=nanmean(squeeze(PK.posper(:,1,:))-PK.posM,1)';
+                Tftot.Decay_time_20_median=nanmedian(squeeze(PK.posper(:,1,:))-PK.posM,1)';
+                Tftot.Decay_time_20_std=nanstd(squeeze(PK.posper(:,1,:))-PK.posM,1)';
+                Tftot.Decay_time_30_mean=nanmean(squeeze(PK.posper(:,2,:))-PK.posM,1)';
+                Tftot.Decay_time_30_median=nanmedian(squeeze(PK.posper(:,2,:))-PK.posM,1)';
+                Tftot.Decay_time_30_std=nanstd(squeeze(PK.posper(:,2,:))-PK.posM,1)';
+                Tftot.Decay_time_50_mean=nanmean(squeeze(PK.posper(:,3,:))-PK.posM,1)';
+                Tftot.Decay_time_50_median=nanmedian(squeeze(PK.posper(:,3,:))-PK.posM,1)';
+                Tftot.Decay_time_50_std=nanstd(squeeze(PK.posper(:,3,:))-PK.posM)';
+                Tftot.Decay_time_70_mean=nanmean(squeeze(PK.posper(:,4,:))-PK.posM,1)';
+                Tftot.Decay_time_70_median=nanmedian(squeeze(PK.posper(:,4,:))-PK.posM,1)';
+                Tftot.Decay_time_70_std=nanstd(squeeze(PK.posper(:,4,:))-PK.posM,1)';
+                Tftot.Decay_time_95_mean=nanmean(squeeze(PK.posper(:,5,:))-PK.posM,1)';
+                Tftot.Decay_time_95_median=nanmedian(squeeze(PK.posper(:,5,:))-PK.posM,1)';
+                Tftot.Decay_time_95_std=nanstd(squeeze(PK.posper(:,5,:))-PK.posM,1)';
                 Tftot.N_pks=PK.N';  
                 Tftot.Sig_noise=(Tftot.Amp_asc_mean+Tftot.Amp_decay_mean)./2./PK.noise';
                 
@@ -912,9 +893,9 @@ classdef AnalysisPeaks < handle
 
 
             Tff.Properties.RowNames = Tf.Properties.VariableNames;
-%             if exist(results_pathname,'file')
-%                 delete(results_pathname)
-%             end
+            if exist(results_pathname,'file')
+                delete(results_pathname)
+            end
             writetable(Tff,results_pathname,'WriteRowNames',true,'Sheet',PK.sheet)  ;
     
         
