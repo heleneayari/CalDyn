@@ -310,7 +310,7 @@ classdef AnalysisPeaks < handle
             
             
             
-            win=3;
+            win=7*PK.vector_filtering_frame_length;
             sl=PK.sm(i);
             %              Signal=PK.matrix_filtered_fluorescences(~isnan(PK.matrix_filtered_fluorescences(:,i)),i);
             Signal=PK.matrix_filtered_fluorescences(:,i);

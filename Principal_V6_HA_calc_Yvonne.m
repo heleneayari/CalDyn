@@ -3,6 +3,7 @@ clc
 clear
 % close all;
 folder='/data1/thoman/ownCloud/flux_calcique/Signaux_calciques/';
+folder='/data1/thoman/ownCloud/Albano/wetransfer_excel-files_2024-02-05_1416/Excel files/'
 %% load data
 [file,rough_data_foldername]=uigetfile([folder,'*.*']);
 rough_data_pathname=[rough_data_foldername, file];
@@ -38,12 +39,12 @@ end
 %% param
 pol_length=31;
 sm=15;
-prop=0.1;
+prop=0.5;
 type=1;%1 for calcic signals, 2 for electrics
 pks_class=1;
 th_smpks=0.2;
 th_medpks=0.5;
-th_multi=0.05;
+th_multi=0.2;
 %%
 
 results_foldername=[rough_data_foldername,filesep,'Results_',file(1:end-5), filesep];
