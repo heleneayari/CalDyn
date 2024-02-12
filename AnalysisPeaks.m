@@ -93,6 +93,7 @@ classdef AnalysisPeaks < handle
         Decay_slope_50_100
         sheet
         indtosave
+        win
         
    
     end
@@ -113,6 +114,7 @@ classdef AnalysisPeaks < handle
             addOptional(p,'th_multi',1.5)
             addOptional(p,'baselinefit',0)
             addOptional(p,'bool_baselineref',0)
+            addOptional(p,'win',3)
             addOptional(p,'list_calc',logical([1,1,1]))
             addOptional(p,'pks_class',0)
             addOptional(p,'list_param_name',{'N_pks','Period','Asc_time','Decay_time',...
@@ -136,7 +138,9 @@ classdef AnalysisPeaks < handle
             time=p.Results.Signal(:,1);
             PK.PixelSize = p.Results.PixelSize;
             PK.cut_freq=p.Results.param_filter;
+           
             PK.list_param_name=p.Results.list_param_name;
+            
             PK.list_param_num=false(1,length(PK.list_allparam));
             for uu=1:length(PK.list_param_name)
                 pos=strcmp(PK.list_param_name(uu),PK.list_allparam);
@@ -173,7 +177,7 @@ classdef AnalysisPeaks < handle
             PK.dd2=zeros(PK.number_acquisitions,PK.number_cells);
             PK.nindpk=true(round(PK.number_acquisitions),round(PK.number_cells));
             
-            
+            PK.win=p.Results.win*ones(1,PK.number_cells);
             PK.sm=sm*ones(1,PK.number_cells);
             PK.th_smpks=th_smpks*ones(1,PK.number_cells);
             PK.th_medpks=th_medpks*ones(1,PK.number_cells);
@@ -310,7 +314,7 @@ classdef AnalysisPeaks < handle
             
             
             
-            win=7*PK.vector_filtering_frame_length;
+ 
             sl=PK.sm(i);
             %              Signal=PK.matrix_filtered_fluorescences(~isnan(PK.matrix_filtered_fluorescences(:,i)),i);
             Signal=PK.matrix_filtered_fluorescences(:,i);
@@ -352,12 +356,12 @@ classdef AnalysisPeaks < handle
             
             clear maxc locc locr minr
             for ii=1:length(locct)
-                [maxc(ii),locc(ii)]=max(ddv(max(1,locct(ii)-win):min(locct(ii)+win,length(ddv))));
-                locc(ii)=max(1,locct(ii)-win)+locc(ii)-1;
+                [maxc(ii),locc(ii)]=max(ddv(max(1,locct(ii)-PK.win(i)):min(locct(ii)+PK.win(i),length(ddv))));
+                locc(ii)=max(1,locct(ii)-PK.win(i))+locc(ii)-1;
             end
             for ii=1:length(locrt)
-                [minr(ii),locr(ii)]=min(ddv(max(1,locrt(ii)-win):min(locrt(ii)+win,length(ddv))));
-                locr(ii)=locr(ii)+max(1,locrt(ii)-win)-1;
+                [minr(ii),locr(ii)]=min(ddv(max(1,locrt(ii)-PK.win(i)):min(locrt(ii)+PK.win(i),length(ddv))));
+                locr(ii)=locr(ii)+max(1,locrt(ii)-PK.win(i))-1;
             end
             %
             %                                                                              figure

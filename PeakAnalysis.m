@@ -22,7 +22,7 @@ function varargout = PeakAnalysis(varargin)
 
 % Edit the above text to modify the response to help PeakAnalysis
 
-% Last Modified by GUIDE v2.5 09-Jan-2024 10:34:02
+% Last Modified by GUIDE v2.5 12-Feb-2024 18:03:14
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -65,6 +65,8 @@ set(handles.th_medpks,'string',num2str(handles.PK.th_medpks(handles.i)))
 set(handles.fac_multi,'string',num2str(handles.PK.th_multi(handles.i)))
 set(handles.remove_base_line,'Value',handles.PK.bb)
 
+set(handles.win,'string',num2str(handles.PK.win(handles.i)))
+
 if handles.PK.bb
     set(handles.bool_baselineref,'Value',handles.PK.bool_baselineref)
 else
@@ -87,7 +89,8 @@ switch handles.PK.type
 %         while error
 %             try
                 handles.PK.Filter(handles.i);
-                handles.PK.CalculateParameters(handles.i);
+              
+               handles.PK.CalculateParameters(handles.i);
                 error=0;
                 set(handles.smooth_length,'string',num2str(handles.PK.sm(handles.i)))
 %             catch
@@ -683,3 +686,32 @@ else
     plot_graphs(handles);
 end
 guidata(hObject, handles);
+
+
+
+function win_Callback(hObject, eventdata, handles)
+% hObject    handle to win (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hints: get(hObject,'String') returns contents of win as text
+%        str2double(get(hObject,'String')) returns contents of win as a double
+input = str2double(get(hObject,'string'));
+handles.PK.win(handles.i:end)=input;
+
+handles.PK.CalculateParameters(handles.i);
+plot_graphs(handles);
+guidata(hObject, handles);
+
+
+% --- Executes during object creation, after setting all properties.
+function win_CreateFcn(hObject, eventdata, handles)
+% hObject    handle to win (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    empty - handles not created until after all CreateFcns called
+
+% Hint: edit controls usually have a white background on Windows.
+%       See ISPC and COMPUTER.
+if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
+    set(hObject,'BackgroundColor','white');
+end
