@@ -5,6 +5,7 @@ clear
 folder='/data1/thoman/ownCloud/flux_calcique/Signaux_calciques/';
 folder='/data1/thoman/ownCloud/Albano/wetransfer_excel-files_2024-02-05_1416/Excel files/'
 folder='/data1/thoman/ownCloud/Albano/'
+folder='C:\Users\HEDY\ownCloud\Albano\wetransfer_excel-files_2024-02-05_1416\'
 %% load data
 [file,rough_data_foldername]=uigetfile([folder,'*.*']);
 rough_data_pathname=[rough_data_foldername, file];
@@ -39,11 +40,11 @@ end
 
 %% param
 pol_length=11;
-sm=1;
-prop=0.3;
-baselinefit=1;
+sm=51;
+prop=0.5;
+baselinefit=0;
 type=1;%1 for calcic signals, 2 for electrics
-pks_class=0;
+pks_class=1;
 th_smpks=0.2;
 th_medpks=0.5;
 th_multi=0.2;
@@ -59,8 +60,8 @@ end
 
 PK=AnalysisPeaks(matrix_rough_data,'param_filter',pol_length,'smoothness',sm,'prop',prop,'type',type,'pks_class',pks_class,'th_smpks',th_smpks,'th_medpks',th_medpks,'th_multi',th_multi,'baselinefit',baselinefit);
 %% test plot
-figure
-plot(PK.vector_time,PK.matrix_rough_fluorescences(:,2))
+% figure
+% plot(PK.vector_time,PK.matrix_rough_fluorescences(:,2))
 
 
 %% rest

@@ -65,7 +65,7 @@ set(handles.th_medpks,'string',num2str(handles.PK.th_medpks(handles.i)))
 set(handles.fac_multi,'string',num2str(handles.PK.th_multi(handles.i)))
 set(handles.remove_base_line,'Value',handles.PK.bb)
 
-set(handles.win,'string',num2str(handles.PK.win(handles.i)))
+
 
 if handles.PK.bb
     set(handles.bool_baselineref,'Value',handles.PK.bool_baselineref)
@@ -77,6 +77,7 @@ handles.PK.type_bl=get(handles.type_bl,'value');
 % set(handles.smooth_length,'string',num2str(handles.PK.sm(handles.i)))
 if handles.PK.pks_class
    set(handles.panel_stat,'Visible','on'); 
+   set(handles.pks_class,'Value',1); 
 else
      set(handles.panel_stat,'Visible','off'); 
 end
@@ -696,7 +697,7 @@ function win_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of win as text
 %        str2double(get(hObject,'String')) returns contents of win as a double
-input = str2double(get(hObject,'string'));
+input = str2double(get(hObject,'string'))
 handles.PK.win(handles.i:end)=input;
 
 handles.PK.CalculateParameters(handles.i);

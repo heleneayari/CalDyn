@@ -111,7 +111,7 @@ classdef AnalysisPeaks < handle
             addOptional(p,'cut_freq',20)
             addOptional(p,'th_smpks',0.2)
             addOptional(p,'th_medpks',0.5)
-            addOptional(p,'th_multi',1.5)
+            addOptional(p,'th_multi',0.2)
             addOptional(p,'baselinefit',0)
             addOptional(p,'bool_baselineref',0)
             addOptional(p,'win',3)
@@ -364,14 +364,14 @@ classdef AnalysisPeaks < handle
                 locr(ii)=locr(ii)+max(1,locrt(ii)-PK.win(i))-1;
             end
             %
-            %                                                                              figure
-            %                                                             hold on
-            %                                                             plot(dd2)
-            %                                                             plot(locc,maxc,'+r')
-            %                                                             plot(locr,minr,'+g')
-            %                                                             plot(sl,dd2(sl),'+y')
-            %                                                             pause
-            %
+%                                                                                          figure
+%                                                                         hold on
+%                                                                         plot(dd2)
+%                                                                         plot(locc,maxc,'+r')
+%                                                                         plot(locr,minr,'+g')
+%                                                                         plot(sl,dd2(sl),'+y')
+%                                                                         pause
+            
             
             [locr,ia,~]=unique(locr);
             minr=minr(ia);
