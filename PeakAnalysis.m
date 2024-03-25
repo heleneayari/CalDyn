@@ -697,7 +697,7 @@ function win_Callback(hObject, eventdata, handles)
 
 % Hints: get(hObject,'String') returns contents of win as text
 %        str2double(get(hObject,'String')) returns contents of win as a double
-input = str2double(get(hObject,'string'))
+input = str2double(get(hObject,'string'));
 handles.PK.win(handles.i:end)=input;
 
 handles.PK.CalculateParameters(handles.i);

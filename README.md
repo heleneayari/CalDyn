@@ -17,29 +17,29 @@ The GUI should look like:
 ![Gui_Figure](./Figures/Figure_GUI.png)
 
 
-In [1], the signal is plotted in light grey, and in blue, the filtered signal is represented. This latter signal is the one on which everything will be calculated, so it should be faithful to the original signal but with less noise, as depicted here (The filtering could be adjusted in box [2], the higher the value, the higher the filtering).
-In [1], all the results from the peak detection algorithms are represented. In black, one will find the maxima and minima associated with each peak. In cyan, is the starting point of the peak and in green its finishing point in magenta are points taking along the decrease in signal corresponding to 0.8, 0.7 0.5 0.3 and 0.05 times the height of the initial signal.
+In [A], the signal is plotted in light grey, and in blue, the filtered signal is represented. This latter signal is the one on which everything will be calculated, so it should be faithful to the original signal but with less noise, as depicted here (The filtering could be adjusted in box [1], the higher the value, the higher the filtering).
+In [A], all the results from the peak detection algorithms are represented in colored crosses. Black ones represent the maxima and minima associated with each peak. Cyan ones are the starting points of the peak and green ones their finishing points. Magenta crosses are points taking along the decrease in signal corresponding to 0.8, 0.7 0.5 0.3 and 0.05 times the height of the initial signal.
 
-The detection of the peak is made using the derivative of the signal searching for a couple of minimum/maximum above a threshold (corresponding to the rise and fall associated to each peak). The derivative of the signal is represented in red in box [3], the signal undergoes a new filtering step which can be adjusted using the smooth_length box [4].
-The most important parameter to be set is the threshold  in box [5] (value between 0 and 1), it will set the dotted line represented in [3], above which the derivative maxima/minima will be searched. If this parameter is set too low, we will mainly detect the noise in the signal, if set too high, we will miss some peaks.
-If parameters of the peaks are not detected properly, it is usually because the derivative of the signal is still very noisy and should be smoothed further increasing the number in box [4].
+The detection of the peak is made using the derivative of the signal searching for a couple of minimum/maximum above a threshold (corresponding to the rise and fall associated to each peak). The derivative of the signal is represented in red of box [B], the signal undergoes a new filtering step which can be adjusted using the smooth_length box [2].
+The most important parameter to be set is the threshold in box [3] (value between 0 and 1), it will set the dotted line represented in [B], above which the derivative maxima/minima will be searched. If this parameter is set to low, we will mainly detect the noise in the signal, if set to high, we will miss some peaks.
+If parameters of the peaks are not detected properly, it is usually because the derivative of the signal is still very noisy and should be smoothed further by increasing the number in box [2].
 
+There is a possibility to manually remove peaks using [5] and clicking near the peak which needs to be erased.
 
-There is a possibility to manually remove peaks using [7] and clicking near the peak which needs to be erased.
-
-It is also possible to remove the base line using [6] (The base line can be fitted either using a constant or a polynomial of degree 1, 2 or 3). See below the result on the 
-initial signal:
+It is also possible to remove the base line using [4] (The base line can be fitted either using a constant or a polynomial of degree 1 or 2). See below the result on the initial signal:
 ![remove_baseline](./Figures/remove_base_line.png)
 If the box Ref=base line is checked, all the minima of the signals will be set to zero.
 
-There is also an option for peaks classification (the panel corresponding to this option can be made apparent clicking on button [9]). Three thresholds will need to be set to classify the peaks between small medium and large, and also to detect multipeaks (peaks which will not go down to the base line before rising again). If the classification option is set to 'on', then in the excel file where the results are saved, there will be now 4 different sheets: Sheet 1 will gather statistics on all peaks, whereas sheets 'small_peaks', 'medium_peaks', 'large_peaks' will gather respectively statistics on small, medium and large peaks only.
+There is also an option for peaks classification (the panel corresponding to this option can be made apparent clicking on button [7]). Three thresholds will need to be set to classify the peaks between small medium and high, and also to detect multipeaks (peaks which will not go down to the base line before rising again). If the classification option is set to 'on', then in the excel file where the results are saved, there will be now 4 different sheets: Sheet 1 will gather statistics on all peaks, whereas sheets 'small_peaks', 'medium_peaks', 'large_peaks' will gather respectively statistics on small, medium and
+large peaks only.
 
-Saved Parameters can be set using button [8], a new checkbox menu will appear on which the user will be able to choose the parameters he will want to save:
+Saved Parameters can be set using button [6], a new checkbox menu will appear on which the user will be able to choose the parameters he will want to save:
 ![parameters_to_be_saved](./Figures/parameters.png)
 
 
+
 ## Saved parameters:
-Below is a description of all the different paramaters that can be saved and their definition:
+Below is a description of all the different parameters that can be saved and their definition:
 
 ![parameters_definition](./Figures/param_def.PNG)
 
@@ -65,7 +65,7 @@ For all the following parameters, the user can decide to save the mean and/or me
 + 'Decay_time_30': Time to relax 30% of the peak amplitude
 + 'Decay_time_20': Time to relax 20% of the peak amplitude, 
 + 'Taud': time between the end of a peak and the beginning of the next one ($\tau_d$ on figure)
-+ 'Baz_taud': $\tau_d/\sqrt(T)$
++ 'Baz_taud': $\frac{\tau_d}{\sqrt{T}}$
 + 'AUC': Area under curve (peak)
 + 'Ascending slope': Slope of the signal during the rising phase in a peak
 + 'Decay slope': Slope of the signal during the decay phase in a peak

@@ -1,11 +1,10 @@
-
 clc
 clear
 % close all;
-folder='/data1/thoman/ownCloud/flux_calcique/Signaux_calciques/';
-folder='/data1/thoman/ownCloud/Albano/wetransfer_excel-files_2024-02-05_1416/Excel files/'
-folder='/data1/thoman/ownCloud/Albano/'
-folder='C:\Users\HEDY\ownCloud\Albano\wetransfer_excel-files_2024-02-05_1416\'
+folder='C:\Users\hayari\ownCloud\flux_calcique\';
+% folder='/data1/thoman/ownCloud/Albano/wetransfer_excel-files_2024-02-05_1416/Excel files/'
+% folder='/data1/thoman/ownCloud/Albano/'
+%folder='C:\Users\HEDY\ownCloud\Albano\wetransfer_excel-files_2024-02-05_1416\'
 %% load data
 [file,rough_data_foldername]=uigetfile([folder,'*.*']);
 rough_data_pathname=[rough_data_foldername, file];

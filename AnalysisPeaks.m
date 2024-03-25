@@ -79,7 +79,7 @@ classdef AnalysisPeaks < handle
         Mmea
         mmea
         list_allparam={'N_pks','f_smpks','f_medpks','f_multipks','Sig_noise','Period','Asc_time','Decay_time',...
-                        'Decay_time_95','Decay_time_70','Decay_time_50','Decay_time_30','Decay_time_20',...
+                        'Decay_time_95','Decay_time_90','Decay_time_70','Decay_time_50','Decay_time_30','Decay_time_20',...
                         'Taud','Baz_taud','AUC','Asc_slope','Decay_slope','Std_decay_slope','Decay_slope_0_50','Decay_slope_50_100',...
                         'Amp_asc','Amp_decay','Maxima','Minima','FP_duration','FP_Amp'};
         list_param_num
@@ -105,8 +105,8 @@ classdef AnalysisPeaks < handle
             addOptional(p, 'SamplingFrequency', 1);
             addOptional(p, 'param_filter', 111);
             addOptional(p,'Pol_order',2)
-            addOptional(p, 'Smoothness', 200);
-            addOptional(p, 'proportion', 0.1);
+            addOptional(p, 'smoothness', 200);
+            addOptional(p, 'prop', 0.1);
             addOptional(p,'type',1)
             addOptional(p,'cut_freq',20)
             addOptional(p,'th_smpks',0.2)
@@ -118,20 +118,20 @@ classdef AnalysisPeaks < handle
             addOptional(p,'list_calc',logical([1,1,1]))
             addOptional(p,'pks_class',0)
             addOptional(p,'list_param_name',{'N_pks','Period','Asc_time','Decay_time',...
-                        'Decay_time_95','Decay_time_70','Decay_time_50','Decay_time_30','Decay_time_20',...
+                        'Decay_time_95','Decay_time_90','Decay_time_70','Decay_time_50','Decay_time_30','Decay_time_20',...
                         'Taud','Baz_taud','AUC','Asc_slope','Decay_slope',...
                         'Amp_asc','Amp_decay','Maxima','Minima'})
             parse(p, varargin{:});
             PK.iter=0;
             pol_length=p.Results.param_filter;
-            sm=p.Results.Smoothness;
+            sm=p.Results.smoothness;
             th_smpks=p.Results.th_smpks;
             th_medpks=p.Results.th_medpks;
             th_multi=p.Results.th_multi;
             PK.bool_baselineref=p.Results.bool_baselineref;
             PK.bb=p.Results.baselinefit;
             PK.ltab=50000;
-            prop=p.Results.proportion;
+            prop=p.Results.prop;
             PK.type=p.Results.type;
             pol_order=p.Results.Pol_order;
             PK.number_cells=size(p.Results.Signal,2)-1;
@@ -209,8 +209,8 @@ classdef AnalysisPeaks < handle
             PK.posM=nan*ones(PK.ltab,PK.number_cells);
             PK.ms=nan*ones(PK.ltab,PK.number_cells);
             PK.Ms=nan*ones(PK.ltab,PK.number_cells);
-            PK.posper=nan*ones(PK.ltab,5,PK.number_cells);
-            PK.Mper=nan*ones(PK.ltab,5,PK.number_cells);
+            PK.posper=nan*ones(PK.ltab,6,PK.number_cells);
+            PK.Mper=nan*ones(PK.ltab,6,PK.number_cells);
             PK.Decay_slope_0_50=nan*ones(PK.ltab,PK.number_cells);
             PK.Decay_slope_50_100=nan*ones(PK.ltab,PK.number_cells);
             PK.Std_decay_slope=nan*ones(PK.ltab,PK.number_cells);
@@ -282,7 +282,7 @@ classdef AnalysisPeaks < handle
             addRequired(p,'i')
             parse(p, varargin{1:end});
             i=p.Results.i;
-            dper=[0.8 0.7 0.5 0.3 0.05];
+            dper=[0.8 0.7 0.5 0.3 0.1 0.05];
             PK.posm(:,i)=nan*ones(PK.ltab,1);
             PK.posM(:,i)=nan*ones(PK.ltab,1);
             PK.ms(:,i)=nan*ones(PK.ltab,1);
@@ -306,8 +306,8 @@ classdef AnalysisPeaks < handle
             %             PK.locc(:,i)=nan*ones(PK.ltab,1);
             %             PK.locr(:,i)=nan*ones(PK.ltab,1);
             
-            PK.Mper(:,:,i)=nan*ones(PK.ltab,5,1);
-            PK.posper(:,:,i)=nan*ones(PK.ltab,5,1);
+            PK.Mper(:,:,i)=nan*ones(PK.ltab,6,1);
+            PK.posper(:,:,i)=nan*ones(PK.ltab,6,1);
             PK.nindpk(:,i)=true(round(PK.number_acquisitions),1);
             PK.base(:,i)=nan*ones(round(PK.number_acquisitions),1);
             
@@ -336,7 +336,7 @@ classdef AnalysisPeaks < handle
             %                 if(sl~=80||prop~=0.05)
 %                                                         figure
 %                                                         hold on
-%                                                         plot(dd)
+% %                                                         plot(dd)
 %                                                         plot(dd2)
 %                                                         pause
             %
@@ -353,6 +353,24 @@ classdef AnalysisPeaks < handle
             
             [~, locct] = findpeaks(dd2,'MinPeakHeight' ,PK.Mder(i));
             [~, locrt] = findpeaks(-dd2,'MinPeakHeight' ,-PK.mder(i));
+            
+         
+           %% if last point or first point is above threshold add it to locrt
+           
+           if dd2(end)>PK.Mder(i)
+
+               locct=[locct;length(dd2)];
+           end
+            
+             if -dd2(1)>-PK.mder(i)
+                 
+               locrt=[1;locrt];
+           end    
+            
+            
+            
+            
+            
             
             clear maxc locc locr minr
             for ii=1:length(locct)
@@ -513,11 +531,11 @@ classdef AnalysisPeaks < handle
             if PK.bool_baselineref&& PK.iter~=0
                 ms=zeros(1,length(ms));
             end
-            posper=round(repmat(xmr',1,5));
+            posper=round(repmat(xmr',1,6));
             
             for kk=1:length(xmr(:))
-                for uu=1:5
-                    % 5 is for 95% and 1 for 10%
+                for uu=1:6
+                    % 6 is for 95% and 1 for 10%
                     dd=dper(uu)*(M(kk)-ms(kk));
                     tutu=find(diff(Signal(round(posM(kk)):round(posm(kk)))-ms(kk)>dd)==-1);
                     if ~isempty(tutu)
@@ -881,9 +899,13 @@ classdef AnalysisPeaks < handle
                 Tftot.Decay_time_70_mean=nanmean(squeeze(PK.posper(:,4,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
                 Tftot.Decay_time_70_median=nanmedian(squeeze(PK.posper(:,4,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
                 Tftot.Decay_time_70_std=nanstd(squeeze(PK.posper(:,4,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
-                Tftot.Decay_time_95_mean=nanmean(squeeze(PK.posper(:,5,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
-                Tftot.Decay_time_95_median=nanmedian(squeeze(PK.posper(:,5,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
-                Tftot.Decay_time_95_std=nanstd(squeeze(PK.posper(:,5,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
+                Tftot.Decay_time_90_mean=nanmean(squeeze(PK.posper(:,5,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
+                Tftot.Decay_time_90_median=nanmedian(squeeze(PK.posper(:,5,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
+                Tftot.Decay_time_90_std=nanstd(squeeze(PK.posper(:,5,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
+
+                Tftot.Decay_time_95_mean=nanmean(squeeze(PK.posper(:,6,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
+                Tftot.Decay_time_95_median=nanmedian(squeeze(PK.posper(:,6,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
+                Tftot.Decay_time_95_std=nanstd(squeeze(PK.posper(:,6,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
                 Tftot.N_pks=PK.N';  
                 Tftot.Sig_noise=(Tftot.Amp_asc_mean+Tftot.Amp_decay_mean)./2./PK.noise';
                 
@@ -923,6 +945,28 @@ classdef AnalysisPeaks < handle
     
         
            end
+           
+           function param=getallinputparams(PK)
+               param.list_param_name=PK.list_param_name;
+               param.PixelSize=PK.PixelSize;
+               param.SamplingFrequency=PK.SamplingFrequency;
+               param.param_filter=PK.vector_filtering_frame_length(1);
+               param.smoothness=PK.sm(1);
+               param.prop=PK.prop(1);
+               param.type=PK.type;
+               param.cut_freq=PK.cut_freq;
+               param.th_smpks=PK.th_smpks;
+               param.th_medpks=PK.th_medpks;
+               param.th_multi=PK.th_multi;
+               param.baselinefit=PK.bb;
+               param.bool_baselineref=PK.bool_baselineref;
+               param.win=PK.win;
+               param.list_calc=PK.list_calc;
+               param.pks_class=PK.pks_class;
+               param.list_param_name=PK.list_param_name;
+
+           end
+           
     end
     
 end

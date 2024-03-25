@@ -22,7 +22,7 @@ function varargout = Parameters(varargin)
 
 % Edit the above text to modify the response to help Parameters
 
-% Last Modified by GUIDE v2.5 22-Dec-2023 21:04:27
+% Last Modified by GUIDE v2.5 25-Mar-2024 15:51:51
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -522,6 +522,20 @@ function Std_decay_slope_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of Std_decay_slope
+val=get(hObject,'Value');
+nom=get(hObject,'Tag');
+pos=strcmp(handles.list_allparam,nom);
+handles.list_param_num(pos)=val;
+guidata(hObject, handles);
+
+
+% --- Executes on button press in Decay_time_90.
+function Decay_time_90_Callback(hObject, eventdata, handles)
+% hObject    handle to Decay_time_90 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of Decay_time_90
 val=get(hObject,'Value');
 nom=get(hObject,'Tag');
 pos=strcmp(handles.list_allparam,nom);

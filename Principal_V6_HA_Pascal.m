@@ -2,6 +2,8 @@ clc
 clear
 close all;
 folder='/data1/thoman/ownCloud/flux_calcique/Comparaison Matlab-Excel P Seyer/';
+folder='/data1/thoman/ownCloud/pascal/'
+
 %% load data
     [file,rough_data_foldername]=uigetfile([folder,'*.*']);
     rough_data_pathname=[rough_data_foldername, file];
