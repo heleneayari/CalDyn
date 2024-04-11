@@ -63,17 +63,18 @@ set(handles.prop,'string',num2str(handles.PK.prop(handles.i)))
 set(handles.th_smpks,'string',num2str(handles.PK.th_smpks(handles.i)))
 set(handles.th_medpks,'string',num2str(handles.PK.th_medpks(handles.i)))
 set(handles.fac_multi,'string',num2str(handles.PK.th_multi(handles.i)))
-set(handles.remove_base_line,'Value',handles.PK.bb)
+set(handles.remove_base_line,'Value',handles.PK.type_bl>0)
 
 
 
-if handles.PK.bb
+if handles.PK.type_bl
+    set(handles.type_bl,'Value',int32(handles.PK.type_bl))
     set(handles.bool_baselineref,'Value',handles.PK.bool_baselineref)
 else
     set(handles.bool_baselineref,'Visible','off');
 end
 
-handles.PK.type_bl=get(handles.type_bl,'value');
+
 % set(handles.smooth_length,'string',num2str(handles.PK.sm(handles.i)))
 if handles.PK.pks_class
    set(handles.panel_stat,'Visible','on'); 
@@ -118,7 +119,7 @@ switch handles.PK.type
         plot_graphs(handles);
         
 end
-if handles.PK.bb
+if handles.PK.type_bl
     handles.PK.remove_base(handles.i);
     handles.PK.CalculateParameters(handles.i);
     plot_graphs(handles);
@@ -179,7 +180,7 @@ try
         end
     end
     handles.PK.Filter(handles.i);
-    if handles.PK.bb
+    if handles.PK.type_bl
         handles.PK.remove_base(handles.i);
     end
     handles.PK.CalculateParameters(handles.i);
@@ -242,7 +243,7 @@ old=handles.PK.sm(handles.i);
 try
     handles.PK.sm(handles.i:end)=input;
     handles.PK.Filter(handles.i);
-    if handles.PK.bb
+    if handles.PK.type_bl
         handles.PK.remove_base(handles.i);
     end
     handles.PK.CalculateParameters(handles.i);
@@ -341,7 +342,7 @@ if handles.PK.type<2
     plot(handles.PK.posm(:,handles.i),handles.PK.ms(:,handles.i),'+k','linewidth',2,'parent',handles.axes_image)
     plot(handles.PK.posM(:,handles.i),handles.PK.M(:,handles.i),'+k','linewidth',2,'parent',handles.axes_image)
     plot(pos(:),M(:),'+m','linewidth',2,'parent',handles.axes_image)
-    if(handles.PK.bb)
+    if(handles.PK.type_bl)
         plot(handles.PK.vector_time,handles.PK.basefit(:,handles.i),'linewidth',1,'color',[0.2,0,0],'parent',handles.axes_image)
     end
     xlabel(handles.axes_image,'Time')
@@ -498,7 +499,8 @@ function rem_base_line_Callback(hObject, ~, handles)
 % hObject    handle to rem_base_line (see GCBO)
 % eventdata  reserved - to be defined in a future version of MATLAB
 % handles    structure with handles and user data (see GUIDATA)
-handles.PK.bb=1;
+handles.PK.type_bl=get(handles.type_bl,'value');
+handles.PK.type_bl
 handles.PK.remove_base(handles.i);
 handles.PK.CalculateParameters(handles.i);
 plot_graphs(handles)
@@ -578,7 +580,7 @@ function type_bl_Callback(hObject, eventdata, handles)
 % Hints: contents = cellstr(get(hObject,'String')) returns type_bl contents as cell array
 %        contents{get(hObject,'Value')} returns selected item from type_bl
 handles.PK.type_bl=get(handles.type_bl,'value');
-handles.PK.bb=1;
+
 set(handles.remove_base_line,'Value',1);
 handles.PK.remove_base(handles.i);
 handles.PK.CalculateParameters(handles.i);
@@ -609,14 +611,16 @@ function remove_base_line_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of remove_base_line
 
-handles.PK.bb=get(hObject,'Value');
-if handles.PK.bb
+bb=get(hObject,'Value');
+if bb
+    handles.PK.type_bl=get(handles.type_bl,'value');
     set(handles.bool_baselineref,'Visible','on');
     set(handles.bool_baselineref,'Value',0);
     handles.PK.remove_base(handles.i);
     handles.PK.CalculateParameters(handles.i);
     plot_graphs(handles);
 else
+    handles.PK.type_bl=0;
     set(handles.bool_baselineref,'Visible','off');
     handles.PK.bool_baselineref=0;
     handles.PK.matrix_filtered_fluorescences(:,handles.i)=handles.PK.matrix_filtered_fluorescences_ori(:,handles.i);
@@ -681,10 +685,10 @@ else
      handles.PK.list_param_num(pos)=0;
      pos=strcmp(handles.PK.list_allparam,'f_multipks');
      handles.PK.list_param_num(pos)=0;
-    handles.PK.list_param_name=handles.PK.list_allparam(handles.PK.list_param_num(:));
-    handles.PK.pks_class=0;
-    handles.PK.CalculateParameters(handles.i);
-    plot_graphs(handles);
+     handles.PK.list_param_name=handles.PK.list_allparam(handles.PK.list_param_num(:));
+     handles.PK.pks_class=0;
+     handles.PK.CalculateParameters(handles.i);
+     plot_graphs(handles);
 end
 guidata(hObject, handles);
 

@@ -24,6 +24,7 @@ folder='/data1/thoman/ownCloud/pascal/'
     sm=1;
     prop=0.3; 
     type=1;% 2 for MEA, 1 for the rest 
+    baselinefit=2;% 1 is for fitting baseline with a constant, 2 with poly1, 3 with poly2, 4 with poly3
 %%
 close all
 results_foldername=[rough_data_foldername,filesep,'Results_',file(1:end-5), filesep];
@@ -31,7 +32,7 @@ if ~exist(results_foldername,'file')
     mkdir(results_foldername);
 end
 
-PK=AnalysisPeaks(matrix_rough_data,'param_filter',pol_length,'smoothness',sm,'prop',prop,'type',type,'baselinefit',1,'bool_baselineref',1);
+PK=AnalysisPeaks(matrix_rough_data,'param_filter',pol_length,'smoothness',sm,'prop',prop,'type',type,'baselinefit',baselinefit,'bool_baselineref',1);
 
 
 %% rest
