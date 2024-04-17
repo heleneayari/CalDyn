@@ -50,7 +50,7 @@ th_smpks=0.2;
 th_medpks=0.5;
 th_multi=0.2;
 
-col_line=1; % parameters to get results in line in the excels files
+col_line=1; %  to get each parameter on  a different column in the excels files if set to 1
 %%
 
 results_foldername=[rough_data_foldername,filesep,'Results_',file(1:end-5), filesep];
