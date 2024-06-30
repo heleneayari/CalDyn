@@ -1,8 +1,12 @@
 clc
 clear
 close all;
-folder='/data1/thoman/ownCloud/flux_calcique/Signaux_MED/';
-
+folder='/data1/thoman/ownCloud/Lamia/';
+%% add basic_functions to path
+filePath = matlab.desktop.editor.getActiveFilename;
+pos=strfind(filePath,filesep);
+pathloc=filePath(1:pos(end-1));
+addpath([pathloc,'basic_functions'])
 %% load data
     [file,rough_data_foldername]=uigetfile([folder,'*.*']);
     rough_data_pathname=[rough_data_foldername, file];
@@ -24,7 +28,8 @@ folder='/data1/thoman/ownCloud/flux_calcique/Signaux_MED/';
     prop=0.4; 
     type=2;%2 for MEA;1 for the rest
     param_filter=100;
-    list_param={'N_pks','FP_duration','FP_Amp'};
+    col_line=1; %  set to 1, to get each parameter on  a different column in the excels files
+    list_param={'N_pks','Amp_mea','Tau_mea','BI','FPD'};
 
 results_foldername=[rough_data_foldername,filesep,'Results_',file(1:end-5), filesep];
 if ~exist(results_foldername,'file')
@@ -32,18 +37,20 @@ if ~exist(results_foldername,'file')
 end
 %% keep only good columns
 
-goodcolumn=[1,2:3:size(matrix_rough_datat,2)];
-matrix_rough_data=-matrix_rough_datat(:,goodcolumn);
+% goodcolumn=[1,2:3:size(matrix_rough_datat,2)];
+goodcolumn=[2,3:2:size(matrix_rough_datat,2)];
+matrix_rough_data=matrix_rough_datat(:,goodcolumn);
 
 %% test figure to see if data are correct for debugging
-figure
-plot(matrix_rough_data(:,1),matrix_rough_data(:,2))
+% figure
+% plot(matrix_rough_data(:,1),matrix_rough_data(:,2))
 
 
 
 %%
-
-PK=AnalysisPeaks(matrix_rough_data,'prop',prop,'type',type,'param_filter',param_filter,'Smoothness',sm,'list_param_name',list_param);
+close all;
+clc;
+PK=AnalysisPeaks(matrix_rough_data,'prop',prop,'type',type,'param_filter',param_filter,'Smoothness',sm,'list_param_name',list_param,'col_line',col_line);
 
 
 
@@ -57,7 +64,6 @@ end
 
 %%
 
-    
 
     results_pathname=[results_foldername filesep 'Results_' file(1:end-5),'.xlsx'];
     save([results_foldername filesep 'Results_' file(1:end-5),'.mat'],'PK');

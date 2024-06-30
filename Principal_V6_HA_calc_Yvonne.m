@@ -44,7 +44,7 @@ sm=51;
 prop=0.2;
 baselinefit=0;%0 for no baseline removal, 1 is for fitting baseline with a constant, 2 with poly1, 3 with poly2, 4 with poly3
 type=1;%1 for calcic signals, 2 for electrics
-pks_class=1;
+pks_class=0;
 
 th_smpks=0.2;
 th_medpks=0.5;

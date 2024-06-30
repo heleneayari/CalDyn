@@ -28,7 +28,7 @@ folder='/data1/thoman/ownCloud/flux_calcique/Signaux_OM/';
     pol_length=51;
     sm=30;
     prop=0.3; 
-    type=2;%1 for calcic signals, 2 for electrics 
+    type=1;%1 for calcic signals, 2 for electrics 
 %%
 close all
 results_foldername=[rough_data_foldername,filesep,'Results_',file(1:end-5), filesep];
