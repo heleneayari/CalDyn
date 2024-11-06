@@ -22,7 +22,7 @@ function varargout = Parameters(varargin)
 
 % Edit the above text to modify the response to help Parameters
 
-% Last Modified by GUIDE v2.5 25-Mar-2024 15:51:51
+% Last Modified by GUIDE v2.5 06-Nov-2024 10:15:17
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -536,6 +536,34 @@ function Decay_time_90_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of Decay_time_90
+val=get(hObject,'Value');
+nom=get(hObject,'Tag');
+pos=strcmp(handles.list_allparam,nom);
+handles.list_param_num(pos)=val;
+guidata(hObject, handles);
+
+
+% --- Executes on button press in Decay_time_80.
+function Decay_time_80_Callback(hObject, eventdata, handles)
+% hObject    handle to Decay_time_80 (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of Decay_time_80
+val=get(hObject,'Value');
+nom=get(hObject,'Tag');
+pos=strcmp(handles.list_allparam,nom);
+handles.list_param_num(pos)=val;
+guidata(hObject, handles);
+
+
+% --- Executes on button press in Amp_norm.
+function Amp_norm_Callback(hObject, eventdata, handles)
+% hObject    handle to Amp_norm (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of Amp_norm
 val=get(hObject,'Value');
 nom=get(hObject,'Tag');
 pos=strcmp(handles.list_allparam,nom);

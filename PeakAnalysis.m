@@ -22,7 +22,7 @@ function varargout = PeakAnalysis(varargin)
 
 % Edit the above text to modify the response to help PeakAnalysis
 
-% Last Modified by GUIDE v2.5 12-Feb-2024 18:03:14
+% Last Modified by GUIDE v2.5 06-Nov-2024 10:13:30
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -127,8 +127,17 @@ else
     plot_graphs(handles);
 end
 
-guidata(hObject, handles);
-uiwait(handles.figure1);
+
+ 
+if handles.PK.auto
+    handles.closeFigure = true;
+    guidata(hObject, handles);
+   
+    pushbutton_save_Callback(hObject, [] , handles);
+else
+    guidata(hObject, handles);
+ uiwait(handles.figure1);
+end
 
 function varargout = PeakAnalysis_OutputFcn(hObject, eventdata, handles)
 varargout{1} = handles.PK;
@@ -721,3 +730,15 @@ function win_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --- Executes on button press in auto_mode.
+function auto_mode_Callback(hObject, eventdata, handles)
+% hObject    handle to auto_mode (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+handles.PK.auto=1;
+    handles.closeFigure = true;
+    guidata(hObject, handles);
+   
+    pushbutton_save_Callback(hObject, [] , handles);

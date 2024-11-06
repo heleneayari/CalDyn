@@ -3,6 +3,11 @@ clear
 close all;
 folder='/data1/thoman/ownCloud/flux_calcique/Comparaison Matlab-Excel P Seyer/';
 folder='/data1/thoman/ownCloud/pascal/'
+%% add basic_functions to path
+filePath = matlab.desktop.editor.getActiveFilename;
+pos=strfind(filePath,filesep);
+pathloc=filePath(1:pos(end-1));
+addpath([pathloc,'basic_functions'])
 
 %% load data
     [file,rough_data_foldername]=uigetfile([folder,'*.*']);
