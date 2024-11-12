@@ -113,6 +113,7 @@ switch handles.PK.type
         handles.PK.Filter(handles.i);
         handles.PK.CalculateParameters(handles.i);
         handles.PK.Analyse_MEA(handles.i);
+        set(handles.prop,'string',num2str(handles.PK.prop(handles.i)))
         cla(handles.axes2,'reset')
         set(handles.axes2,'Visible','off')
         
@@ -215,6 +216,7 @@ else
     handles.PK.Filter(handles.i);
     handles.PK.CalculateParameters(handles.i);
     handles.PK.Analyse_MEA(handles.i);
+    set(handles.prop,'string',num2str(handles.PK.prop(handles.i)))
     plot_graphs(handles);
     catch
             set(handles.frame_length,'string',num2str(old))
@@ -299,6 +301,7 @@ try
     else
     handles.PK.CalculateParameters(handles.i);
     handles.PK.Analyse_MEA(handles.i);
+    set(handles.prop,'string',num2str(handles.PK.prop(handles.i)))
     end
     plot_graphs(handles);
     
