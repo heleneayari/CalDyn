@@ -4,11 +4,13 @@ We give here a quick description on how to use the software, for further details
 "CalDyn: An advanced high-throughput automated algorithm for monitoring intracellular calcium dynamics and electrophysiological signals in patient-derived cells".... to be cited
 
 
-A Graphical User Interface (gui) is launched running the file Principal_V6_HA_*.m in matlab.
+## Examples
+A Graphical User Interface (gui) is launched running the file CalDyn_*.m in Matlab.
 
 
-There exist different versions of this file which have been finely tuned for different signals. But any of them can be launched and the user is invited to create its own starting file once conditions have been chosen for a given experiment to make the analysis even faster.
+There exists different versions of this file which have been finely tuned for different signals (The one presented in the article previously mentionned). We also provide here a set of excel files for testing.  But for a new analysis, any of them can be launched and the user is invited to create its own starting file once conditions have been chosen for a given experiment to make the analysis even faster.
 
+## Let's start
 In this file, the user will have to set the path to the excel file to be analyzed (folder variable). All results will be saved in the very same folder, in subfolders having the same name as the original excel file.
 
 See below for a list of the parameters that can be set in the gui either at startup or also directly using the interface.
