@@ -62,7 +62,9 @@ For all the following parameters, the user can decide to save the mean and/or me
 + 'Asc_time': Duration of the contration ($\tau_c$ on figure)
 + 'Decay_time': Duration of the relaxation ($\tau_r$ on figure)
 + ‘Decay_time_95': Time to relax 95% of the peak amplitude
-+ 'Decay_time_70': Time to relax 75% of the peak amplitude
++ 'Decay_time_90': Time to relax 70% of the peak amplitude
++ 'Decay_time_80': Time to relax 70% of the peak amplitude
++ 'Decay_time_70': Time to relax 70% of the peak amplitude
 + 'Decay_time_50': Time to relax 50% of the peak amplitude
 + 'Decay_time_30': Time to relax 30% of the peak amplitude
 + 'Decay_time_20': Time to relax 20% of the peak amplitude, 

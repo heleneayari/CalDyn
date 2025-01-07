@@ -17,7 +17,7 @@ folder=['Data' filesep 'action_potential_hiPSC_CMs' filesep];
     pol_length=3;
     sm=50;
     prop=0.05; 
- 
+
 
 %%
 close all

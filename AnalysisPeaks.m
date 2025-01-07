@@ -347,6 +347,7 @@ classdef AnalysisPeaks < handle
 %                         plot(Signal,'linewidth',2)
             %             sl
             ss=smooth(Signal,sl,'loess');
+          %  ss=Signal;
 %             figure
 %             plot(Signal)
 %             pause
@@ -576,7 +577,7 @@ classdef AnalysisPeaks < handle
             
             for kk=1:length(xmr(:))
                 for uu=1:7
-                    % 7 is for 95% and 1 for 10%
+                    % 7 is for 95% and 1 for 20%
                     dd=dper(uu)*(M(kk)-ms(kk));
                     tutu=find(diff(Signal(round(posM(kk)):round(posm(kk)))-ms(kk)>dd)==-1);
                     if ~isempty(tutu)
