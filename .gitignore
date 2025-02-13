@@ -10,9 +10,12 @@ Principal_V6_HA_test_MEA.m
 files=[dir([folder,'*.xlsx']);dir([folder,'*.csv'])]
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 *.tif
 =======
 >>>>>>> d9239477ced259511253dd15b2501e5de937d162
 Data/optical_mapping/N256 (IF1-CAM1).tif
+=======
+>>>>>>> d9239477ced259511253dd15b2501e5de937d162
 =======
 >>>>>>> d9239477ced259511253dd15b2501e5de937d162
