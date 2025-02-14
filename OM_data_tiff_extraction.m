@@ -48,6 +48,7 @@ pts(:,:) = ptst(ind2,:);
 plot(pts(:,2),pts(:,1),'r+')
 set(gca,'Ydir','reverse')
 indf = sub2ind(size(bw), pts(:,1), pts(:,2));
+pause
 
 %% load the whole tiff
 for ii=1:T
