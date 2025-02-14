@@ -10,20 +10,8 @@ classdef AnalysisPeaks < handle
         matrix_filtered_fluorescences
         matrix_filtered_fluorescences_ori
         sm
-        prop
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-        props
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
+        prop       
+        props       
         PixelSize
         framerate
         SamplingFrequency
@@ -80,19 +68,12 @@ classdef AnalysisPeaks < handle
         bool_baselineref
         iter
         th
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+        
+        
+        
+        
         ths
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
+        
         Amea
         M2mea
         Tmea
@@ -104,19 +85,12 @@ classdef AnalysisPeaks < handle
         posM2mea
         posMMmea
         posmmmea
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+        
+        
+        
+        
         posfinmea
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
+        
         mcmea
         Mmea
         mmea
@@ -144,19 +118,12 @@ classdef AnalysisPeaks < handle
         Homogeneity
         area
         PeriodF
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+        
+        
+        
+        
         rl=1;
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
+        
         
         
     end
@@ -181,19 +148,12 @@ classdef AnalysisPeaks < handle
             addOptional(p,'pks_class',0)
             addOptional(p,'col_line',0)
             addOptional(p,'auto',0)
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+            
+            
+            
+            
             addOptional(p,'props',0.3)
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
+            
             addOptional(p,'list_param_name',{'N_pks','Period','Asc_time','Decay_time',...
                 'Decay_time_95','Decay_time_90','Decay_time_80','Decay_time_70','Decay_time_50','Decay_time_30','Decay_time_20',...
                 'Taud','Baz_taud','AUC','Asc_slope','Decay_slope',...
@@ -211,19 +171,12 @@ classdef AnalysisPeaks < handle
             PK.type_bl=p.Results.baselinefit;
             PK.ltab=50000;
             prop=p.Results.prop;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+            
+            
+            
+            
             props=p.Results.props;
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
+            
             PK.type=p.Results.type;
             pol_order=p.Results.Pol_order;
             PK.number_cells=size(p.Results.Signal,2)-1;
@@ -277,19 +230,12 @@ classdef AnalysisPeaks < handle
             PK.th_smpks=th_smpks*ones(1,PK.number_cells);
             PK.th_medpks=th_medpks*ones(1,PK.number_cells);
             PK.th_multi=th_multi*ones(1,PK.number_cells);
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+            
+            
+            
+            
             PK.props=props*ones(1,PK.number_cells);
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
+            
             PK.prop=prop*ones(1,PK.number_cells);
             PK.xmr=nan*ones(PK.ltab,PK.number_cells);
             PK.ind_smpks=false(PK.ltab,PK.number_cells);
@@ -374,10 +320,10 @@ classdef AnalysisPeaks < handle
                 %  PK.matrix_filtered_fluorescences(:,i)=PK.matrix_rough_fluorescences(:,i);
             else
                 F=fft(PK.matrix_rough_fluorescences(:,i));
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+                
+                
+                
+                
                 
                 %                 figure
                 %                 plot(PK.matrix_rough_fluorescences(:,i))
@@ -388,32 +334,19 @@ classdef AnalysisPeaks < handle
                 %                 figure
                 %                 plot(PK.matrix_filtered_fluorescences(:,i))
                 %                 pause
-=======
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-              
-%                 figure
-%                 plot(PK.matrix_rough_fluorescences(:,i))
+                
+                
+                %                 figure
+                %                 plot(PK.matrix_rough_fluorescences(:,i))
                 F(PK.cut_freq+1:end-PK.cut_freq)=0;
                 PK.matrix_filtered_fluorescences(:,i)=real(ifft(F));
                 PK.matrix_filtered_fluorescences_ori(:,i)=PK.matrix_filtered_fluorescences(:,i);
-%                 figure
-%                 plot(PK.matrix_filtered_fluorescences(:,i))
-%                 pause
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
+                %                 figure
+                %                 plot(PK.matrix_filtered_fluorescences(:,i))
+                %                 pause
+                
+                
+                
             end
             
         end
@@ -462,10 +395,10 @@ classdef AnalysisPeaks < handle
             sl=PK.sm(i);
             %              Signal=PK.matrix_filtered_fluorescences(~isnan(PK.matrix_filtered_fluorescences(:,i)),i);
             Signal=PK.matrix_filtered_fluorescences(:,i);
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+            
+            
+            
+            
             
             %
             %                         figure;
@@ -478,35 +411,22 @@ classdef AnalysisPeaks < handle
             %             plot(Signal)
             %             pause
             
-=======
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-
+            
+            
             %
-%                         figure;
-%                         hold on
-%                         plot(Signal,'linewidth',2)
+            %                         figure;
+            %                         hold on
+            %                         plot(Signal,'linewidth',2)
             %             sl
             ss=smooth(Signal,sl,'loess');
-          %  ss=Signal;
-%             figure
-%             plot(Signal)
-%             pause
- 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
+            %  ss=Signal;
+            %             figure
+            %             plot(Signal)
+            %             pause
+            
+            
+            
+            
             %                         ss=Signal;
             
             %                         plot(PK.vector_time,Signal)
@@ -527,20 +447,14 @@ classdef AnalysisPeaks < handle
             %                 end
             mm=max(dd2);
             nn=min(dd2);
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+            
+            
+            
+            
             PK.mder(i)=PK.prop(i)*nn;
             PK.Mder(i)=PK.prop(i)*mm;
             
-=======
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
+            
             if PK.type<2
                 PK.mder(i)=PK.prop(i)*nn;
                 PK.Mder(i)=PK.prop(i)*mm;
@@ -548,16 +462,9 @@ classdef AnalysisPeaks < handle
                 PK.mder(i)=0.05*nn;
                 PK.Mder(i)=0.05*mm;
             end
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
+            
+            
+            
             
             [~, locct] = findpeaks(dd2,'MinPeakHeight' ,PK.Mder(i));
             [~, locrt] = findpeaks(-dd2,'MinPeakHeight' ,-PK.mder(i));
@@ -598,78 +505,49 @@ classdef AnalysisPeaks < handle
             %                                                                         plot(sl,dd2(sl),'+y')
             %                                                                         pause
             
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
             
-=======
-       
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-       
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-       
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-       
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
+            
+            
+            
+            
+            
+            
+            
+            
             [locr,ia,~]=unique(locr);
             minr=minr(ia);
             
             [locc,ia,~]=unique(locc);
             maxc=maxc(ia);
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
             
-=======
-     
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-     
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-     
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-     
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
+            
+            
+            
+            
+            
+            
+            
+            
             
             
             %% for keeping the first peak in good cases
             
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+            
+            
+            
+            
             %             figure
             %             plot(abs(dd2))
             [counts,ed]=histcounts(abs(dd2));
             
-=======
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-%             figure
-%             plot(abs(dd2))
+            
+            %             figure
+            %             plot(abs(dd2))
             [counts,ed]=histcounts(abs(dd2));
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
+            
+            
+            
+            
             T=otsuthresh(counts(2:end));
             
             %             figure
@@ -737,39 +615,26 @@ classdef AnalysisPeaks < handle
                             %
                             %                             mmvd(count)=nanmean(ss(max(1,vvd(ii)+win2):min(vvd(ii)+win2,llgg)));
                             %                             mmvg(count)=nanmean(ss(max(1,vvg(ii)-win2):min(vvg(ii)+win2,llgg)));
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+                            
+                            
+                            
+                            
                             %                                                         plot(vvg(ii),mmvg(count),'+b')
                             %                                                         plot(vvd(ii),mmvd(count),'+r')
                             %                                                         plot(locr(pl-1),ss(locr(pl-1)),'+g')
                             %                                                         plot(locc(ii),ss(locc(ii)),'+m')
                             
                             %                             pause
-=======
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-%                                                         plot(vvg(ii),mmvg(count),'+b')
-%                                                         plot(vvd(ii),mmvd(count),'+r')
-%                                                         plot(locr(pl-1),ss(locr(pl-1)),'+g')
-%                                                         plot(locc(ii),ss(locc(ii)),'+m')
                             
-%                             pause
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
+                            %                                                         plot(vvg(ii),mmvg(count),'+b')
+                            %                                                         plot(vvd(ii),mmvd(count),'+r')
+                            %                                                         plot(locr(pl-1),ss(locr(pl-1)),'+g')
+                            %                                                         plot(locc(ii),ss(locc(ii)),'+m')
+                            
+                            %                             pause
+                            
+                            
+                            
                             if PK.bool_baselineref&&PK.iter~=0
                                 
                                 mmvg(count)=0;
@@ -816,10 +681,10 @@ classdef AnalysisPeaks < handle
             
             
             for kk=1:length(xMr)-1
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+                
+                
+                
+                
                 
                 if ~isempty(min(Signal(max(1,round(xMr(kk))):round(xMr(kk+1)))))
                     [ms(kk),posm(kk)]=min(Signal(max(1,round(xMr(kk))):round(xMr(kk+1))));
@@ -829,32 +694,19 @@ classdef AnalysisPeaks < handle
                     ms(kk)=Signal(round(xMr(kk)));
                     
                 end
-=======
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-
-        if ~isempty(min(Signal(max(1,round(xMr(kk))):round(xMr(kk+1)))))
-                [ms(kk),posm(kk)]=min(Signal(max(1,round(xMr(kk))):round(xMr(kk+1))));
-                posm(kk)=posm(kk)+xMr(kk)-1;
-        else
-            posm(kk)=1;
-            ms(kk)=Signal(round(xMr(kk)));
-
-        end
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
+                
+                
+                if ~isempty(min(Signal(max(1,round(xMr(kk))):round(xMr(kk+1)))))
+                    [ms(kk),posm(kk)]=min(Signal(max(1,round(xMr(kk))):round(xMr(kk+1))));
+                    posm(kk)=posm(kk)+xMr(kk)-1;
+                else
+                    posm(kk)=1;
+                    ms(kk)=Signal(round(xMr(kk)));
+                    
+                end
+                
+                
+                
                 
             end
             [ms(length(xMr)),posm(length(xMr))]=min(Signal(round(xMr(length(xMr))):end));
@@ -902,79 +754,55 @@ classdef AnalysisPeaks < handle
                         xmrn(kk)=posm(kk);
                     end
                 end
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+                
+                
+                
+                
                 xmrn=round(xmrn)+1;
                 
                 PK.Aire(kk,i)=sum(Signal(max(1,xmc(kk)):min(round(xmr(kk)),length(Signal))))/PK.framerate;
                 
-=======
                 PK.Aire(kk,i)=sum(Signal(max(1,xmc(kk)):min(round(xmr(kk)),length(Signal))))/PK.framerate;
                 xmrn=round(xmrn);
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
                 PK.Aire(kk,i)=sum(Signal(max(1,xmc(kk)):min(round(xmr(kk)),length(Signal))))/PK.framerate;
                 xmrn=round(xmrn);
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
                 PK.Aire(kk,i)=sum(Signal(max(1,xmc(kk)):min(round(xmr(kk)),length(Signal))))/PK.framerate;
                 xmrn=round(xmrn);
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
                 PK.Aire(kk,i)=sum(Signal(max(1,xmc(kk)):min(round(xmr(kk)),length(Signal))))/PK.framerate;
                 xmrn=round(xmrn);
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
                 
                 PK.Tauc(kk,i)=PK.vector_time(posM(kk))-PK.vector_time(max(1,xmc(kk)));
                 PK.Taur(kk,i)=PK.vector_time(min(xmrn(kk),length(Signal)))-PK.vector_time(max(1,posM(kk)));
                 if kk<(length(xMr(:))-1)
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+                    
+                    
+                    
+                    
                     PK.Taud(kk,i)=PK.vector_time(max(1,xmc(kk+1)))-PK.vector_time(min(xmrn(kk),length(Signal)));
                     
-=======
-                PK.Taud(kk,i)=PK.vector_time(max(1,xmc(kk+1)))-PK.vector_time(min(xmrn(kk),length(Signal)));
-               
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-                PK.Taud(kk,i)=PK.vector_time(max(1,xmc(kk+1)))-PK.vector_time(min(xmrn(kk),length(Signal)));
-               
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-                PK.Taud(kk,i)=PK.vector_time(max(1,xmc(kk+1)))-PK.vector_time(min(xmrn(kk),length(Signal)));
-               
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-                PK.Taud(kk,i)=PK.vector_time(max(1,xmc(kk+1)))-PK.vector_time(min(xmrn(kk),length(Signal)));
-               
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
+                    PK.Taud(kk,i)=PK.vector_time(max(1,xmc(kk+1)))-PK.vector_time(min(xmrn(kk),length(Signal)));
+                    
+                    PK.Taud(kk,i)=PK.vector_time(max(1,xmc(kk+1)))-PK.vector_time(min(xmrn(kk),length(Signal)));
+                    
+                    PK.Taud(kk,i)=PK.vector_time(max(1,xmc(kk+1)))-PK.vector_time(min(xmrn(kk),length(Signal)));
+                    
+                    PK.Taud(kk,i)=PK.vector_time(max(1,xmc(kk+1)))-PK.vector_time(min(xmrn(kk),length(Signal)));
+                    
                 end
                 PK.nindpk(max(1,xmc(kk)):min(round(posper(kk,6)),length(Signal)),i)=0;
                 PK.Std_decay_slope(kk,i)=nanstd(ddv(max(posM(kk)+1,1):min(length(ddv),xmrn(kk)+1)));
                 PK.Decay_slope_0_50(kk,i)=nanmean(ddv(max(posM(kk)+1,1):min(length(ddv),posper(kk,3)+1)));
                 PK.Decay_slope_50_100(kk,i)=nanmean(ddv(max(posper(kk,3)+1,1):min(length(ddv),xmrn(kk)+1)));
             end
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
             
-=======
-         
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-         
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-         
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-         
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
+            
+            
+            
+            
+            
+            
+            
+            
             
             
             PK.nindpk(round(posm(end)):end,i)=0;
@@ -1067,7 +895,7 @@ classdef AnalysisPeaks < handle
                     PK.ind_multipks(ii,i)=1;
                 end
                 if lgpks
-                    PK.ind_lgpks(ii,1)=1;
+                    PK.ind_lgpks(ii,i)=1;
                 end
                 
             end
@@ -1087,14 +915,14 @@ classdef AnalysisPeaks < handle
             Signal=PK.matrix_filtered_fluorescences(:,i);
             mm=max(Signal);
             mm2=prctile(PK.matrix_rough_fluorescences(:,i),99.8);
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+            
+            
+            
+            
             ddv=gradient(Signal);
             sl=PK.sm(i);
             ss=smooth(Signal,sl,'loess');
-
+            
             
             dd2=gradient(ss);
             PK.dd2(1:length(Signal),i)=dd2;
@@ -1103,18 +931,10 @@ classdef AnalysisPeaks < handle
             nnd=min(dd2);
             PK.mder(i)=PK.props(i)*nnd;
             PK.Mder(i)=PK.props(i)*mmd;
-=======
-          
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-          
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-          
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-          
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
+            
+            
+            
+            
             
             PK.posmmea(:,i)=nan*ones(PK.ltab,1);
             PK.posMmea(:,i)=nan*ones(PK.ltab,1);
@@ -1134,10 +954,10 @@ classdef AnalysisPeaks < handle
             PK.BI(:,i)=nan*ones(PK.ltab,1);
             
             PK.th(i)=PK.prop(i)*mm;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+            
+            
+            
+            
             mindistpk=1000;
             [M,posM] = findpeaks(Signal,'MinPeakHeight' ,PK.th(i),'MinPeakDistance',mindistpk);
             while length(posM)<2
@@ -1172,87 +992,96 @@ classdef AnalysisPeaks < handle
                     [Mt,post]=findpeaks(Signal(ind2),'SortStr','descend');
                     %                     plot(post+posm(uu)-1,Mt,'+g')
                     
-=======
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-            
-            [M,posM] = findpeaks(Signal,'MinPeakHeight' ,PK.th(i));
-            while length(posM)<2
-                PK.prop(i:end)=PK.prop(i)-0.05;
-               
-                PK.th(i)=PK.prop(i)*mm;
-                
-                [M,posM] = findpeaks(Signal,'MinPeakHeight' ,PK.th(i));
-            end
-%                         figure
-%                         hold on
-%                         plot(Signal)
-%                         plot(posM,M,'+')
-%         
-                        
-     
-            %% find parameters for complete peaks
-            count=1;
-
-            for uu=1: length(posM)-1
-                
-
-                ind=posM(uu):posM(uu+1);               
-                [m(uu),posm(uu)]=min(Signal(ind));
-                posm(uu)=posm(uu)+posM(uu)-1;
-%                 plot(posm(uu),m(uu),'+')
-                if uu<length(posM)
-                
                     
-
-                    ind2=posm(uu):posM(uu+1);
-                    [Mt,post]=findpeaks(Signal(ind2),'SortStr','descend');
-%                     plot(post+posm(uu)-1,Mt,'+g')
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-                    if~isempty(Mt)
+                    
+                    [M,posM] = findpeaks(Signal,'MinPeakHeight' ,PK.th(i));
+                    while length(posM)<2
+                        PK.prop(i:end)=PK.prop(i)-0.05;
                         
-                        M2(uu)=Mt(1);
-                        posM2(uu)=post(1)+posm(uu)-1;
-                    else
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+                        PK.th(i)=PK.prop(i)*mm;
                         
-=======
-                       
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-                       
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-                       
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-                       
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-                        M2(uu)=M(uu);
-                        posM2(uu)=posM(uu);
+                        [M,posM] = findpeaks(Signal,'MinPeakHeight' ,PK.th(i));
+                    end
+                    %                         figure
+                    %                         hold on
+                    %                         plot(Signal)
+                    %                         plot(posM,M,'+')
+                    %
+                    
+                    
+                    %% find parameters for complete peaks
+                    count=1;
+                    
+                    for uu=1: length(posM)-1
+                        
+                        
+                        ind=posM(uu):posM(uu+1);
+                        [m(uu),posm(uu)]=min(Signal(ind));
+                        posm(uu)=posm(uu)+posM(uu)-1;
+                        %                 plot(posm(uu),m(uu),'+')
+                        if uu<length(posM)
+                            
+                            
+                            
+                            ind2=posm(uu):posM(uu+1);
+                            [Mt,post]=findpeaks(Signal(ind2),'SortStr','descend');
+                            %                     plot(post+posm(uu)-1,Mt,'+g')
+                            
+                            
+                            
+                            
+                            if~isempty(Mt)
+                                
+                                M2(uu)=Mt(1);
+                                posM2(uu)=post(1)+posm(uu)-1;
+                            else
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                M2(uu)=M(uu);
+                                posM2(uu)=posM(uu);
+                                
+                            end
+                            
+                            
+                            
+                            
+                            
+                            %                     plot(posM2,M2,'+k')
+                            
+                            %% find posM and M on original signal and not filtered one
+                            win=1500;
+                            [vmin(uu), pmint]=  min(PK.matrix_rough_fluorescences(max(posM(uu)-win,1):min(posM(uu)+win,length(Signal)),i));
+                            pmin(uu)=posM(uu)+pmint-win;
+                            [vmax(uu), pmaxt]=  max(PK.matrix_rough_fluorescences(max(posM(uu)-win,1):min(posM(uu)+win,length(Signal)),i));
+                            pmax(uu)=max(1,posM(uu)+pmaxt-win);
+                            [AA,pp]=max(PK.matrix_rough_fluorescences(max(1,pmin(uu)):min(posM(uu)+win,length(Signal)),i));
+                            if~isempty(pp)
+                                posM(uu)=max(1,pmin(uu)+pp-1);
+                                
+                                M(uu)=AA;
+                            else
+                                posM(uu)=pmin(uu);
+                                M(uu)=PK.matrix_rough_fluorescences(pmin(uu));
+                            end
+                            
+                            
+                            
+                            
+                        end
                         
                     end
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+                    [vmin(uu+1), pmint]=  min(PK.matrix_rough_fluorescences(max(posM(end)-win,1):min(posM(end)+win,length(Signal)),i));
+                    pmin(uu+1)=max(1,posM(uu+1)+pmint-win);
+                    [vmax(uu+1), pmaxt]=  max(PK.matrix_rough_fluorescences(max(posM(end)-win,1):min(posM(end)+win,length(Signal)),i));
+                    pmax(uu+1)=max(1,posM(uu+1)+pmaxt-win);
+                    
                     
                     %                     plot(posM2,M2,'+k')
                     
@@ -1264,7 +1093,7 @@ classdef AnalysisPeaks < handle
                     pmax(uu)=max(1,posM(uu)+pmaxt-win);
                     [AA,pp]=max(PK.matrix_rough_fluorescences(max(1,pmin(uu)):min(posM(uu)+win,length(Signal)),i));
                     if~isempty(pp)
-                        posM(uu)=max(1,pmin(uu)+pp-1);
+                        posM(uu)=pmin(uu)+pp-1;
                         
                         M(uu)=AA;
                     else
@@ -1279,55 +1108,12 @@ classdef AnalysisPeaks < handle
                 
             end
             [vmin(uu+1), pmint]=  min(PK.matrix_rough_fluorescences(max(posM(end)-win,1):min(posM(end)+win,length(Signal)),i));
-            pmin(uu+1)=max(1,posM(uu+1)+pmint-win);
-            [vmax(uu+1), pmaxt]=  max(PK.matrix_rough_fluorescences(max(posM(end)-win,1):min(posM(end)+win,length(Signal)),i));
-            pmax(uu+1)=max(1,posM(uu+1)+pmaxt-win);
-=======
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-
-%                     plot(posM2,M2,'+k')
-
-                   %% find posM and M on original signal and not filtered one
-                   win=1500;
-                   [vmin(uu), pmint]=  min(PK.matrix_rough_fluorescences(max(posM(uu)-win,1):min(posM(uu)+win,length(Signal)),i));
-                   pmin(uu)=posM(uu)+pmint-win;
-                   [vmax(uu), pmaxt]=  max(PK.matrix_rough_fluorescences(max(posM(uu)-win,1):min(posM(uu)+win,length(Signal)),i));
-                    pmax(uu)=max(1,posM(uu)+pmaxt-win);
-                   [AA,pp]=max(PK.matrix_rough_fluorescences(max(1,pmin(uu)):min(posM(uu)+win,length(Signal)),i));
-                   if~isempty(pp) 
-                   posM(uu)=pmin(uu)+pp-1;
-
-                   M(uu)=AA;
-                   else
-                       posM(uu)=pmin(uu);
-                     M(uu)=PK.matrix_rough_fluorescences(pmin(uu));  
-                   end
-                                        
- 
-                    
-                    
-                end
-  
-            end
-            [vmin(uu+1), pmint]=  min(PK.matrix_rough_fluorescences(max(posM(end)-win,1):min(posM(end)+win,length(Signal)),i));
             pmin(uu+1)=posM(uu+1)+pmint-win;
             [vmax(uu+1), pmaxt]=  max(PK.matrix_rough_fluorescences(max(posM(end)-win,1):min(posM(end)+win,length(Signal)),i));
-            pmax(uu+1)=max(1,posM(uu+1)+pmaxt-win);     
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
+            pmax(uu+1)=max(1,posM(uu+1)+pmaxt-win);
+            
+            
+            
             
             [AA,pp]=max(PK.matrix_rough_fluorescences(pmin(uu+1):min(posM(end)+win,length(Signal)),i));
             
@@ -1335,10 +1121,10 @@ classdef AnalysisPeaks < handle
                 posM(end)=pmin(uu+1);
                 M(end)=PK.matrix_rough_fluorescences(pminabs,i);
             else
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+                
+                
+                
+                
                 posM(end)=max(1,pmin(uu+1)+pp-1);
                 M(end)=AA;
             end
@@ -1439,40 +1225,27 @@ classdef AnalysisPeaks < handle
             PK.posMMmea(1:length(posM),i)=PK.vector_time(pmax);
             if pmin>0
                 PK.posmmmea(1:length(posM),i)=PK.vector_time(pmin);
-=======
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
+                
                 posM(end)=pmin(uu+1)+pp-1;
                 M(end)=AA;
             end
-
             
-%                            plot(posM,M,'+r')
-%                         plot(posm,m,'+y')
-%                         plot(posM2,M2,'+g')
-   
+            
+            %                            plot(posM,M,'+r')
+            %                         plot(posm,m,'+y')
+            %                         plot(posM2,M2,'+g')
+            
             
             PK.MMmea(1:length(posM),i)=vmax;
             PK.mmmea(1:length(posM),i)=vmin;
-  
-
+            
+            
             PK.posMMmea(1:length(posM),i)=PK.vector_time(pmax);
             if pmin>0
-            PK.posmmmea(1:length(posM),i)=PK.vector_time(pmin);    
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
+                PK.posmmmea(1:length(posM),i)=PK.vector_time(pmin);
+                
+                
+                
             end
             PK.posMmea(1:length(posM),i)=PK.vector_time(posM);
             PK.posmmea(1:length(posm),i)=PK.vector_time(posm);
@@ -1480,61 +1253,32 @@ classdef AnalysisPeaks < handle
             PK.Mmea(1:length(M),i)=M;
             PK.mmea(1:length(m),i)=m;
             PK.M2mea(1:length(M2),i)=M2;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+            
+            
+            
+            
             PK.posfinmea(1:length(posM2),i)=PK.vector_time(xmrn);
             PK.Amea(1:length(M),i)=vmax-vmin;
             if pmin>0
                 PK.Tmea(1:length(posM),i)=-PK.vector_time(pmax)+PK.vector_time(pmin);
-=======
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-            
-            PK.Amea(1:length(M),i)=vmax-vmin;
-            if pmin>0
-            PK.Tmea(1:length(posM),i)=-PK.vector_time(pmax)+PK.vector_time(pmin);
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
+                
+                
+                PK.Amea(1:length(M),i)=vmax-vmin;
+                if pmin>0
+                    PK.Tmea(1:length(posM),i)=-PK.vector_time(pmax)+PK.vector_time(pmin);
+                    
+                    
+                    
+                end
+                PK.FPD(1:length(posm),i)=(posM2-posM(1:end-1)')/PK.framerate;
+                PK.BI(1:length(posm),i)=(diff(posM))/PK.framerate;
+                PK.N(i)=length(posM)-1;
+                
             end
-            PK.FPD(1:length(posm),i)=(posM2-posM(1:end-1)')/PK.framerate;
-            PK.BI(1:length(posm),i)=(diff(posM))/PK.framerate;
-            PK.N(i)=length(posM)-1;
             
         end
-        
-        
         function PK=Save(PK,varargin)
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
             
-=======
-          
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-          
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-          
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-          
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
             results_pathname=varargin{1};
             PK.sheet=1;
             PK.indtosave=true(PK.ltab,PK.number_cells);
@@ -1650,23 +1394,15 @@ classdef AnalysisPeaks < handle
             PS.Area(kk).Decay_time_80_mean=nanmean(squeeze(PK.posper(:,5,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
             PS.Area(kk).Decay_time_80_median=nanmedian(squeeze(PK.posper(:,5,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
             PS.Area(kk).Decay_time_80_std=nanstd(squeeze(PK.posper(:,5,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
             
-=======
-
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
+            
+            
+            
+            
+            
+            
+            
+            
             
             PS.Area(kk).Decay_time_90_mean=nanmean(squeeze(PK.posper(:,6,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
             PS.Area(kk).Decay_time_90_median=nanmedian(squeeze(PK.posper(:,6,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
@@ -1677,46 +1413,14 @@ classdef AnalysisPeaks < handle
             PS.Area(kk).Decay_time_95_std=nanstd(squeeze(PK.posper(:,7,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
             PS.Area(kk).N_pks=PK.N';
             PS.Area(kk).Sig_noise=(PS.Area(kk).Amp_asc_mean+PS.Area(kk).Amp_decay_mean)./2./PK.noise';
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-            
-=======
-
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
             
         end
         
         
         
         function PK=Save_sheet(PK,varargin)
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
             
-=======
-      
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-      
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-      
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-      
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
+            
             results_pathname=varargin{1};
             Tftot= array2table(zeros(PK.number_cells,(length(PK.list_allparam)-5)*3+5));
             
@@ -1756,29 +1460,21 @@ classdef AnalysisPeaks < handle
                 MedT(uu)=median(diff(PK.posM(ind,uu)));
                 MeanT(uu)=mean(diff(PK.posM(ind,uu)));
                 StdT(uu)=std(diff(PK.posM(ind,uu)));
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+                
+                
+                
+                
                 if PK.type<2
-                Amp_norm(1:sum(ind),uu)=(PK.hr(ind,uu)+PK.hc(ind,uu))./PK.matrix_filtered_fluorescences_ori(PK.posmr(ind,uu),uu)/2;
+                    Amp_norm(1:sum(ind),uu)=(PK.hr(ind,uu)+PK.hc(ind,uu))./PK.matrix_filtered_fluorescences_ori(PK.posmr(ind,uu),uu)/2;
                 end
-=======
                 Amp_norm(1:sum(ind),uu)=(PK.hr(ind,uu)+PK.hc(ind,uu))./PK.matrix_filtered_fluorescences_ori(PK.posmr(ind,uu),uu)/2;
                 
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
                 Amp_norm(1:sum(ind),uu)=(PK.hr(ind,uu)+PK.hc(ind,uu))./PK.matrix_filtered_fluorescences_ori(PK.posmr(ind,uu),uu)/2;
                 
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
                 Amp_norm(1:sum(ind),uu)=(PK.hr(ind,uu)+PK.hc(ind,uu))./PK.matrix_filtered_fluorescences_ori(PK.posmr(ind,uu),uu)/2;
                 
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
                 Amp_norm(1:sum(ind),uu)=(PK.hr(ind,uu)+PK.hc(ind,uu))./PK.matrix_filtered_fluorescences_ori(PK.posmr(ind,uu),uu)/2;
                 
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
             end
             TabMedT=repmat(MedT,PK.ltab,1);
             if PK.type<2
@@ -1849,25 +1545,6 @@ classdef AnalysisPeaks < handle
                 Tftot.Decay_time_80_median=nanmedian(squeeze(PK.posper(:,5,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
                 Tftot.Decay_time_80_std=nanstd(squeeze(PK.posper(:,5,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
                 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-                
-=======
-
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-                
-                
                 Tftot.Decay_time_90_mean=nanmean(squeeze(PK.posper(:,6,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
                 Tftot.Decay_time_90_median=nanmedian(squeeze(PK.posper(:,6,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
                 Tftot.Decay_time_90_std=nanstd(squeeze(PK.posper(:,6,:)).*PK.indtosave-PK.posM.*PK.indtosave,1)';
@@ -1892,24 +1569,12 @@ classdef AnalysisPeaks < handle
                 Tftot.Amp_mea_median=nanmedian(PK.Amea,1)';
                 Tftot.Amp_mea_std=nanstd(PK.Amea,1)';
                 Tftot.Tau_mea_mean=nanmean(PK.Tmea,1)';
-                Tftot.Tau_mea_median=nanmedian(PK.Tmea,1)';
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
+                Tftot.Tau_mea_median=nanmedian(PK.Tmea,1)';        
                 Tftot.Tau_mea_std=nanstd(PK.Tmea,1)';
-=======
-                Tftot.Tau_mea_std=nanstd(PK.Tmea,1)';               
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-                Tftot.Tau_mea_std=nanstd(PK.Tmea,1)';               
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-                Tftot.Tau_mea_std=nanstd(PK.Tmea,1)';               
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-                Tftot.Tau_mea_std=nanstd(PK.Tmea,1)';               
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
+                Tftot.Tau_mea_std=nanstd(PK.Tmea,1)';
+                Tftot.Tau_mea_std=nanstd(PK.Tmea,1)';
+                Tftot.Tau_mea_std=nanstd(PK.Tmea,1)';
+                Tftot.Tau_mea_std=nanstd(PK.Tmea,1)';
                 Tftot.BI_mean=nanmean(PK.BI,1)';
                 Tftot.BI_median=nanmedian(PK.BI,1)';
                 Tftot.BI_std=nanstd(PK.BI,1)';
@@ -1918,197 +1583,69 @@ classdef AnalysisPeaks < handle
                 Tftot.FPD_std=nanstd(PK.FPD,1)';
                 
             end
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
             
-            
-            if ~ PK.col_line
+    
+                if ~ PK.col_line
+                    
+                    Tf=Tftot(:,Tf_num);
+                    Tfa = table2array(Tf);
+                    Tff = array2table(Tfa.');
+                    
+                    Tff.Properties.RowNames = Tf.Properties.VariableNames;
+                    %             if exist(results_pathname,'file')
+                    %                 delete(results_pathname)
+                    %             end
+                    writetable(Tff,results_pathname,'WriteRowNames',true,'Sheet',PK.sheet)  ;
+                    
+                else
+                    
+                    Tf=Tftot(:,Tf_num);
+                    
+                    writetable(Tf,results_pathname,'Sheet',PK.sheet)  ;
+                    
+                end
                 
-=======
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-         
-            
-            if ~ PK.col_line
-            
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-                Tf=Tftot(:,Tf_num);
-                Tfa = table2array(Tf);
-                Tff = array2table(Tfa.');
-                
-                
-                Tff.Properties.RowNames = Tf.Properties.VariableNames;
-                %             if exist(results_pathname,'file')
-                %                 delete(results_pathname)
-                %             end
-                writetable(Tff,results_pathname,'WriteRowNames',true,'Sheet',PK.sheet)  ;
-                
-            else
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-                
-=======
-           
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-           
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-           
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-           
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-                Tf=Tftot(:,Tf_num);
-                
-                writetable(Tf,results_pathname,'Sheet',PK.sheet)  ;
                 
             end
-            
-            
-        end
-        function PK=Save_sheet_area(PK,varargin)
-            results_pathname=varargin{1};
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-            
-            
-            
-=======
-
-            
-        
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-
-            
-        
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-
-            
-        
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-
-            
-        
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-            A=nanmean(PK.matrix_filtered_fluorescences(:,1));
-            B=nanstd(PK.matrix_filtered_fluorescences(:,1));
-            Tf=table(60/PK.PeriodF,A,B,PK.Homogeneity,nanmedian(PK.Tauc), nanstd(PK.Tauc),nanmedian(PK.Taur),nanstd(PK.Taur),nanmedian(PK.Taud),nanstd(PK.Taud),nanmedian(PK.Taud./sqrt(PK.PeriodF)),nanstd(PK.Taud./sqrt(PK.PeriodF)),nanmedian(PK.Aire), nanstd(PK.Aire),nanmedian(PK.pc),nanstd(PK.pc),nanmedian(PK.pr), nanstd(PK.pr));
-            Tf.Properties.RowNames={['Area',num2str(PK.area)]};
-            Tf.Properties.VariableNames = {'frequence_bpm', 'Mean_Amp_mum', 'Std_Amp_mum',...
-                'Homogeneity_AU','Tau_contract_med_s','Tau_contract_std_s','Tau_relax_med_s','Tau_relax_std_s','Tau_Diast_med_s','Tau_diast_std_s','BAZ_Tau_Diast_med_s','BAZ_Tau_diast_std_s','AUC_med_mums','AUC_std_mums','Pente_contraction_med_mumpers','pente_contraction_std_mumpers','Pente_relax_med_mumpers','pente_relax_std_mumpers'};
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-            
-=======
-
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
-
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-            
-            if ~PK.col_line
+            function PK=Save_sheet_area(PK,varargin)
+                results_pathname=varargin{1};
+                A=nanmean(PK.matrix_filtered_fluorescences(:,1));
+                B=nanstd(PK.matrix_filtered_fluorescences(:,1));
+                Tf=table(60/PK.PeriodF,A,B,PK.Homogeneity,nanmedian(PK.Tauc), nanstd(PK.Tauc),nanmedian(PK.Taur),nanstd(PK.Taur),nanmedian(PK.Taud),nanstd(PK.Taud),nanmedian(PK.Taud./sqrt(PK.PeriodF)),nanstd(PK.Taud./sqrt(PK.PeriodF)),nanmedian(PK.Aire), nanstd(PK.Aire),nanmedian(PK.pc),nanstd(PK.pc),nanmedian(PK.pr), nanstd(PK.pr));
+                Tf.Properties.RowNames={['Area',num2str(PK.area)]};
+                Tf.Properties.VariableNames = {'frequence_bpm', 'Mean_Amp_mum', 'Std_Amp_mum',...
+                    'Homogeneity_AU','Tau_contract_med_s','Tau_contract_std_s','Tau_relax_med_s','Tau_relax_std_s','Tau_Diast_med_s','Tau_diast_std_s','BAZ_Tau_Diast_med_s','BAZ_Tau_diast_std_s','AUC_med_mums','AUC_std_mums','Pente_contraction_med_mumpers','pente_contraction_std_mumpers','Pente_relax_med_mumpers','pente_relax_std_mumpers'};
                 
-                Tfa = table2array(Tf);
-                Tff = array2table(Tfa.');
-                Tf.Properties.VariableNames
-                Tf.Properties.RowNames
-                Tff.Properties.RowNames = Tf.Properties.VariableNames;
-                Tff.Properties.VariableNames = Tf.Properties.RowNames;
-                if PK.area==1
-                    char(PK.area+'A'-1)
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-                    writetable(Tff,results_pathname,'WriteRowNames',true,'Range',[char(PK.area+'A'-1) num2str(1)])  ;
-                else
-                    char(PK.area+'A')
-                    writetable(Tff,results_pathname,'WriteRowNames',false,'Range',[char(PK.area+'A') num2str(1)])  ;
-                    
-                end
-                
-            else
-                
-                if PK.area==1
-                    
-                    writetable(Tf,results_pathname,'WriteVariableNames',true,'WriteRowNames',true,'Range',['A',num2str(PK.area)])
-                    
-                else
-                    
-                    writetable(Tf,results_pathname,'WriteRowNames',true,'WriteVariableNames',false,'Range',['A',num2str(PK.area+1)])
-                    
-                end
-            end
-=======
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-                writetable(Tff,results_pathname,'WriteRowNames',true,'Range',[char(PK.area+'A'-1) num2str(1)])  ;
-                else
-                    char(PK.area+'A')
-                  writetable(Tff,results_pathname,'WriteRowNames',false,'Range',[char(PK.area+'A') num2str(1)])  ;
-
-                end
-                
-            else
-             
+                if ~PK.col_line
+                    Tfa = table2array(Tf);
+                    Tff = array2table(Tfa.');
+                    Tf.Properties.VariableNames
+                    Tf.Properties.RowNames
+                    Tff.Properties.RowNames = Tf.Properties.VariableNames;
+                    Tff.Properties.VariableNames = Tf.Properties.RowNames;
                     if PK.area==1
-  
-                 writetable(Tf,results_pathname,'WriteVariableNames',true,'WriteRowNames',true,'Range',['A',num2str(PK.area)])
-        
+                        char(PK.area+'A'-1)
+                        writetable(Tff,results_pathname,'WriteRowNames',true,'Range',[char(PK.area+'A'-1) num2str(1)])  ;
                     else
-
-                  writetable(Tf,results_pathname,'WriteRowNames',true,'WriteVariableNames',false,'Range',['A',num2str(PK.area+1)])
-           
+                        char(PK.area+'A')
+                        writetable(Tff,results_pathname,'WriteRowNames',false,'Range',[char(PK.area+'A') num2str(1)])  ;
                     end
+                else
+                    if PK.area==1
+                        writetable(Tf,results_pathname,'WriteVariableNames',true,'WriteRowNames',true,'Range',['A',num2str(PK.area)])
+                    else
+                        writetable(Tf,results_pathname,'WriteRowNames',true,'WriteVariableNames',false,'Range',['A',num2str(PK.area+1)])
                     end
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
-=======
->>>>>>> d9239477ced259511253dd15b2501e5de937d162
+                end
+                
+            end
             
             
-        end
+            
+            
+            
+            
+    
         function param=getallinputparams(PK)
             param.list_param_name=PK.list_param_name;
             param.PixelSize=PK.PixelSize;
@@ -2130,6 +1667,8 @@ classdef AnalysisPeaks < handle
             
         end
         
-    end
-    
 end
+
+end
+
+

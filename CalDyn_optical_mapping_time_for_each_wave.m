@@ -62,8 +62,3 @@ end
 results_pathname=[results_foldername filesep 'Results_' file(1:end-5),'.xlsx'];
 save([results_foldername filesep 'Results_' file(1:end-5),'.mat'],'PK');
 PK.Save(results_pathname);
-
-% %     results_pathname=[results_foldername filesep 'Results_fit_' file(1:end-5),'.xlsx'];
-% %     save([results_foldername filesep 'Results_' file(1:end-5),'.mat'],'PK');
-% %     PK.Save(results_pathname);
-

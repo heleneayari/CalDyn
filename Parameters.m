@@ -22,7 +22,7 @@ function varargout = Parameters(varargin)
 
 % Edit the above text to modify the response to help Parameters
 
-% Last Modified by GUIDE v2.5 06-Nov-2024 10:15:17
+% Last Modified by GUIDE v2.5 14-Feb-2025 09:36:02
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -564,6 +564,20 @@ function Amp_norm_Callback(hObject, eventdata, handles)
 % handles    structure with handles and user data (see GUIDATA)
 
 % Hint: get(hObject,'Value') returns toggle state of Amp_norm
+val=get(hObject,'Value');
+nom=get(hObject,'Tag');
+pos=strcmp(handles.list_allparam,nom);
+handles.list_param_num(pos)=val;
+guidata(hObject, handles);
+
+
+% --- Executes on button press in f_pks.
+function f_pks_Callback(hObject, eventdata, handles)
+% hObject    handle to f_pks (see GCBO)
+% eventdata  reserved - to be defined in a future version of MATLAB
+% handles    structure with handles and user data (see GUIDATA)
+
+% Hint: get(hObject,'Value') returns toggle state of f_pks
 val=get(hObject,'Value');
 nom=get(hObject,'Tag');
 pos=strcmp(handles.list_allparam,nom);

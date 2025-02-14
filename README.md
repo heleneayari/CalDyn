@@ -4,13 +4,11 @@ We give here a quick description on how to use the software, for further details
 "CalDyn: An advanced high-throughput automated algorithm for monitoring intracellular calcium dynamics and electrophysiological signals in patient-derived cells".... to be cited
 
 
-## Examples
-A Graphical User Interface (gui) is launched running the file CalDyn_*.m in Matlab.
+A Graphical User Interface (gui) is launched running the file Principal_V6_HA_*.m in matlab.
 
 
-There exists different versions of this file which have been finely tuned for different signals (The one presented in the article previously mentionned). We also provide here a set of excel files for testing.  But for a new analysis, any of them can be launched and the user is invited to create its own starting file once conditions have been chosen for a given experiment to make the analysis even faster.
+There exist different versions of this file which have been finely tuned for different signals. But any of them can be launched and the user is invited to create its own starting file once conditions have been chosen for a given experiment to make the analysis even faster.
 
-## Let's start
 In this file, the user will have to set the path to the excel file to be analyzed (folder variable). All results will be saved in the very same folder, in subfolders having the same name as the original excel file.
 
 See below for a list of the parameters that can be set in the gui either at startup or also directly using the interface.
@@ -62,9 +60,7 @@ For all the following parameters, the user can decide to save the mean and/or me
 + 'Asc_time': Duration of the contration ($\tau_c$ on figure)
 + 'Decay_time': Duration of the relaxation ($\tau_r$ on figure)
 + ‘Decay_time_95': Time to relax 95% of the peak amplitude
-+ 'Decay_time_90': Time to relax 70% of the peak amplitude
-+ 'Decay_time_80': Time to relax 70% of the peak amplitude
-+ 'Decay_time_70': Time to relax 70% of the peak amplitude
++ 'Decay_time_70': Time to relax 75% of the peak amplitude
 + 'Decay_time_50': Time to relax 50% of the peak amplitude
 + 'Decay_time_30': Time to relax 30% of the peak amplitude
 + 'Decay_time_20': Time to relax 20% of the peak amplitude, 
