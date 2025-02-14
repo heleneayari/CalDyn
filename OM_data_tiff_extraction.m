@@ -1,7 +1,6 @@
 clear; close all; clc;
 
-folder=['Data' filesep 'optical_mapping' filesep];
-
+folder='C:\Users\HEDY\Google Drive\Caldyn_video'
 
 %% load image
 [file,foldername]=uigetfile([folder,'*.*']);
@@ -33,7 +32,6 @@ end
 clear pts ptst
 figure('Name','ptssuperimposed')
 hold on
-figToolbarFix
 imagesc(A)
 colormap(gray)
 axis equal
