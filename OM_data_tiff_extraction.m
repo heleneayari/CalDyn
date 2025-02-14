@@ -1,7 +1,5 @@
 clear; close all; clc;
-clc
-clear
-close all;
+
 folder=['Data' filesep 'optical_mapping' filesep];
 
 
