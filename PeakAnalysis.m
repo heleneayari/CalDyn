@@ -96,6 +96,7 @@ switch handles.PK.type
         error=0;
         set(handles.smooth_length,'string',num2str(handles.PK.sm(handles.i)))
         set(handles.props,'Visible', 'off')
+        set(handles.detect_small,'Visible', 'off')
 
         %             catch
         %                 handles.PK.sm(:)=handles.PK.sm(1)+1;
@@ -429,8 +430,9 @@ else
     plot(handles.PK.posM2mea(:,handles.i),handles.PK.M2mea(:,handles.i),'+g','linewidth',2,'parent',handles.axes_image)
     plot(handles.PK.posmmea(:,handles.i),handles.PK.mmea(:,handles.i),'+k','linewidth',2,'parent',handles.axes_image)
     %     plot(handles.PK.posMmea(:,handles.i),handles.PK.Mmea(:,handles.i),'+r','linewidth',2,'parent',handles.axes_image)
-    plot(handles.PK.posMMmea(:,handles.i),handles.PK.MMmea(:,handles.i),'+m','linewidth',2,'parent',handles.axes_image)
-    plot(handles.PK.posfinmea(:,handles.i),0,'+y','linewidth',2,'parent',handles.axes_image)
+ % plot(handles.PK.posMMmea(:,handles.i),handles.PK.MMmea(:,handles.i),'+m','linewidth',2,'parent',handles.axes_image)
+   plot(handles.PK.posMMmea(:,handles.i),zeros(size(handles.PK.posMMmea(:,handles.i),1),1),'+m','linewidth',2,'parent',handles.axes_image)
+    plot(handles.PK.posfinmea(:,handles.i),handles.PK.valfinmea(:,handles.i),'+y','linewidth',2,'parent',handles.axes_image)
     plot([0, handles.PK.vector_time(end)],[handles.PK.th(handles.i), handles.PK.th(handles.i)],'r','parent',handles.axes_image)
     
     xlabel(handles.axes_image,'Time')

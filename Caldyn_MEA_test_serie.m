@@ -1,39 +1,36 @@
 clc
 clear
 close all;
-folder='/data1/thoman/ownCloud/Lamia/';
-folder='/data1/thoman/Lamia/';
-folder='/data1/thoman/ownCloud/Albano/Text Data Experiment 1/';
 
-% folder='C:\Users\HEDY\ownCloud\Albano\Text Data Experiment 1\';
+% folder='/data1/thoman/Lamia/';
+folder='/data1/thoman/Nextcloud_cnrs/Albano/Text Data Experiment 1/';
+%folder='D:\Helene\nextcloud_cnrs\Albano\Text Data Experiment 1\'
+% folder='C:\Users\HEDY\NextCloud_cnrs\Albano\Text Data Experiment 1\'
 
 %% load data
-tic
+
 
 files=dir([folder,'*textdata.txt']);
 
 
 %% param 
-    sm=10;
-    prop=0.5; 
+    sm=500;
+    prop=0.8; 
     props=0.1;
     type=2;%2 for MEA;1 for the rest
     param_filter=300;
     col_line=1; %  set to 1, to get each parameter on  a different column in the excels files
-    list_param={'N_pks','Amp_mea','Tau_mea','BI','FPD'};
+    list_param={'N_pks','Amp_mea','Tau_Start_Peak','Tau_Start_End'};
 
 
 
-for ff=3:length(files)
+for ff=5:length(files)
     file=files(ff).name;
     rough_data_pathname=[folder, file];
 
        warning('off','MATLAB:table:ModifiedAndSavedVarnames')
-%        matrix_rough_datat=table2array(readtable(rough_data_pathname));
-       matrix_rough_data=table2array(readtable(rough_data_pathname));
 
- toc
- 
+       matrix_rough_data=table2array(readtable(rough_data_pathname));
 
 
 
@@ -57,6 +54,7 @@ for i=1:PK.number_cells
  PK=PeakAnalysis(PK,i,results_foldername);
 
 end
+
 
 props=PK.props(i);
 %%
