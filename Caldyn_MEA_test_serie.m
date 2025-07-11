@@ -2,10 +2,7 @@ clc
 clear
 close all;
 
-% folder='/data1/thoman/Lamia/';
-folder='/data1/thoman/Nextcloud_cnrs/Albano/Text Data Experiment 1/';
-%folder='D:\Helene\nextcloud_cnrs\Albano\Text Data Experiment 1\'
-% folder='C:\Users\HEDY\NextCloud_cnrs\Albano\Text Data Experiment 1\'
+folder=['Data' filesep 'MEA' filesep];
 
 %% load data
 
@@ -24,7 +21,7 @@ files=dir([folder,'*textdata.txt']);
 
 
 
-for ff=5:length(files)
+for ff=1:length(files)
     file=files(ff).name;
     rough_data_pathname=[folder, file];
 

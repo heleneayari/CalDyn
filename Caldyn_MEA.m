@@ -1,10 +1,8 @@
 clc
 clear
 close all;
-% folder='/data1/thoman/ownCloud/Lamia/';
-% folder='/data1/thoman/Lamia/';
-% folder='/data1/thoman/ownCloud/Albano/Text Data Experiment 1/';
-folder='C:\Users\HEDY\NextCloud_cnrs\Albano\Text Data Experiment 1\'
+
+folder=['Data' filesep 'MEA' filesep];
 
 %% load data
 tic
